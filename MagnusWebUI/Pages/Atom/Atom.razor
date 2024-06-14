@@ -1,0 +1,1728 @@
+﻿@page "/atom"
+@using System.Linq.Dynamic.Core
+@using Blazored.Toast.Services
+@using Magnus.APIs.Atom
+@using Radzen
+@using Radzen.Blazor
+
+@inject IAtomServices atomServices
+@inject IToastService toastService
+
+<AuthorizeView>
+    <Authorized>
+        @{
+            if (IsLoading)
+            {
+                <div class="preloader" style="">
+                    <img src="Gif/EnagePreloader.gif" />
+                </div>
+            }
+            else
+            {
+                <RadzenTabs RenderMode="TabRenderMode.Server" Change="ChangeTab">
+                    <Tabs>
+                        <RadzenTabsItem Text="Planning">
+                            <div class="row">
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        PartOfCountry (@(multipleValuesPartOfCountry == null ? "0" : multipleValuesPartOfCountry.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DropdownData @bind-Value=@multipleValuesPartOfCountry
+                                                TextProperty="PartOfCountry" ValueProperty="PartOfCountry"
+                                                Placeholder="Part Of Country" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Area  (@(multipleValuesArea == null ? "0" : multipleValuesArea.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DropdownData @bind-Value=@multipleValuesArea
+                                                TextProperty="Area" ValueProperty="Area"
+                                                Placeholder="Area" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Region (@(multipleValuesRegion == null ? "0" : multipleValuesRegion.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DropdownData @bind-Value=@multipleValuesRegion
+                                                TextProperty="Region" ValueProperty="Region"
+                                                Placeholder="Region" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Priority (@(multipleValuesPriority == null ? "0" : multipleValuesPriority.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DropdownData @bind-Value=@multipleValuesPriority
+                                                TextProperty="Priority" ValueProperty="Priority"
+                                                Placeholder="Priority" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Company  (@(multipleValuesCompany == null ? "0" : multipleValuesCompany.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DropdownData @bind-Value=@multipleValuesCompany
+                                                TextProperty="Company" ValueProperty="Company"
+                                                Placeholder="Company" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        SLA Status (@(multipleValuesSLAStatus == null ? "0" : multipleValuesSLAStatus.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DropdownData @bind-Value=@multipleValuesSLAStatus
+                                                TextProperty="SLAStatus" ValueProperty="SLAStatus"
+                                                Placeholder="SLA Status" />
+                                    </div>
+
+                                </div>
+
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Agent Name  (@(multipleValuesAgentName == null ? "0" : multipleValuesAgentName.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DropdownData @bind-Value=@multipleValuesAgentName
+                                                TextProperty="AgentName" ValueProperty="AgentName"
+                                                Placeholder="AgentName " />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Planned Date   (@(multipleValuesPlannedDate == null ? "0" : multipleValuesPlannedDate.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DropdownData @bind-Value=@multipleValuesPlannedDate
+                                                TextProperty="PlannedDate" ValueProperty="PlannedDate"
+                                                Placeholder="Planned Date " />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Dual (@(multipleValuesDual == null ? "0" : multipleValuesDual.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DropdownData @bind-Value=@multipleValuesDual
+                                                TextProperty="Dual" ValueProperty="Dual"
+                                                Placeholder="Dual" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Planned Status   (@(multipleValuesPlannedStatus == null ? "0" : multipleValuesPlannedStatus.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DropdownData @bind-Value=@multipleValuesPlannedStatus
+                                                TextProperty="PlannedStatus" ValueProperty="PlannedStatus"
+                                                Placeholder="PlannedStatus" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Code   (@(multipleValuesCode == null ? "0" : multipleValuesCode.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DropdownData @bind-Value=@multipleValuesCode
+                                                TextProperty="Code" ValueProperty="Code"
+                                                Placeholder="Code" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Selected
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenRadioButtonList @bind-Value=@multipleValuesSelected TValue="int">
+                                            <Items>
+                                                <RadzenRadioButtonListItem Text="Yes" Value="1" />
+                                                <RadzenRadioButtonListItem Text="No" Value="2" />
+                                            </Items>
+                                        </RadzenRadioButtonList>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <RadzenFieldset Text="Agent Selection">
+                                        <div class="row">
+
+                                            <div class="col-md-6 col-lg-5 col-xl-4 d-flex align-items-center row-Gap-2nd">
+                                                <div class="col-md-3 col-lg-4   ">
+                                                    <RadzenLabel Text="No" />
+                                                </div>
+                                                <div class="col-md-9 col-lg-8">
+                                                    <RadzenTextBox style="width: 100%;" Name="No" @bind-Value="agentSelection.No" Placeholder="No" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-lg-5 col-xl-4 d-flex align-items-center row-Gap-2nd">
+                                                <div class="col-md-3 col-lg-4  ">
+                                                    <RadzenLabel Text="Name" />
+                                                </div>
+                                                <div class="col-md-9 col-lg-8">
+                                                    <RadzenTextBox style="width: 100%;" @bind-Value="agentSelection.Name" Placeholder="Name" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10 col-lg-10 col-xl-4 d-flex align-items-center row-Gap">
+                                                <div class="col-md-3 col-lg-4  ">
+                                                    <RadzenLabel Text="Date" />
+                                                </div>
+                                                <div class="col-md-9 col-lg-8">
+                                                    <RadzenDatePicker style="width: 100%;" DateFormat="d" Name="Date" @bind-Value="agentSelection.Date" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <div class="col-xl-6 d-flex align-items-center align-center-mobile" style="margin-top:20px;">
+                                                <div class="row">
+                                                    <div class="col-6 col-sm-3 col-md-4 col-lg-3 row-Gap-2nd">
+                                                        @*<RadzenButton ButtonStyle="ButtonStyle.Info" Text="Reset" />*@
+                                                        <button class="btn btn-effect">Reset</button>
+                                                    </div>
+                                                    <div class="col-6 col-sm-3 col-md-4 col-lg-3 row-Gap-2nd">
+                                                        @*<RadzenButton ButtonType="ButtonType.Submit" Text="Save" />*@
+                                                        <button class="btn btn-effect">Save</button>
+                                                    </div>
+                                                    <div class="col-6 col-sm-3 col-md-4 col-lg-3 row-Gap-2nd">
+                                                        @*<RadzenButton ButtonStyle="ButtonStyle.Success" Text="Load" />*@
+                                                        <button class="btn btn-effect">Load</button>
+                                                    </div>
+
+                                                    <div class="col-6 col-sm-3 col-md-4 col-lg-3 row-Gap-2nd">
+                                                        @*<RadzenButton ButtonStyle="ButtonStyle.Danger" Text="Remove" />*@
+                                                        <button class="btn btn-effect">Remove</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </RadzenFieldset>
+                                </div>
+
+                            </div>
+                            @*<br />
+
+                    <br />*@
+                            <RadzenFieldset>
+                                <HeaderTemplate>
+                                    <span class="d-inline-flex align-items-center align-middle">
+                                        <b>Planning List</b>
+                                    </span>
+                                </HeaderTemplate>
+                                <ChildContent>
+
+                                    <RadzenDataGrid @ref="grid" AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnPicking="true" AllowPaging="true"
+                                            PageSize="@TakePlannings"
+                                            AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true"
+                                            AllowColumnResize="true" ColumnWidth="200px" AllowRowSelectOnRowClick="@allowRowSelectOnRowClick"
+                                            FilterCaseSensitivity="FilterCaseSensitivity.Default" Data="@Plannings" TItem="AtomPlanningView"
+                                            LoadData="LoadList" PagerAlwaysVisible="true"
+                                            Count="PlanningCount" PagerHorizontalAlign="HorizontalAlign.Left"
+                                            Density="Density.Compact">
+                                       
+                                        <Columns>
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Width="100px" Sortable="false" Filterable="false" TextAlign="TextAlign.Center" Frozen="true" MinWidth="50px"
+                                                          Pickable="false">
+                                                <HeaderTemplate>
+                                                    <RadzenCheckBox TriState="false" TValue="bool" Value="@(Plannings.Any(i => selectedPlannings != null && selectedPlannings.ToList().Where(x => x.OurRef == i.OurRef).FirstOrDefault()!=null))"
+                                                            Change="@(args => CheckChangeAll())" />
+
+                                                </HeaderTemplate>
+                                                <Template Context="data">
+                                                    <RadzenCheckBox TriState="false" Value="@(data.selected)"
+                                                            TValue="bool" Change="@(args=>CheckChange(data))" />
+                                                </Template>
+                                                <FooterTemplate>
+                                                    <span>Select: <b>@(selectedPlannings != null ? selectedPlannings.Count : "0")</b> </span>
+                                                </FooterTemplate>
+                                            </RadzenDataGridColumn>
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="OurRef" Title="Our Ref" TextAlign="TextAlign.Center">
+                                                <FooterTemplate>
+                                                    <span>Total: <b>@(PlanningCount)</b> </span>
+                                                </FooterTemplate>
+                                            </RadzenDataGridColumn>
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="Company" Title="Company" TextAlign="TextAlign.Center" />
+
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="AgentName" Title="Agent Name" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="PostCode" Title="Post Code" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="Area" Title="Area" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="Dual" Title="Dual" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="Balance" Title="Balance" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="SpaDate" Title="SpaDate" FormatString="{0:d}" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="Visit" Title="Visit" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="Pri" Title="Pri" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="Reg" Title="Reg" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="Code" Title="Code" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="FCA" Title="Visit" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="STR" Title="Reg" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="PlannedDate" Title="Planned Date" FormatString="{0:d}" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="PlannedStatus" Title="PlannedStatus" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="Row" Title="Row" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomPlanningView" Property="Count" Title="Count" TextAlign="TextAlign.Center" />
+                                        </Columns>
+                                    </RadzenDataGrid>
+                                    <div class="row d-flex Take-DropDown-planning" style=" margin-left: 2px; ">
+                                        <RadzenDropDown TValue="string"
+                                                Data=@(TakeDropDownList)
+                                                Change=@(args => TakeDropDownChange(args)) Placeholder="Default Item Count 10" />
+                                    </div>
+                                </ChildContent>
+
+                            </RadzenFieldset>
+
+                        </RadzenTabsItem>
+                        <RadzenTabsItem Text="Export Plan">
+                            @{
+                                <div class="row" style="display: flex;justify-content: center;">
+                                    <div class="col-md-6 col-lg-5 col-xl-4 d-flex align-items-center row-Gap-2nd">
+                                        <div class="col-md-3 col-lg-4   " style="display: flex; justify-content: center;">
+                                            <RadzenLabel Text="Date" />
+                                        </div>
+                                        <div class="col-md-9 col-lg-8">
+                                            <RadzenDatePicker style="width: 100%;" Min="DateTime.Today.AddDays(-7)" Max="DateTime.Today.AddDays(7)" DateFormat="d" Name="Date" @bind-Value="ExportDate" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-5 col-xl-4 d-flex align-items-center row-Gap-2nd">
+                                        <div class="col-md-3 " style="display: flex;justify-content: center;">
+                                            @*<RadzenButton ButtonStyle="ButtonStyle.Success" Click="LoadExportData" Text="Show Plans" />*@
+                                            <button class="btn btn-effect" @onclick="LoadExportData">Show Plans</button>
+                                        </div>
+                                        <div class="col-md-6 ">
+                                            @*<RadzenButton ButtonStyle="ButtonStyle.Info" Text="Export Data" />*@
+                                            <button class="btn btn-effect">Export Data</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                if (IsExportDateSelect && ExportPlans != null)
+                                {
+                                    <div class="row">
+                                        <RadzenFieldset>
+                                            <HeaderTemplate>
+                                                <span class="d-inline-flex align-items-center align-middle">
+                                                    <b>Export Plan List</b>
+                                                </span>
+                                            </HeaderTemplate>
+                                            <ChildContent>
+
+                                                <RadzenDataGrid @ref="exportPlansGrid" AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnPicking="true"
+                                                AllowPaging="true" PageSize="@TakeExportPlans"
+                                                AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true"
+                                                AllowColumnResize="true" ColumnWidth="200px" AllowRowSelectOnRowClick="@allowRowSelectOnRowClick"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data="@ExportPlans" TItem="AtomExportPlansView"
+                                                Count="ExportPlanCount" PagerHorizontalAlign="HorizontalAlign.Left" LoadData="LoadExportPLan"
+                                                Density="Density.Compact" PagerAlwaysVisible="true">
+                                                    <EmptyTemplate>
+                                                        <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No records to display.</p>
+                                                    </EmptyTemplate>
+                                                    <Columns>
+                                                        <RadzenDataGridColumn TItem="AtomExportPlansView" Width="100px" Sortable="false" Filterable="false" TextAlign="TextAlign.Center" Frozen="true" MinWidth="50px"
+                                                              Pickable="false">
+                                                            <HeaderTemplate>
+                                                                <RadzenCheckBox TriState="false" TValue="bool" Value="@(ExportPlans.Any(i => selectedExportPlans != null && selectedExportPlans.ToList().Where(x => x.AgentNo == i.AgentNo).FirstOrDefault()!=null))"
+                                                                Change="@(args => CheckChangeAllForExportPlans())" />
+
+                                                            </HeaderTemplate>
+                                                            <Template Context="data">
+                                                                <RadzenCheckBox TriState="false" Value="@(data.Select)"
+                                                                TValue="bool" Change="@(args=>CheckChangeForExportPlans(data))" />
+                                                            </Template>
+                                                            <FooterTemplate>
+                                                                <span>Select: <b>@(selectedExportPlans != null ? selectedExportPlans.Count : "0")</b> </span>
+                                                            </FooterTemplate>
+                                                        </RadzenDataGridColumn>
+                                                        <RadzenDataGridColumn TItem="AtomExportPlansView" Property="AgentName" Title="Agent Name" TextAlign="TextAlign.Center">
+                                                            <FooterTemplate>
+                                                                <span>Total: <b>@(ExportPlanCount)</b> </span>
+                                                            </FooterTemplate>
+                                                        </RadzenDataGridColumn>
+                                                        <RadzenDataGridColumn TItem="AtomExportPlansView" Property="AgentNo" Title="Agent No." TextAlign="TextAlign.Center" />
+
+                                                        <RadzenDataGridColumn TItem="AtomExportPlansView" Property="JobDate" Title="JobDate" TextAlign="TextAlign.Center" />
+                                                        <RadzenDataGridColumn TItem="AtomExportPlansView" Property="NoOfJob" Title="No Of Job" TextAlign="TextAlign.Center" />
+                                                        <RadzenDataGridColumn TItem="AtomExportPlansView" Property="TimersExported" Title="Timers Exported" TextAlign="TextAlign.Center" />
+                                                        <RadzenDataGridColumn TItem="AtomExportPlansView" Property="FileName" Title="File Name" TextAlign="TextAlign.Center" />
+
+                                                    </Columns>
+                                                </RadzenDataGrid>
+                                                <div class="row d-flex Take-DropDown-Export-Plan" style=" margin-left: 2px; ">
+                                                    <RadzenDropDown TValue="string"
+                                                    Data=@(TakeDropDownList)
+                                                    Change=@(args => TakeDropDownChange(args)) Placeholder="Default Item Count 10" />
+                                                </div>
+                                            </ChildContent>
+
+                                        </RadzenFieldset>
+                                    </div>
+                                }
+
+                            }
+
+                        </RadzenTabsItem>
+                        <RadzenTabsItem Text="Distribution">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h4 class="text-muted">Agent(All)</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@multipleValues
+                                           Multiple="true" Data=@agentList
+                                           Style="height: 453px" Class="w-100" />
+                                    @*Change=@(args => OnChange(args, "ListBox with multiple selection"))   -------This Event will call if value is changed  *@
+                                </div>
+                                <div class="col-md-9">
+                                    <RadzenDataGrid @ref="distributionGrid" AllowFiltering="true" FilterMode="FilterMode.Simple"
+                                            AllowPaging="true" PageSize="@TakeDistribution"
+                                            AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true"
+                                            AllowColumnResize="true" ColumnWidth="200px" AllowRowSelectOnRowClick="@allowRowSelectOnRowClick"
+                                            FilterCaseSensitivity="FilterCaseSensitivity.Default" Data="@atomDistributionList" TItem="AtomDistributionView"
+                                            Count="totalDistribution" PagerHorizontalAlign="HorizontalAlign.Left"
+                                            Density="Density.Compact" PagerAlwaysVisible="true" LoadData="LoadDistribution">
+
+                                        <EmptyTemplate>
+                                            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No records to display.</p>
+                                        </EmptyTemplate>
+
+                                        <Columns>
+                                            <RadzenDataGridColumn TItem="AtomDistributionView" Property="Company" Title="Company"
+                                                          TextAlign="TextAlign.Center">
+                                                <FooterTemplate>
+                                                    <span>Total: <b>@(totalDistribution)</b> </span>
+                                                </FooterTemplate>
+                                            </RadzenDataGridColumn>
+                                            <RadzenDataGridColumn TItem="AtomDistributionView" Property="Jobs" Title="Jobs" TextAlign="TextAlign.Center" />
+
+                                            <RadzenDataGridColumn TItem="AtomDistributionView" Property="Distribute" Title="Distribute" TextAlign="TextAlign.Center">
+                                                <Template Context="data">
+                                                    <RadzenCheckBox TriState="false" Value="@(data.Distribute)"
+                                                            TValue="bool" />
+                                                    @*Change="@(args=>ChangeCheckForChangePriorities(data,"Visit 1"))"*@
+                                                </Template>
+                                            </RadzenDataGridColumn>
+
+                                        </Columns>
+                                    </RadzenDataGrid>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <button class="btn btn-effect">Distribute</button>
+                                </div>
+                                <div class="col-md-4" style="display: flex; justify-content: center;">
+                                    <h5>Jobs In Distribution Queue: 0</h5>
+                                </div>
+                                <div class="col-md-4" style="display: flex; justify-content: end;">
+                                    <button class="btn btn-effect">Distribute</button>
+                                </div>
+                            </div>
+                        </RadzenTabsItem>
+                        <RadzenTabsItem Text="Postcode Exception">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h3 class="text-muted">Postcode Area Activation / De-Activation</h3>
+                                            <h5 class="text-muted">This will prevent these accounts from being imported.</h5>
+
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            @* <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Enabled Postcodes</RadzenText>*@
+                                            <h4 class="text-muted">Enabled Postcodes</h4>
+                                            <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@multipleValues
+                                                   Multiple="true" Data=@enablePostCodes
+                                                   TextProperty="Postcode" ValueProperty="Postcode" Style="height:300px" Class="w-100" />
+                                            @*Change=@(args => OnChange(args, "ListBox with multiple selection"))   -------This Event will call if value is changed  *@
+                                            <button class="btn btn-effect" style="width:100%">Disable ></button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h4 class="text-muted">Disabled Postcodes</h4>
+                                            @*<RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Disabled Postcodes</RadzenText>*@
+                                            <RadzenListBox AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @bind-Value=@multipleValues
+                                                   Multiple="true" Data=@disablePostCodes
+                                                   TextProperty="Postcode" ValueProperty="Postcode" Style="height:300px" Class="w-100" />
+                                            <button class="btn btn-effect" style="width:100%">@EnableText</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <RadzenFieldset>
+                                            <HeaderTemplate>
+                                                <span class="d-inline-flex align-items-center align-middle">
+                                                    <b>Post-Code List</b>
+                                                </span>
+                                            </HeaderTemplate>
+                                            <ChildContent>
+
+                                                <RadzenDataGrid @ref="postCodeGrid" AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnPicking="true"
+                                                        AllowPaging="true" PageSize="@TakePostCodeStatus"
+                                                        AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true"
+                                                        AllowColumnResize="true" ColumnWidth="200px" AllowRowSelectOnRowClick="@allowRowSelectOnRowClick"
+                                                        FilterCaseSensitivity="FilterCaseSensitivity.Default" Data="@atomPostCodes" TItem="AtomPostCodeExceptionView"
+                                                        Count="totalPostCodes" PagerHorizontalAlign="HorizontalAlign.Left" LoadData="LoadPostCodeExpceptions"
+                                                        Density="Density.Compact" PagerAlwaysVisible="true">
+
+                                                    <EmptyTemplate>
+                                                        <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No records to display.</p>
+                                                    </EmptyTemplate>
+
+                                                    <Columns>
+                                                        <RadzenDataGridColumn TItem="AtomPostCodeExceptionView" Property="PostCodeArea" Title="PostCode Area"
+                                                                      TextAlign="TextAlign.Center">
+                                                            <FooterTemplate>
+                                                                <span>Total: <b>@(totalPostCodes)</b> </span>
+                                                            </FooterTemplate>
+                                                        </RadzenDataGridColumn>
+                                                        <RadzenDataGridColumn TItem="AtomPostCodeExceptionView" Property="PostCodeStatus" Title="PostCode Status" TextAlign="TextAlign.Center"
+                                                                      Filterable="false">
+                                                            <Template Context="data">
+                                                                @{
+                                                                    if (data.PostCodeStatus == true)
+                                                                    {
+                                                                        <span>Enable</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span>Disable</span>
+                                                                    }
+                                                                }
+                                                            </Template>
+                                                        </RadzenDataGridColumn>
+
+                                                        <RadzenDataGridColumn TItem="AtomPostCodeExceptionView" Property="ChangeDate" Title="ChangeDate" TextAlign="TextAlign.Center" />
+                                                        <RadzenDataGridColumn TItem="AtomPostCodeExceptionView" Property="ChangedBy" Title="ChangedBy" TextAlign="TextAlign.Center" />
+
+
+                                                    </Columns>
+                                                </RadzenDataGrid>
+                                                <div class="row d-flex Take-DropDown-PostCode" style=" margin-left: 2px; ">
+                                                    <RadzenDropDown TValue="string"
+                                                            Data=@(TakeDropDownList)
+                                                            Change=@(args => TakeDropDownChange(args)) Placeholder="Default Item Count 10" />
+                                                </div>
+                                            </ChildContent>
+
+                                        </RadzenFieldset>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </RadzenTabsItem>
+                        <RadzenTabsItem Text="Change Priorities">
+                            <RadzenFieldset>
+                                <HeaderTemplate>
+                                    <span class="d-inline-flex align-items-center align-middle">
+                                        <b>Change Priority List</b>
+                                    </span>
+                                </HeaderTemplate>
+                                <ChildContent>
+
+                                    <RadzenDataGrid @ref="changePrioritiesGrid" AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnPicking="true"
+                                            AllowPaging="true" PageSize="@TakePostCodeStatus"
+                                            AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true"
+                                            AllowColumnResize="true" ColumnWidth="200px" AllowRowSelectOnRowClick="@allowRowSelectOnRowClick"
+                                            FilterCaseSensitivity="FilterCaseSensitivity.Default" Data="@atomChangePrioritiesList" TItem="AtomChangePrioritiesView"
+                                            Count="totalChangePriorities" PagerHorizontalAlign="HorizontalAlign.Left" LoadData="LoadChangePriorities"
+                                            Density="Density.Compact" PagerAlwaysVisible="true">
+
+                                        <EmptyTemplate>
+                                            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No records to display.</p>
+                                        </EmptyTemplate>
+
+                                        <Columns>
+
+                                            <RadzenDataGridColumn TItem="AtomChangePrioritiesView" Property="Company" Title="Company"
+                                                          TextAlign="TextAlign.Center">
+                                                <FooterTemplate>
+                                                    <span>Total: <b>@(totalChangePriorities)</b> </span>
+                                                </FooterTemplate>
+                                            </RadzenDataGridColumn>
+                                            <RadzenDataGridColumn TItem="AtomChangePrioritiesView" Property="Description" Title="Description" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomChangePrioritiesView" Property="Priority" Title="Priority" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="AtomChangePrioritiesView" Property="Visit1" Title="Visit 1" TextAlign="TextAlign.Center"
+                                                          CssClass="Color-For-Visit" MinWidth="80px" Width="80px">
+                                                <Template Context="data">
+                                                    <RadzenCheckBox TriState="false" Value="@(data.Visit1)"
+                                                            TValue="bool" Change="@(args=>ChangeCheckForChangePriorities(data,"Visit 1"))" />
+                                                </Template>
+                                            </RadzenDataGridColumn>
+                                            <RadzenDataGridColumn TItem="AtomChangePrioritiesView" Property="Visit2" Title="Visit 2" TextAlign="TextAlign.Center"
+                                                          CssClass="Color-For-Visit" MinWidth="80px" Width="80px">
+                                                <Template Context="data">
+                                                    <RadzenCheckBox TriState="false" Value="@(data.Visit2)"
+                                                            TValue="bool" Change="@(args=>ChangeCheckForChangePriorities(data,"Visit 2"))" />
+                                                </Template>
+                                            </RadzenDataGridColumn>
+                                            <RadzenDataGridColumn TItem="AtomChangePrioritiesView" Property="Row" Title="Row" TextAlign="TextAlign.Center"
+                                                          CssClass="Color-For-Row" MinWidth="80px" Width="80px">
+                                                <Template Context="data">
+                                                    <RadzenCheckBox TriState="false" Value="@(data.Row)"
+                                                            TValue="bool" Change="@(args=>ChangeCheckForChangePriorities(data,"Row"))" />
+                                                </Template>
+                                            </RadzenDataGridColumn>
+                                            <RadzenDataGridColumn TItem="AtomChangePrioritiesView" Property="OD" Title="O/D" TextAlign="TextAlign.Center"
+                                                          CssClass="Color-For-OD" MinWidth="80px" Width="80px">
+                                                <Template Context="data">
+                                                    <RadzenCheckBox TriState="false" Value="@(data.OD)"
+                                                            TValue="bool" Change="@(args=>ChangeCheckForChangePriorities(data,"OD"))" />
+                                                </Template>
+                                            </RadzenDataGridColumn>
+                                            <RadzenDataGridColumn TItem="AtomChangePrioritiesView" Property="OD7" Title="O/D7" TextAlign="TextAlign.Center"
+                                                          CssClass="Color-For-OD" MinWidth="80px" Width="80px">
+                                                <Template Context="data">
+                                                    <RadzenCheckBox TriState="false" Value="@(data.OD7)"
+                                                            TValue="bool" Change="@(args=>ChangeCheckForChangePriorities(data,"OD7"))" />
+                                                </Template>
+                                            </RadzenDataGridColumn>
+                                            <RadzenDataGridColumn TItem="AtomChangePrioritiesView" Property="OD8To14" Title="O/D8-14" TextAlign="TextAlign.Center"
+                                                          CssClass="Color-For-OD" MinWidth="100px" Width="100px">
+                                                <Template Context="data">
+                                                    <RadzenCheckBox TriState="false" Value="@(data.OD8To14)"
+                                                            TValue="bool" Change="@(args=>ChangeCheckForChangePriorities(data,"OD8To14"))" />
+                                                </Template>
+                                            </RadzenDataGridColumn>
+                                            <RadzenDataGridColumn TItem="AtomChangePrioritiesView" Property="OD15" Title="O/D15" TextAlign="TextAlign.Center"
+                                                          CssClass="Color-For-OD" MinWidth="80px" Width="80px">
+                                                <Template Context="data">
+                                                    <RadzenCheckBox TriState="false" Value="@(data.OD15)"
+                                                            TValue="bool" Change="@(args=>ChangeCheckForChangePriorities(data,"OD15"))" />
+                                                </Template>
+                                            </RadzenDataGridColumn>
+                                            <RadzenDataGridColumn TItem="AtomChangePrioritiesView" Property="Disabled" Title="Disabled" TextAlign="TextAlign.Center"
+                                                          MinWidth="100px" Width="100px">
+                                                <Template Context="data">
+                                                    <RadzenCheckBox TriState="false" Value="@(data.Disabled)"
+                                                            TValue="bool" Change="@(args=>ChangeCheckForChangePriorities(data,"Disabled"))" />
+                                                </Template>
+                                            </RadzenDataGridColumn>
+                                        </Columns>
+                                    </RadzenDataGrid>
+                                    <div class="row d-flex Take-DropDown-PostCode" style=" margin-left: 2px; ">
+                                        <RadzenDropDown TValue="string"
+                                                Data=@(TakeDropDownList)
+                                                Change=@(args => TakeDropDownChange(args)) Placeholder="Default Item Count 10" />
+                                    </div>
+                                </ChildContent>
+
+                            </RadzenFieldset>
+                        </RadzenTabsItem>
+                        <RadzenTabsItem Text="Disconnection Status">
+                            <div class="row">
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Company (@(multipleValuesForCompanyDisconnectStatus == null ? "0" : multipleValuesForCompanyDisconnectStatus.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DisconnectionStatusDropdownData @bind-Value=@multipleValuesForCompanyDisconnectStatus
+                                                TextProperty="Company" ValueProperty="Company"
+                                                Placeholder="Company" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Agent Name  (@(multipleValuesForAgentNameDisconnectStatus == null ? "0" : multipleValuesForAgentNameDisconnectStatus.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DisconnectionStatusDropdownData @bind-Value=@multipleValuesForAgentNameDisconnectStatus
+                                                TextProperty="AgentName" ValueProperty="AgentName"
+                                                Placeholder="Agent Name" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Status (@(multipleValuesForStatusDisconnectStatus == null ? "0" : multipleValuesForStatusDisconnectStatus.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DisconnectionStatusDropdownData @bind-Value=@multipleValuesForStatusDisconnectStatus
+                                                TextProperty="Status" ValueProperty="Status"
+                                                Placeholder="Status" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Sub Status (@(multipleValuesForSubStatusDisconnectStatus == null ? "0" : multipleValuesForSubStatusDisconnectStatus.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DisconnectionStatusDropdownData @bind-Value=@multipleValuesForSubStatusDisconnectStatus
+                                                TextProperty="SubStatus" ValueProperty="SubStatus"
+                                                Placeholder="Sub Status" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        Selected  (@(multipleValuesForSelectedDisconnectStatus == null ? "0" : multipleValuesForSelectedDisconnectStatus.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DisconnectionStatusDropdownData @bind-Value=@multipleValuesForSelectedDisconnectStatus
+                                                TextProperty="Selected" ValueProperty="Selected"
+                                                Placeholder="Selected" />
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                                    <div class="col-12">
+                                        PLanned Date (@(multipleValuesForPlannedDateDisconnectStatus == null ? "0" : multipleValuesForPlannedDateDisconnectStatus.Count()))
+                                    </div>
+                                    <div class="col-12">
+                                        <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@DisconnectionStatusDropdownData @bind-Value=@multipleValuesForPlannedDateDisconnectStatus
+                                                TextProperty="PLannedDate" ValueProperty="PLannedDate"
+                                                Placeholder="PLanned Date" />
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <RadzenFieldset Text="Selection">
+                                        <div class="row">
+
+                                            <div class="col-md-6 col-lg-5 col-xl-4 d-flex align-items-center row-Gap-2nd">
+                                                <div class="col-md-3 col-lg-4   ">
+                                                    <RadzenLabel Text="No" />
+                                                </div>
+                                                <div class="col-md-9 col-lg-8">
+                                                    <RadzenTextBox style="width: 100%;" Name="No" @bind-Value="agentSelection.No" Placeholder="No" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-lg-5 col-xl-4 d-flex align-items-center row-Gap-2nd">
+                                                <div class="col-md-3 col-lg-4  ">
+                                                    <RadzenLabel Text="Name" />
+                                                </div>
+                                                <div class="col-md-9 col-lg-8">
+                                                    <RadzenTextBox style="width: 100%;" @bind-Value="agentSelection.Name" Placeholder="Name" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-10 col-lg-10 col-xl-4 d-flex align-items-center row-Gap">
+                                                <div class="col-md-3 col-lg-4  ">
+                                                    <RadzenLabel Text="Date" />
+                                                </div>
+                                                <div class="col-md-9 col-lg-8">
+                                                    <RadzenDatePicker style="width: 100%;" DateFormat="d" Name="Date" @bind-Value="agentSelection.Date" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <div class="col-xl-6 d-flex align-items-center align-center-mobile justify-content-center" style="margin-top:20px;">
+                                                <div class="row">
+                                                    <div class="col-6 row-Gap-2nd">
+                                                        @*<RadzenButton ButtonStyle="ButtonStyle.Info" Text="Reset" />*@
+                                                        <button class="btn btn-effect">Reset</button>
+                                                    </div>
+                                                    <div class="col-6 row-Gap-2nd">
+                                                        @*<RadzenButton ButtonType="ButtonType.Submit" Text="Submit" />*@
+                                                        <button class="btn btn-effect">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </RadzenFieldset>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <RadzenFieldset>
+                                    <HeaderTemplate>
+                                        <span class="d-inline-flex align-items-center align-middle">
+                                            <b>Disconnection Status List</b>
+                                        </span>
+                                    </HeaderTemplate>
+                                    <ChildContent>
+
+                                        <RadzenDataGrid @ref="disconnectionStatusGrid" AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnPicking="true"
+                                                AllowPaging="true" PageSize="@TakeDisconnectionStatus"
+                                                AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true"
+                                                AllowColumnResize="true" ColumnWidth="200px" AllowRowSelectOnRowClick="@allowRowSelectOnRowClick"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data="@DisconnectionStatusList" TItem="AtomDisconnectionStatusView"
+                                                Count="DisconnectionStatusCount" PagerHorizontalAlign="HorizontalAlign.Left" LoadData="LoadDisconnectionStatus"
+                                                Density="Density.Compact" PagerAlwaysVisible="true">
+
+                                            <EmptyTemplate>
+                                                <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No records to display.</p>
+                                            </EmptyTemplate>
+
+                                            <Columns>
+                                                <RadzenDataGridColumn TItem="AtomDisconnectionStatusView" Width="100px" Sortable="false" Filterable="false" TextAlign="TextAlign.Center" Frozen="true" MinWidth="50px"
+                                                              Pickable="false">
+                                                    <HeaderTemplate>
+                                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@(DisconnectionStatusList.Any(i => DisconnectionStatusSelectionList != null && DisconnectionStatusSelectionList.ToList().Where(x => x.OurRef == i.OurRef).FirstOrDefault()!=null))"
+                                                                Change="@(args => CheckChangeAllForDisconnectionStatus())" />
+
+                                                    </HeaderTemplate>
+                                                    <Template Context="data">
+                                                        <RadzenCheckBox TriState="false" Value="@(data.Select)"
+                                                                TValue="bool" Change="@(args=>CheckChangeForDisconnectionStatus(data))" />
+                                                    </Template>
+                                                    <FooterTemplate>
+                                                        <span>Select: <b>@(DisconnectionStatusSelectionList != null ? DisconnectionStatusSelectionList.Count : "0")</b> </span>
+                                                    </FooterTemplate>
+                                                </RadzenDataGridColumn>
+                                                <RadzenDataGridColumn TItem="AtomDisconnectionStatusView" Property="OurRef" Title="Our Ref" TextAlign="TextAlign.Center">
+                                                    <FooterTemplate>
+                                                        <span>Total: <b>@(DisconnectionStatusCount)</b> </span>
+                                                    </FooterTemplate>
+                                                </RadzenDataGridColumn>
+                                                <RadzenDataGridColumn TItem="AtomDisconnectionStatusView" Property="ClientRef" Title="Client Ref" TextAlign="TextAlign.Center" />
+
+                                                <RadzenDataGridColumn TItem="AtomDisconnectionStatusView" Property="Company" Title="Company " TextAlign="TextAlign.Center" />
+                                                <RadzenDataGridColumn TItem="AtomDisconnectionStatusView" Property="AgentName" Title="Agent Name" TextAlign="TextAlign.Center" />
+                                                <RadzenDataGridColumn TItem="AtomDisconnectionStatusView" Property="PostCode" Title="Post Code" TextAlign="TextAlign.Center" />
+                                                <RadzenDataGridColumn TItem="AtomDisconnectionStatusView" Property="Balance" Title="Balance" TextAlign="TextAlign.Center" />
+                                                <RadzenDataGridColumn TItem="AtomDisconnectionStatusView" Property="SLADate" Title="SLADate" TextAlign="TextAlign.Center" />
+                                                <RadzenDataGridColumn TItem="AtomDisconnectionStatusView" Property="PlannedDate" Title="Planned Date" TextAlign="TextAlign.Center" />
+                                                <RadzenDataGridColumn TItem="AtomDisconnectionStatusView" Property="Status" Title="Status" TextAlign="TextAlign.Center" />
+                                                <RadzenDataGridColumn TItem="AtomDisconnectionStatusView" Property="SubStatus" Title="SubStatus" TextAlign="TextAlign.Center" />
+
+                                            </Columns>
+                                        </RadzenDataGrid>
+                                        <div class="row d-flex Take-DropDown-Disconnection-Status" style=" margin-left: 2px; ">
+                                            <RadzenDropDown TValue="string"
+                                                    Data=@(TakeDropDownList)
+                                                    Change=@(args => TakeDropDownChange(args)) Placeholder="Default Item Count 10" />
+                                        </div>
+                                    </ChildContent>
+
+                                </RadzenFieldset>
+                            </div>
+                        </RadzenTabsItem>
+                    </Tabs>
+                </RadzenTabs>
+            }
+
+        }
+
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin />
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
+
+
+@code {
+    bool IsLoading = true;
+    bool IsTabLoading = true;
+    bool allowRowSelectOnRowClick = true;
+    bool IsExportDateSelect = false;
+    public int TakePlannings { get; set; } = 10;
+    public int TakeExportPlans { get; set; } = 10;
+    public int TakeDistribution { get; set; } = 10;
+    public int TakeDisconnectionStatus { get; set; } = 10;
+    public int TakePostCodeStatus { get; set; } = 10;
+    public int TakeChangePriorities { get; set; } = 10;
+    List<int> TakeDropDownList = new List<int>() { 10, 15, 20, 25 };
+    List<string> multipleValues { get; set; }
+    public string EnableText = "< Enable";
+
+    private IQueryable<AtomPlanningView> PlanningsDataCollection { get; set; }
+    private List<AtomPlanningView> DataFormApi { get; set; } = new();
+    private List<AtomPlanningView> Plannings = new List<AtomPlanningView>();
+    private List<AtomPlanningView> selectedPlannings = new List<AtomPlanningView>();
+    private RadzenDataGrid<AtomPlanningView> GridRef = new RadzenDataGrid<AtomPlanningView>();
+
+    private List<PlanningMultiSelectView> DropdownData = new();
+    List<string> multipleValuesPartOfCountry { get; set; }
+    List<string> multipleValuesArea { get; set; }
+    List<string> multipleValuesRegion { get; set; }
+    List<string> multipleValuesPriority { get; set; }
+    List<string> multipleValuesCompany { get; set; }
+    List<string> multipleValuesSLAStatus { get; set; }
+    List<string> multipleValuesAgentName { get; set; }
+    List<string> multipleValuesPlannedDate { get; set; }
+    List<string> multipleValuesDual { get; set; }
+    List<string> multipleValuesPlannedStatus { get; set; }
+    List<string> multipleValuesCode { get; set; }
+    int multipleValuesSelected { get; set; }
+
+    private List<AtomDisconnectionStatusMultiSelect> DisconnectionStatusDropdownData = new();
+    List<string> multipleValuesForCompanyDisconnectStatus { get; set; }
+    List<string> multipleValuesForAgentNameDisconnectStatus { get; set; }
+    List<string> multipleValuesForStatusDisconnectStatus { get; set; }
+    List<string> multipleValuesForSubStatusDisconnectStatus { get; set; }
+    List<string> multipleValuesForSelectedDisconnectStatus { get; set; }
+    List<string> multipleValuesForPlannedDateDisconnectStatus { get; set; }
+
+
+    private AgentSelectionView agentSelection { get; set; } = new();
+
+    private int PlanningCount { get; set; } = 0;
+    private int ExportPlanCount { get; set; } = 0;
+    private int SelectionCount { get; set; } = 0;
+
+    private GridViewParams planningGridParams = new();
+    private GridViewParams exportPlansGridParams = new();
+    private GridViewParams distributionGridParams = new();
+    private GridViewParams postCodeGridParams = new();
+    private GridViewParams changePrioritiesGridParams = new();
+    private GridViewParams disconnectionStatusGridParams = new();
+
+    RadzenDataGrid<AtomPlanningView> grid;
+    RadzenDataGrid<AtomExportPlansView> exportPlansGrid;
+    RadzenDataGrid<AtomPostCodeExceptionView> postCodeGrid;
+    RadzenDataGrid<AtomDistributionView> distributionGrid;
+    RadzenDataGrid<AtomChangePrioritiesView> changePrioritiesGrid;
+    RadzenDataGrid<AtomDisconnectionStatusView> disconnectionStatusGrid;
+
+    private List<AtomExportPlansView> ExportPlans = new List<AtomExportPlansView>();
+    private List<AtomExportPlansView> selectedExportPlans = new List<AtomExportPlansView>();
+
+
+    private List<AtomDisconnectionStatusView> DisconnectionStatusList = new List<AtomDisconnectionStatusView>();
+    private List<AtomDisconnectionStatusView> DisconnectionStatusSelectionList = new List<AtomDisconnectionStatusView>();
+    public int DisconnectionStatusCount { get; set; } = 0;
+
+    private DateTime ExportDate { get; set; }
+
+
+    List<AtomPostCodeExceptionView> atomPostCodes = new List<AtomPostCodeExceptionView>();
+
+    List<AtomPostCodeExceptionView> enablePostCodes = new List<AtomPostCodeExceptionView>();
+    List<AtomPostCodeExceptionView> disablePostCodes = new List<AtomPostCodeExceptionView>();
+    public int totalPostCodes { get; set; } = 0;
+
+    List<AtomChangePrioritiesView> atomChangePrioritiesList = new List<AtomChangePrioritiesView>();
+    public int totalChangePriorities { get; set; } = 0;
+
+    List<AtomDistributionView> atomDistributionList = new List<AtomDistributionView>();
+    List<string> agentList = new List<string>() { "Anna", "Evan", "Harjaspreet" };
+    public int totalDistribution { get; set; } = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        IsLoading = true;
+        planningGridParams.DateFilter = null;
+        planningGridParams.Filter = "";
+        planningGridParams.OrderBy = "";
+        planningGridParams.Skip = 0;
+        planningGridParams.Take = 10;
+
+        await LoadData(planningGridParams);
+
+        selectedCheck();
+        IsLoading = false;
+    }
+    public async Task TakeDropDownChange(object value)
+    {
+        Console.WriteLine("Value: " + value.ToString());
+        switch (TabSelected)
+        {
+            case 0:
+                TakePlannings = int.Parse(value.ToString());
+                planningGridParams.DateFilter = string.Empty;
+                planningGridParams.Filter = "";
+                planningGridParams.OrderBy = "";
+                planningGridParams.Skip = 0;
+                planningGridParams.Take = TakePlannings;
+                await LoadData(planningGridParams);
+                break;
+            case 1:
+                TakeExportPlans = int.Parse(value.ToString());
+                exportPlansGridParams.DateFilter = string.Empty;
+                exportPlansGridParams.Filter = "";
+                exportPlansGridParams.OrderBy = "";
+                exportPlansGridParams.Skip = 0;
+                exportPlansGridParams.Take = TakeExportPlans;
+                Console.WriteLine("Value: " + value.ToString());
+                await LoadDataExportPlanning(exportPlansGridParams);
+                break;
+            case 2:
+                TakeDistribution = int.Parse(value.ToString());
+                distributionGridParams.DateFilter = string.Empty;
+                distributionGridParams.Filter = "";
+                distributionGridParams.OrderBy = "";
+                distributionGridParams.Skip = 0;
+                distributionGridParams.Take = TakeDistribution;
+                Console.WriteLine("Value: " + value.ToString());
+                await LoadDataExportPlanning(exportPlansGridParams);
+                break;
+            case 3:
+                TakePostCodeStatus = int.Parse(value.ToString());
+                postCodeGridParams.DateFilter = string.Empty;
+                postCodeGridParams.Filter = "";
+                postCodeGridParams.OrderBy = "";
+                postCodeGridParams.Skip = 0;
+                postCodeGridParams.Take = TakeExportPlans;
+                Console.WriteLine("Value: " + value.ToString());
+                await LoadDataForPostCodeException(postCodeGridParams);
+                break;
+            case 4:
+                TakeChangePriorities = int.Parse(value.ToString());
+                changePrioritiesGridParams.DateFilter = string.Empty;
+                changePrioritiesGridParams.Filter = "";
+                changePrioritiesGridParams.OrderBy = "";
+                changePrioritiesGridParams.Skip = 0;
+                changePrioritiesGridParams.Take = TakeChangePriorities;
+                Console.WriteLine("Value: " + value.ToString());
+                await LoadDataForChangePriorities(changePrioritiesGridParams);
+                break;
+            case 5:
+                TakeDisconnectionStatus = int.Parse(value.ToString());
+                disconnectionStatusGridParams.DateFilter = string.Empty;
+                disconnectionStatusGridParams.Filter = "";
+                disconnectionStatusGridParams.OrderBy = "";
+                disconnectionStatusGridParams.Skip = 0;
+                disconnectionStatusGridParams.Take = TakeDisconnectionStatus;
+                Console.WriteLine("Value: " + value.ToString());
+                await LoadDataDisconnectionStatus(disconnectionStatusGridParams);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private async Task CheckChange(AtomPlanningView planning)
+    {
+        var SelectData = selectedPlannings.ToList().Where(e => e.OurRef == planning.OurRef).FirstOrDefault();
+        if (SelectData != null)
+        {
+            selectedPlannings = selectedPlannings.Distinct().ToList();
+            selectedPlannings.Remove(SelectData);
+            planning.selected = false;
+        }
+        else
+        {
+            selectedPlannings.Add(planning);
+            planning.selected = true;
+        }
+
+    }
+    private async Task CheckChangeForExportPlans(AtomExportPlansView planning)
+    {
+        var SelectData = selectedExportPlans.ToList().Where(e => e.AgentNo == planning.AgentNo).FirstOrDefault();
+        if (SelectData != null)
+        {
+            selectedExportPlans = selectedExportPlans.Distinct().ToList();
+            selectedExportPlans.Remove(SelectData);
+            planning.Select = false;
+        }
+        else
+        {
+            selectedExportPlans.Add(planning);
+            planning.Select = true;
+        }
+
+    }
+    private async Task CheckChangeForDisconnectionStatus(AtomDisconnectionStatusView planning)
+    {
+        var SelectData = DisconnectionStatusSelectionList.ToList().Where(e => e.OurRef == planning.OurRef).FirstOrDefault();
+        if (SelectData != null)
+        {
+            DisconnectionStatusSelectionList = DisconnectionStatusSelectionList.Distinct().ToList();
+            DisconnectionStatusSelectionList.Remove(SelectData);
+            planning.Select = false;
+        }
+        else
+        {
+            DisconnectionStatusSelectionList.Add(planning);
+            planning.Select = true;
+        }
+
+    }
+
+    private void ChangeCheckForChangePriorities(AtomChangePrioritiesView Data, string ChangedStr)
+    {
+        var SelectedData = atomChangePrioritiesList.Where(x => x.Id == Data.Id).FirstOrDefault();
+        if (SelectedData != null)
+        {
+            switch (ChangedStr)
+            {
+                case "Visit 1":
+                    SelectedData.Visit1 = !SelectedData.Visit1;
+                    break;
+                case "Visit 2":
+                    SelectedData.Visit2 = !SelectedData.Visit2;
+                    break;
+                case "OD":
+                    SelectedData.OD = !SelectedData.OD;
+                    break;
+                case "OD7":
+                    SelectedData.OD7 = !SelectedData.OD7;
+                    break;
+                case "OD8To14":
+                    SelectedData.OD8To14 = !SelectedData.OD8To14;
+                    break;
+                case "OD15":
+                    SelectedData.OD15 = !SelectedData.OD15;
+                    break;
+                case "Row":
+                    SelectedData.Row = !SelectedData.Row;
+                    break;
+                case "Disabled":
+                    SelectedData.Disabled = !SelectedData.Disabled;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public int TabSelected { get; set; } = 0;
+    public async Task ChangeTab(int index)
+    {
+        Console.WriteLine("index: " + index);
+
+
+        if (index == 0)
+        {
+            TabSelected = 0;
+            planningGridParams.DateFilter = string.Empty;
+            planningGridParams.Filter = "";
+            planningGridParams.OrderBy = "";
+            planningGridParams.Skip = 0;
+            planningGridParams.Take = TakePlannings;
+            await LoadData(planningGridParams);
+        }
+        else if (index == 1)
+        {
+            TabSelected = 1;
+
+        }
+        else if (index == 2)
+        {
+            TabSelected = 2;
+            distributionGridParams.DateFilter = string.Empty;
+            distributionGridParams.Filter = "";
+            distributionGridParams.OrderBy = "";
+            distributionGridParams.Skip = 0;
+            distributionGridParams.Take = TakeDistribution;
+            await LoadDataForDistribution(distributionGridParams);
+        }
+        else if (index == 3)
+        {
+            TabSelected = 3;
+            postCodeGridParams.DateFilter = string.Empty;
+            postCodeGridParams.Filter = "";
+            postCodeGridParams.OrderBy = "";
+            postCodeGridParams.Skip = 0;
+            postCodeGridParams.Take = TakePlannings;
+            await LoadDataForPostCodeException(postCodeGridParams);
+
+        }
+        else if (index == 4)
+        {
+            TabSelected = 4;
+            changePrioritiesGridParams.DateFilter = string.Empty;
+            changePrioritiesGridParams.Filter = "";
+            changePrioritiesGridParams.OrderBy = "";
+            changePrioritiesGridParams.Skip = 0;
+            changePrioritiesGridParams.Take = TakePlannings;
+            await LoadDataForChangePriorities(changePrioritiesGridParams);
+
+        }
+        else if (index == 5)
+        {
+            disconnectionStatusGridParams.DateFilter = string.Empty;
+            disconnectionStatusGridParams.Filter = "";
+            disconnectionStatusGridParams.OrderBy = "";
+            disconnectionStatusGridParams.Skip = 0;
+            disconnectionStatusGridParams.Take = TakeExportPlans;
+            TabSelected = 5;
+            await LoadDataDisconnectionStatus(disconnectionStatusGridParams);
+
+        }
+    }
+
+    private async Task CheckChangeAll()
+    {
+        if (selectedPlannings.Count == 0)
+        {
+            foreach (var planning in Plannings)
+            {
+                planning.selected = true;
+                selectedPlannings.Add(planning);
+            }
+        }
+        else
+        {
+            bool IsSelected = false;
+            var Selectedlist = (from planning in Plannings
+                                where planning.selected == true
+                                select planning).ToList();
+
+            if (Selectedlist != null && Selectedlist.Count != 0)
+            {
+                IsSelected = true;
+            }
+            foreach (var planning in Plannings)
+            {
+                selectedPlannings = selectedPlannings.Distinct().ToList();
+                var SelectData = selectedPlannings.Where(x => x.OurRef == planning.OurRef).FirstOrDefault();
+                if (SelectData != null)
+                {
+                    planning.selected = false;
+                    selectedPlannings.Remove(SelectData);
+                }
+                else if (!IsSelected)
+                {
+                    planning.selected = true;
+                    selectedPlannings.Add(planning);
+                }
+
+            }
+        }
+        selectedPlannings = selectedPlannings.Distinct().ToList();
+    }
+    private async Task CheckChangeAllForExportPlans()
+    {
+
+        if (selectedExportPlans.Count == 0)
+        {
+            foreach (var planning in ExportPlans)
+            {
+                planning.Select = true;
+                selectedExportPlans.Add(planning);
+            }
+        }
+        else
+        {
+            bool IsSelected = false;
+            var Selectedlist = (from exportPlans in ExportPlans
+                                where exportPlans.Select == true
+                                select exportPlans).ToList();
+
+            if (Selectedlist != null && Selectedlist.Count != 0)
+            {
+                IsSelected = true;
+            }
+            foreach (var planning in ExportPlans)
+            {
+                selectedExportPlans = selectedExportPlans.Distinct().ToList();
+                var SelectData = selectedExportPlans.Where(x => x.AgentNo == planning.AgentNo).FirstOrDefault();
+                if (SelectData != null)
+                {
+                    planning.Select = false;
+                    selectedExportPlans.Remove(SelectData);
+                }
+                else if (!IsSelected)
+                {
+                    planning.Select = true;
+                    selectedExportPlans.Add(planning);
+                }
+
+            }
+        }
+        selectedExportPlans = selectedExportPlans.Distinct().ToList();
+    }
+    private async Task CheckChangeAllForDisconnectionStatus()
+    {
+        Console.WriteLine("DisconnectionStatusList: " + DisconnectionStatusList.Count);
+        if (DisconnectionStatusSelectionList.Count == 0)
+        {
+            foreach (var Status in DisconnectionStatusList)
+            {
+                Status.Select = true;
+                DisconnectionStatusSelectionList.Add(Status);
+            }
+        }
+        else
+        {
+            bool IsSelected = false;
+            var Selectedlist = (from disconnectionStatusList in DisconnectionStatusList
+                                where disconnectionStatusList.Select == true
+                                select disconnectionStatusList).ToList();
+
+            if (Selectedlist != null && Selectedlist.Count != 0)
+            {
+                IsSelected = true;
+            }
+            foreach (var Status in DisconnectionStatusList)
+            {
+                DisconnectionStatusSelectionList = DisconnectionStatusSelectionList.Distinct().ToList();
+                var SelectData = DisconnectionStatusSelectionList.Where(x => x.OurRef == Status.OurRef).FirstOrDefault();
+                if (SelectData != null)
+                {
+                    Status.Select = false;
+                    DisconnectionStatusSelectionList.Remove(SelectData);
+                }
+                if (!IsSelected)
+                {
+                    Status.Select = true;
+                    DisconnectionStatusSelectionList.Add(Status);
+                }
+            }
+        }
+        DisconnectionStatusSelectionList = DisconnectionStatusSelectionList.Distinct().ToList();
+    }
+
+    private void selectedCheck()
+    {
+        Console.WriteLine("TabSelected " + TabSelected);
+
+        switch (TabSelected)
+        {
+            case 0:
+                if (selectedPlannings != null)
+                {
+                    foreach (var item in selectedPlannings)
+                    {
+                        var planning = Plannings.Where(x => x.OurRef == item.OurRef).FirstOrDefault();
+                        if (planning != null)
+                        {
+                            planning.selected = true;
+                        }
+                    }
+                }
+                break;
+            case 1:
+                if (selectedExportPlans != null)
+                {
+                    foreach (var item in selectedExportPlans)
+                    {
+                        var planning = ExportPlans.Where(x => x.AgentNo == item.AgentNo).FirstOrDefault();
+                        if (planning != null)
+                        {
+                            planning.Select = true;
+                        }
+                    }
+                }
+                break;
+            case 5:
+                if (DisconnectionStatusSelectionList != null)
+                {
+                    foreach (var item in DisconnectionStatusSelectionList)
+                    {
+                        var planning = DisconnectionStatusList.Where(x => x.OurRef == item.OurRef).FirstOrDefault();
+                        if (planning != null)
+                        {
+                            planning.Select = true;
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    public async Task LoadData(GridViewParams planningGridViewParams)
+    {
+        IsTabLoading = true;
+        var DataFormApi2 = await atomServices.GetAllAsync(planningGridViewParams);
+        DropdownData = await atomServices.GetAllPlanningMutiselectAsync();
+        Plannings = DataFormApi2.DataViewList.ToList();
+        PlanningCount = DataFormApi2.TotalDataViewCount;
+        IsTabLoading = false;
+
+    }
+    public async Task LoadDataForPostCodeException(GridViewParams planningGridViewParams)
+    {
+        List<AtomPostCodeExceptionView> postCodeList = new();
+        IQueryable<AtomPostCodeExceptionView> postcodeQueryable;
+        for (int i = 1; i < 22; i++)
+        {
+            AtomPostCodeExceptionView APC = new AtomPostCodeExceptionView()
+                {
+                    Postcode = "AB" + i,
+                    PostCodeArea = "Area " + i,
+                    ChangeDate = DateTime.Now.ToString("dd-MM-yyyy"),
+                    ChangedBy = "Employee " + i,
+                    PostCodeStatus = true
+                };
+            postCodeList.Add(APC);
+        }
+        AtomPostCodeExceptionView APC2 = new AtomPostCodeExceptionView()
+            {
+                Postcode = "AB",
+                PostCodeArea = "Area ",
+                ChangeDate = DateTime.Now.ToString("dd-MM-yyyy"),
+                ChangedBy = "Employee ",
+                PostCodeStatus = false
+            };
+        postCodeList.Add(APC2);
+        enablePostCodes = postCodeList.Where(x => x.PostCodeStatus == true).ToList();
+        disablePostCodes = postCodeList.Where(x => x.PostCodeStatus == false).ToList();
+        postcodeQueryable = postCodeList.AsQueryable();
+
+        if (!string.IsNullOrEmpty(planningGridViewParams.Filter))
+        {
+            postcodeQueryable = postcodeQueryable.Where(planningGridViewParams.Filter);
+        }
+        else if (!string.IsNullOrEmpty(planningGridViewParams.OrderBy))
+        {
+            postcodeQueryable = postcodeQueryable.OrderBy(planningGridViewParams.OrderBy);
+        }
+
+        totalPostCodes = postCodeList.Count();
+        var skip = (int)planningGridViewParams.Skip;
+        var take = (int)planningGridViewParams.Take;
+        atomPostCodes = postcodeQueryable.Skip(skip).Take(take).ToList();
+
+
+    }
+    public async Task LoadDataForChangePriorities(GridViewParams planningGridViewParams)
+    {
+        List<AtomChangePrioritiesView> changePrioritiesList = new();
+        IQueryable<AtomChangePrioritiesView> changePrioritiesQueryable;
+        for (int i = 1; i < 22; i++)
+        {
+            AtomChangePrioritiesView ACP = new AtomChangePrioritiesView()
+                {
+                    Id = i,
+                    Company = "Company " + i,
+                    Description = "Description " + i,
+                    Priority = i,
+                    Visit1 = true,
+                    Visit2 = true,
+                    Row = true,
+                    OD = true,
+                    OD7 = true,
+                    OD8To14 = true,
+                    OD15 = true,
+                    Disabled = false
+                };
+            changePrioritiesList.Add(ACP);
+        }
+        changePrioritiesQueryable = changePrioritiesList.AsQueryable();
+
+        if (!string.IsNullOrEmpty(planningGridViewParams.Filter))
+        {
+            changePrioritiesQueryable = changePrioritiesQueryable.Where(planningGridViewParams.Filter);
+        }
+        else if (!string.IsNullOrEmpty(planningGridViewParams.OrderBy))
+        {
+            changePrioritiesQueryable = changePrioritiesQueryable.OrderBy(planningGridViewParams.OrderBy);
+        }
+
+        totalChangePriorities = changePrioritiesList.Count();
+        var skip = (int)planningGridViewParams.Skip;
+        var take = (int)planningGridViewParams.Take;
+        atomChangePrioritiesList = changePrioritiesQueryable.Skip(skip).Take(take).ToList();
+
+
+    }
+    public async Task LoadDataForDistribution(GridViewParams planningGridViewParams)
+    {
+        List<AtomDistributionView> distributionList = new();
+        IQueryable<AtomDistributionView> distributionQueryable;
+        for (int i = 1; i < 22; i++)
+        {
+            AtomDistributionView ACP = new AtomDistributionView()
+                {
+
+                    Company = "Company " + i,
+                    Distribute = false,
+                    Jobs = i
+                };
+            distributionList.Add(ACP);
+        }
+        distributionQueryable = distributionList.AsQueryable();
+
+        if (!string.IsNullOrEmpty(planningGridViewParams.Filter))
+        {
+            distributionQueryable = distributionQueryable.Where(planningGridViewParams.Filter);
+        }
+        else if (!string.IsNullOrEmpty(planningGridViewParams.OrderBy))
+        {
+            distributionQueryable = distributionQueryable.OrderBy(planningGridViewParams.OrderBy);
+        }
+
+        totalDistribution = distributionList.Count();
+        var skip = (int)planningGridViewParams.Skip;
+        var take = (int)planningGridViewParams.Take;
+        atomDistributionList = distributionQueryable.Skip(skip).Take(take).ToList();
+        atomDistributionList = atomDistributionList.Distinct().ToList();
+
+    }
+    public async Task LoadExportData()
+    {
+        exportPlansGridParams.DateFilter = "JobDate " + ExportDate.Date.ToString("dd-MM-yyyy");
+        exportPlansGridParams.Filter = "";
+        exportPlansGridParams.OrderBy = "";
+        exportPlansGridParams.Skip = 0;
+        exportPlansGridParams.Take = TakeExportPlans;
+        IsExportDateSelect = true;
+        await LoadDataExportPlanning(exportPlansGridParams);
+
+    }
+
+    public async Task LoadDataExportPlanning(GridViewParams planningGridViewParams)
+    {
+        if (IsExportDateSelect)
+        {
+            var DataFormApi2 = await atomServices.GetAllExportplanAsync(planningGridViewParams);
+            if (DataFormApi2.DataViewList != null || DataFormApi2.DataViewList.Count != 0)
+            {
+                ExportPlans = DataFormApi2.DataViewList.ToList();
+                ExportPlanCount = DataFormApi2.TotalDataViewCount;
+                Console.WriteLine("ExportPlans: " + ExportPlans.Count);
+            }
+            else
+            {
+                toastService.ShowWarning("No Data Found");
+            }
+        }
+    }
+    public async Task LoadDataDisconnectionStatus(GridViewParams planningGridViewParams)
+    {
+        var DataFormApi2 = await atomServices.GetAllDisconnectionStatusAsync(planningGridViewParams);
+        DisconnectionStatusDropdownData = await atomServices.GetAllDisconnectioStatusMutiselectAsync();
+        if (DataFormApi2.DataViewList != null || DataFormApi2.DataViewList.Count != 0)
+        {
+            DisconnectionStatusList = DataFormApi2.DataViewList.ToList();
+            DisconnectionStatusCount = DataFormApi2.TotalDataViewCount;
+            Console.WriteLine("Disconnection Status Count: " + DisconnectionStatusList.Count);
+        }
+        else
+        {
+            toastService.ShowWarning("No Data Found");
+        }
+    }
+    public async Task LoadList(LoadDataArgs args)
+    {
+        planningGridParams.DateFilter = null;
+        planningGridParams.Filter = args.Filter ?? string.Empty;
+        planningGridParams.OrderBy = args.OrderBy ?? string.Empty; ;
+        planningGridParams.Skip = args.Skip ?? 0;
+        planningGridParams.Take = TakePlannings;
+
+        await LoadData(planningGridParams);
+        selectedCheck();
+    }
+    public async Task LoadExportPLan(LoadDataArgs args)
+    {
+
+        exportPlansGridParams.DateFilter = "JobDate " + ExportDate.Date.ToString("dd-MM-yyyy");
+        exportPlansGridParams.Filter = args.Filter ?? string.Empty;
+        exportPlansGridParams.OrderBy = args.OrderBy ?? string.Empty; ;
+        exportPlansGridParams.Skip = args.Skip ?? 0;
+        exportPlansGridParams.Take = TakeExportPlans;
+
+        await LoadDataExportPlanning(exportPlansGridParams);
+        selectedCheck();
+    }
+    public async Task LoadDistribution(LoadDataArgs args)
+    {
+
+        distributionGridParams.DateFilter = string.Empty;
+        distributionGridParams.Filter = args.Filter ?? string.Empty;
+        distributionGridParams.OrderBy = args.OrderBy ?? string.Empty; ;
+        distributionGridParams.Skip = args.Skip ?? 0;
+        distributionGridParams.Take = TakeDistribution;
+
+        await LoadDataForDistribution(distributionGridParams);
+        //selectedCheck();
+    }
+    public async Task LoadPostCodeExpceptions(LoadDataArgs args)
+    {
+
+        postCodeGridParams.DateFilter = string.Empty;
+        postCodeGridParams.Filter = args.Filter ?? string.Empty;
+        postCodeGridParams.OrderBy = args.OrderBy ?? string.Empty; ;
+        postCodeGridParams.Skip = args.Skip ?? 0;
+        postCodeGridParams.Take = TakePostCodeStatus;
+
+        await LoadDataForPostCodeException(postCodeGridParams);
+        //selectedCheck();
+    }
+    public async Task LoadChangePriorities(LoadDataArgs args)
+    {
+
+        changePrioritiesGridParams.DateFilter = string.Empty;
+        changePrioritiesGridParams.Filter = args.Filter ?? string.Empty;
+        changePrioritiesGridParams.OrderBy = args.OrderBy ?? string.Empty; ;
+        changePrioritiesGridParams.Skip = args.Skip ?? 0;
+        changePrioritiesGridParams.Take = TakeChangePriorities;
+
+        await LoadDataForChangePriorities(changePrioritiesGridParams);
+        //selectedCheck();
+    }
+    public async Task LoadDisconnectionStatus(LoadDataArgs args)
+    {
+
+        disconnectionStatusGridParams.DateFilter = string.Empty;
+        disconnectionStatusGridParams.Filter = args.Filter ?? string.Empty;
+        disconnectionStatusGridParams.OrderBy = args.OrderBy ?? string.Empty; ;
+        disconnectionStatusGridParams.Skip = args.Skip ?? 0;
+        disconnectionStatusGridParams.Take = TakeDisconnectionStatus;
+
+        await LoadDataDisconnectionStatus(disconnectionStatusGridParams);
+        selectedCheck();
+    }
+
+    public void Export()
+    {
+
+    }
+
+
+
+    DataGridSettings _settings;
+    public DataGridSettings Settings
+    {
+        get
+        {
+            return _settings;
+        }
+        set
+        {
+            if (_settings != value)
+            {
+                _settings = value;
+                //InvokeAsync(SaveStateAsync);
+            }
+        }
+    }
+}
+<style>
+
+
+    /*.rz-fieldset {
+                box-shadow: 0 3px 10px rgb(0 0 0 / 20%);
+                border-radius: 10px;
+            }*/
+
+
+
+    .row {
+        margin-bottom: 10px !important;
+    }
+
+    .Take-DropDown-planning {
+        //position: absolute;
+        //right: 88px;
+        //bottom: 32px;
+        width: 100%;
+        justify-content: end;
+        margin-top: -50px;
+        margin-left: -30px !important;
+    }
+
+    .Take-DropDown-Export-Plan {
+        //position: absolute;
+        //right: 88px;
+        //bottom: 42px;
+        width: 100%;
+        justify-content: end;
+        margin-top: -50px;
+        margin-left: -30px !important;
+    }
+
+    .Take-DropDown-Disconnection-Status {
+        //position: absolute;
+        //right: 88px;
+        //bottom: 49px;
+        width: 100%;
+        justify-content: end;
+        margin-top: -50px;
+        margin-left: -30px !important;
+    }
+
+    .Take-DropDown-PostCode {
+        //position: relative;
+        //right: -82%;
+        //bottom: 50px;
+        width: 100%;
+        justify-content: end;
+        margin-top: -50px;
+        margin-left: -30px !important;
+    }
+
+    .Color-For-Visit {
+        background-color: #eec0c0 !important;
+    }
+
+    .Color-For-Row {
+        background-color: #e4b986 !important;
+    }
+
+    .Color-For-OD {
+        background-color: #cbebfa !important;
+    }
+
+    @@media (max-width: 1200px) {
+        ul .rz-tabview-nav {
+            overflow-y: auto !important;
+        }
+
+        .row-Gap {
+            margin-top: 10px;
+        }
+    }
+    /*@@media (max-width: 1094px) {
+                .rz-tabview-nav li a {
+                    font-size: 11px;
+                }
+            }
+            @@media (max-width: 937px) {
+                .rz-tabview-nav li a {
+                    font-size: 11px;
+                }
+            }*/
+    @@media (max-width: 791px) {
+        .Take-DropDown-planning {
+            position: unset;
+        }
+
+        .Take-DropDown-Export-Plan {
+            position: unset;
+        }
+
+        .Take-DropDown-Disconnection-Status {
+            position: unset;
+        }
+
+        .Take-DropDown-PostCode {
+            position: unset;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .row-Gap-2nd {
+            margin-top: 10px;
+        }
+
+        .align-center-mobile {
+            justify-content: center;
+        }
+
+        .rz-paginator {
+            overflow: scroll !important;
+        }
+    }
+</style>

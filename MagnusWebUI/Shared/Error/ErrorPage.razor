@@ -1,0 +1,51 @@
+﻿@using Microsoft.Extensions.Logging
+@using Blazored.Toast.Services
+@using Toolbelt.Blazor
+@using System.Net
+@inject ILogger<ErrorPage> _logger
+@inject IToastService _toastService
+@inject IHttpClientInterceptor Interceptor
+@implements IDisposable
+
+<CascadingValue Value="this">
+    @ChildContent
+</CascadingValue>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public void ProcessError(Exception ex)
+    {
+        _toastService.ShowError("Something has gone wrong, Please contact system admin");
+    }
+
+    protected override void OnInitialized()
+    {
+        this.Interceptor.AfterSendAsync += OnAfterSendAsync;
+    }
+    public async Task OnAfterSendAsync(object? sender, HttpClientInterceptorEventArgs e)
+    {
+        if (!e.Response.IsSuccessStatusCode && e.Response.StatusCode.ToString() == BusinessExceptionStatus)
+        {
+            var readAsStringAsync = await e.Response.Content.ReadAsStringAsync();
+            _toastService.ShowError(readAsStringAsync);
+        }
+        else if (!e.Response.IsSuccessStatusCode && e.Response.StatusCode.ToString() == InternalServerErrorStatus)
+        {
+            _toastService.ShowError("Something has gone wrong, Please contact system admin");
+        }
+    }
+
+    private static string InternalServerErrorStatus => "500";
+
+    private static string BusinessExceptionStatus => "550";
+
+    public void Dispose()
+    {
+        this.Interceptor.AfterSendAsync -= OnAfterSendAsync;
+    }
+
+
+}

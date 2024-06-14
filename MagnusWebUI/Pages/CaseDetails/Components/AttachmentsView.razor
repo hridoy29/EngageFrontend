@@ -1,0 +1,228 @@
+﻿@using Azure.Storage.Blobs;
+@using Engage.Views.Files;
+@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.AttachmentsDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject DialogService DialogService
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+@inject IAdminService adminService
+<AuthorizeView>
+    <Authorized>
+
+        <div class="col-12 d-flex" style="display: flex;padding:0;">
+            <div class="col-8" style="padding-right:8px;padding-left: 0;">
+                <RadzenFieldset Text="Audio">
+                    <div class="col=12" style=" margin-top: -9px;">
+                        <div class="row">
+                            <div class="col-6">
+                                <RadzenFieldset Text="Audio Call Recording(s) Available">
+                                    <div class="col=12">
+                                        <RadzenDataGrid AllowAlternatingRows="false" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                                        Data="@adjustmentViews" TItem="AdjustmentView" ColumnWidth="auto" LogicalFilterOperator="LogicalFilterOperator.Or">
+                                            <Columns>
+                                                <RadzenDataGridColumn TItem="AdjustmentView" Property="ChaseRef" Filterable="false" Title="Our Reference" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+
+                                                <RadzenDataGridColumn TItem="AdjustmentView" Property="UpdateType" Filterable="false" Title="Update type" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                                <RadzenDataGridColumn TItem="AdjustmentView" Property="ClientReference" Title="Client Ref" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                                <RadzenDataGridColumn TItem="AdjustmentView" Property="ClientCancellationReason" Title="Client Cancellation Reason" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                            </Columns>
+                                        </RadzenDataGrid>
+                                    </div>
+                                </RadzenFieldset>
+                            </div>
+                        </div>
+                    </div>
+                </RadzenFieldset>
+            </div>
+            <div class="col-4" style="padding-left:8px;padding-right: 0;">
+                <RadzenFieldset Text="Attachments">
+                    <div class="col=12">
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenDataGrid AllowAlternatingRows="false" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                                Data="@attachmentViews" TItem="AttachmentView" ColumnWidth="auto" LogicalFilterOperator="LogicalFilterOperator.Or">
+                                    <Columns>
+                                        <RadzenDataGridColumn TItem="AttachmentView" Property="DateTime" Filterable="false" Title="Adj Type" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+
+                                        <RadzenDataGridColumn TItem="AttachmentView" Property="Description" Title="Adj Date " Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                        <RadzenDataGridColumn TItem="AttachmentView" Property="Action" Title="Adj Amount" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+
+                                    </Columns>
+                                </RadzenDataGrid>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row" style="">
+                            <div class="col-12" style="/*max-height: 400px;*/overflow-y: auto;">
+                                <div class="row" style="">
+                                    @{
+                                        if (loading)
+                                        {
+                                            <div class="preloader d-flex justify-content-center" style="margin-left:0px !important; width:100% ">
+                                                <img src="Gif/EnagePreloader.gif" />
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var item in fileData)
+                                            {
+                                                Console.WriteLine("item.fileType: " + item.fileType);
+                                                if (!item.fileType.Contains("xlsx") && !item.fileType.Contains("docx"))
+                                                {
+                                                    <div class=" col-3" style="padding:5px; display:flex; flex-direction:column;justify-content:center;align-items:center;" @onclick="(() => ShowImagePopup(item.fileData,item.Id))">
+                                                        @{
+                                                            string fileExtension = item.fileType;
+                                                            if (fileExtension.Equals("jpg", StringComparison.OrdinalIgnoreCase) ||
+                                                            fileExtension.Equals("jpeg", StringComparison.OrdinalIgnoreCase) ||
+                                                            fileExtension.Equals("png", StringComparison.OrdinalIgnoreCase) ||
+                                                            fileExtension.Equals(".gif", StringComparison.OrdinalIgnoreCase) ||
+                                                            fileExtension.Equals(".bmp", StringComparison.OrdinalIgnoreCase))
+                                                            {
+                                                                <img src="@item.fileData" style="width: 100px;height: 100px;object-fit:contain;" />
+                                                            }
+                                                            else if (fileExtension.Equals("pdf", StringComparison.OrdinalIgnoreCase))
+                                                            {
+                                                                <i class="far fa-file-pdf fa-5x" style="display: flex; color:rgba(0,91,132,1) !important; flex-direction: column; justify-content: center; align-items: center; height: 100px; width: 100px;">
+                                                                    <span style="font-size: 10px;text-align: center;color:black;margin-top: auto;width:100px;font-family: sans-serif;">@item.fileName</span>
+                                                                </i>
+                                                            }
+                                                            else if (fileExtension.Equals("mp3", StringComparison.OrdinalIgnoreCase))
+                                                            {
+                                                                <i class="fa-regular fa-file-audio fa-5x" style="display: flex; color:rgba(0,91,132,1) !important; flex-direction: column; justify-content: center; align-items: center; height: 100px; width: 100px;">
+                                                                    <span style="font-size: 10px;text-align: center;color:black;margin-top: auto;width:100px;font-family: sans-serif;">@item.fileName</span>
+                                                                </i>
+                                                            }
+                                                        }
+                                                    </div>
+                                                }
+
+                                            }
+                                        }
+                                    }
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <br />
+                        <div class="row" style="padding-right:3%;">
+                            <div class="col-6">
+                                <button class="btn btn-effect" style="width:100%;">Add New Document</button>
+                            </div>
+                        </div>
+                    </div>
+                </RadzenFieldset>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    public List<AttachmentView> attachmentViews { get; set; } = new();
+    public List<AdjustmentView> adjustmentViews { get; set; } = new();
+    public GalleryDataView galleryDataView { get; set; } = new();
+    public List<FileDetailsView> fileDetails { get; set; } = new();
+
+    [Parameter]
+    public AttachmentsDetails AttachmentsDetails { get; set; }
+    public bool loading { get; set; } = true;
+
+    public List<string> images { get; set; } = new List<string>()
+    {
+        "audio.png",
+        "audit.png",
+        "Book1.pdf",
+        "audio.png",
+        "audit.png",
+        "HomeImage.jpg",
+        "Coffee.jpg",
+        "budget.png",
+        "testAudio.WAV",
+        "testAudio1.WAV",
+        "test.jpg",
+        "Doc1.pdf",
+        "Book1.xlsx",
+        "Doc1.docx",
+        
+
+    };
+    public List<FileDetailsView> fileData { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        var data = await adminService.GetFileAsync(images);
+        var count = 1;
+        foreach (var item in data)
+        {
+
+            if (item.fileType.Contains("pdf"))
+            {
+                var dataValue = "data:application/pdf;base64," + item.fileData;
+                fileData.Add(new FileDetailsView() { Id = count, fileData = dataValue, fileName = item.fileName, fileType = "pdf" });
+            }
+            else if (item.fileType.Contains("png"))
+            {
+                var dataValue = "data:application/png;base64," + item.fileData;
+                fileData.Add(new FileDetailsView() { Id = count, fileData = dataValue, fileName = item.fileName, fileType = "png" });
+            }
+            else if (item.fileType.Contains("jpg"))
+            {
+                var dataValue = "data:application/jpg;base64," + item.fileData;
+                fileData.Add(new FileDetailsView() { Id = count, fileData = dataValue, fileName = item.fileName, fileType = "png" });
+            }
+            else if (item.fileType.Contains("xlsx"))
+            {
+                var dataValue = "data:application/octet-stream;base64," + item.fileData;
+                fileData.Add(new FileDetailsView() { Id = count, fileData = dataValue, fileName = item.fileName, fileType = "xlsx" });
+            }
+            else if (item.fileType.Contains("docx"))
+            {
+                var dataValue = "data:application/octet-stream;base64," + item.fileData;
+                fileData.Add(new FileDetailsView() { Id = count, fileData = dataValue, fileName = item.fileName, fileType = "docx" });
+            }
+            else
+            {
+                fileData.Add(new FileDetailsView()
+                    {
+                        Id = count,
+                        fileData = "https://saengagemanusdev001.file.core.windows.net/fs-engage-magnus-dev-001/Images/" + item.fileName + "?sv=2021-12-02&ss=bfqt&srt=o&sp=rlp&se=2024-05-30T22:35:47Z&st=2023-03-16T15:35:47Z&spr=https&sig=i5wswXrJt5KiXfxpyHmRLHuadjkjJ6GZRFSxahgD9BE%3D",
+                        fileName = item.fileName,
+                        fileType = "mp3"
+
+                    });
+            }
+            count++;
+        }
+
+
+        loading = false;
+
+    }
+    private async Task ShowImagePopup(string selectedImage, int id)
+    {
+        galleryDataView.SelectedImage = selectedImage;
+        galleryDataView.SelectedFileType = fileData.Where(x => x.Id == id).FirstOrDefault().fileType;
+        galleryDataView.Images = fileData;
+        galleryDataView.Id = id;
+        await DialogService.OpenAsync<GalleryView>("",
+     new Dictionary<string, object> { { "ImagesData", galleryDataView } },
+     new DialogOptions() { ShowTitle = false, CloseDialogOnOverlayClick = true, Style = "width:100%;" }); ;
+    }
+
+
+
+}

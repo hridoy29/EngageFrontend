@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+	<Nullable>enable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.23" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Magnus.Views\Magnus.Views.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\AdminModels\" />
+    <Folder Include="Models\AgentModels\" />
+    <Folder Include="Models\AtomModels\" />
+    <Folder Include="Models\ContactCentreModels\" />
+    <Folder Include="Models\ImportModels\" />
+    <Folder Include="Models\SearchModels\" />
+    <Folder Include="Models\OnLoadAllocationModels\" />
+  </ItemGroup>
+
+</Project>

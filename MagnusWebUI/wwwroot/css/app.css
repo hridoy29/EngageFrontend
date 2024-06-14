@@ -1,0 +1,283 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css2?family=GFS+Neohellenic&family=Poppins:wght@300&display=swap');
+
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    /*font-family: 'GFS Neohellenic', sans-serif;*/
+}
+
+body{
+    background:white !important;
+}
+
+a, .btn -link {
+    color: #0366d6;
+}
+
+.btn -primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.content {
+    padding-top: 1.1rem;
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+.rz-dialog-titlebar {
+    background: linear-gradient(140deg, rgba(0,91,132,1) 0%, rgba(24,42,71,1) 100%) !important;
+    padding: 16px !important;
+    color: white;
+}
+div#rz-dialog-0-label{
+    color:white !important;
+}
+button.rz-html-editor-button.rz-selected {
+    background-color: rgba(0,91,132,1) !important;
+    color: white;
+}
+span.rzi.rzi-times {
+    color: white;
+}
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+.rz-fieldset {
+    box-shadow: 0 3px 10px rgb(0 0 0 / 20%);
+    border-radius: 10px;
+}
+.header-of-dropdown-and-texbox {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(0,91,132,1) !important;
+}
+
+/*-----This section form Datagrid-Start-------*/
+/*datagrid header background color*/
+th.rz-unselectable-text.rz-sortable-column.rz-text-align-center {
+    background: rgba(0,91,132,1) !important;
+}
+/*datagrid header text color*/
+span.rz-column-title {
+    color: white !important;
+    /*color: rgba(0,91,132,1) !important;*/
+}
+
+.rz-grid-table-striped tbody tr:not(.rz-expanded-row-content):nth-child(even) > td {
+    /*background-color: #eaeff3;*/background-color:red;
+}
+.card-top-margin{
+    margin-top:0%;
+}
+
+.rz-paginator-page.rz-state-active {
+    color: white;
+    /*background: #182A47;*/
+    background-color: red;
+}
+/*----datgrid header padding------*/
+.rz-datatable-thead th > div:not(.rz-cell-filter), .rz-grid-table thead th > div:not(.rz-cell-filter) {
+    /* padding: 13px; */
+    padding-top: 7px !important;
+    padding-bottom: 10px !important;
+}
+/*----datgrid result padding------*/
+.rz-grid-table td {
+    padding: 8px !important;
+}
+/*-----This section form Datagrid-End-------*/
+.preloader {
+    display: flex;
+    justify-content: center;
+    margin-left: -250px;
+}
+
+/*.btn -effect-Remove {
+    border: 2px solid #c82333 !important;
+    color: #c82333 !important;
+    transition: all 300ms ease-in 0ms;
+    background: white !important;
+}
+
+    .btn -effect-Remove:hover {
+        background-color: #c82333 !important;
+        color: white !important;
+    }
+
+.btn -effect-load {
+    border: 2px solid #005a8a !important;
+    color: #005a8a !important;
+    transition: all 300ms ease-in 0ms;
+    background: white !important;
+}
+
+    .btn -effect-load:hover {
+        background-color: #005a8a !important;
+        color: white !important;
+    }
+
+.btn -effect-save {
+    border: 2px solid #28a745 !important;
+    color: #28a745 !important;
+    transition: all 300ms ease-in 0ms;
+    background: white !important;
+}
+
+    .btn -effect-save:hover {
+        background-color: #28a745 !important;
+        color: white !important;
+    }
+
+.btn -effect-Reset {
+    border: 2px solid #138496 !important;
+    color: #138496 !important;
+    transition: all 300ms ease-in 0ms;
+    background: white !important;
+}
+
+    .btn -effect-Reset:hover {
+        background-color: #138496 !important;
+        color: white !important;
+    }*/
+.btn-effect {
+    transition: .3s ease-out;
+    border: 2px solid #005A8A !important;
+    color: #005A8A !important;
+    transition: all 300ms ease-in 0ms;
+    background: white !important;
+}
+    .btn-effect:hover {
+        background-color: #005A8A !important;
+        color: white !important;
+    }
+
+.card-header-color {
+    background: linear-gradient(140deg, rgba(0,91,132,1) 0%, rgba(24,42,71,1) 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    border-radius: 10px 10px 0px 0px !important;
+    margin-left: -1px;
+}
+.card-For-Pages {
+    border-radius: 10px !important;
+    box-shadow: rgb(0 91 132) 0px 3px 8px;
+}
+.margin-top-for-textboxHeader {
+    margin-top: 10px;
+}
+.margin-bottom-for-textboxHeader {
+    margin-bottom: 8px !important;
+}
+/*toggler headercolor*/
+h4.rz-text-subtitle2 {
+    color: rgba(0,91,132,1) !important;
+}
+/*toggler color*/
+.rz-switch.rz-switch-checked .rz-switch-circle:before {
+    background: rgba(0,91,132,1) !important;
+}
+/*pagination Color*/
+.rz-paginator-page.rz-state-active {
+    background-color: rgba(0,91,132,1) !important;
+    color: white !important;
+}
+/*dropdown-color*/
+li.rz-dropdown-item.rz-state-highlight {
+    background-color: rgba(0,91,132,1) !important;
+    color: white !important;
+}
+/*textboxes-calender command etc focus color*/
+.rz-colorpicker:not(:disabled):not(.rz-state-disabled):focus, .rz-lookup-search input:not(:disabled):not(.rz-state-disabled):focus, .rz-spinner:not(:disabled):not(.rz-state-disabled):focus, .rz-calendar .rz-inputtext:not(:disabled):not(.rz-state-disabled):focus, .rz-multiselect:not(:disabled):not(.rz-state-disabled):focus, .rz-dropdown:not(:disabled):not(.rz-state-disabled):focus, .mask:not(:disabled):not(.rz-state-disabled):focus, .rz-textarea:not(:disabled):not(.rz-state-disabled):focus, .rz-textbox:not(:disabled):not(.rz-state-disabled):focus {
+    /* box-shadow: var(--rz-input-focus-shadow); */
+    border: 1px solid #005b84 !important;
+    box-shadow: inset 0 0 0 1px #005b84 !important;
+}
+/*calender Selected color-profile change*/
+.rz-datepicker-calendar td .rz-state-active {
+    background-color: rgba(0,91,132,1) !important;
+    color: white !important;
+}
+/*fieldset leged color-profile change*/
+
+span.rz-fieldset-legend-text {
+    color: rgba(0,91,132,1) !important;
+    font-weight:700;
+}
+/*column header*/
+.column-header {
+   /* background: #182A47;
+    color: white;*/
+    background-color: rgba(0,91,132,1) !important;
+    color: white !important;
+    border:none !important;
+}
+/*import-search-textfield-header-color*/
+.textFieldHeaderColor {
+    font-size: 14px;
+    color: rgba(0,91,132,1) !important;
+    font-weight:600;
+}
+/*sorting icon color*/
+span.rz-sortable-column-icon.rzi-grid-sort.rzi-sort {
+    color: white !important;
+}
+/*sorting while hober*/
+/*.rz-sortable-column > div:hover .rzi-sort:not(.rzi-sort-asc):not(.rzi-sort-desc) {*/
+    /* color: var(--rz-grid-sort-icon-color); */
+    /*color: white;
+}*/
+.tab-card-style {
+    display: flex;  /*border: 1px solid gray; */
+    /*padding: 0 10px 25px 10px;*/
+    padding:16px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 20%);
+}
+.tab-card-style-all {
+    display: flex; /*border: 1px solid gray; */
+    padding: 3px 1px 10px 1px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 20%);
+}
+    .accordian-top-margin{
+        margin-top:10px;
+    }
+.col-margin {
+    margin-left: 2%;
+    margin-right: 2%;
+}
+/* .contactDetailsTopBarFont{
+     font-weight:bold !important;
+ }*/
+.padding-zero-for-label-textbox{
+    padding:0px !important;
+}

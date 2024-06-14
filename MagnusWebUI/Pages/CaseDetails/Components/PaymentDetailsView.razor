@@ -1,0 +1,364 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.PaymentDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using MagnusWebUI.Shared.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div>
+            <div class="row">
+                <div class="col-3">
+                    <button class="btn btn-effect" style="width:100%;">Create New Plan</button>
+                </div>
+                <br />
+                <div class="col-3">
+                    <button class="btn btn-effect" style="width:100%;">Make A Payment</button>
+                </div>
+                <br />
+                <div class="col-3">
+                    <button class="btn btn-effect" style="width:100%;">Close Current Plan</button>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 4px;">
+                <div class="col-4" style="padding-right: 8px;">
+                    <RadzenFieldset Text="Balance Details">
+                        <div class="@*col-margin*@">
+                            <div class="row ">
+                                <div class="col-7 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox" style="">
+                                    Original Balance:
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-7 margin-bottom-for-textboxHeader">
+                                    <DisabledTextBox placeHolder="Original Balance" bindTextValue="@PaymentDetails.GetValue("Original Balance")"/>
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-7 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox">
+                                    Balance Outstanding:
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-7 margin-bottom-for-textboxHeader">
+                                    @*<RadzenTextBox Placeholder="Balance Outstanding" Class="w-100" />*@
+                                    <DisabledTextBox placeHolder="Balance Outstanding" bindTextValue="@PaymentDetails.GetValue("Balance Outstanding")" />
+                                </div>
+                            </div>
+                        </div>
+                    </RadzenFieldset>
+                </div>
+                <div class="col-8" style="margin-top: 14px ;padding-left: 10px;">
+                    <RadzenAccordion Multiple="true">
+                        <Items>
+                            <RadzenAccordionItem Text="Customer Payment Details">
+                                <div class="col-12 d-flex main-col-padding">
+                                    <div class="col-6 left-col-padding">
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Customer Able To Pay In Full:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Customer Able To Pay In Full" bindTextValue="@PaymentDetails.GetValue("Customer Able To Pay In Full")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Customer Making Payment Today:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Customer Making Payment Today" bindTextValue="@PaymentDetails.GetValue("Customer Making Payment Today")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Customer Payment Method:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Customer Payment Method" bindTextValue="@PaymentDetails.GetValue("Customer Payment Method")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Customer Payment Amount:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Customer Payment Amount" bindTextValue="@PaymentDetails.GetValue("Customer Payment Amount")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Cheque Made Payable To:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Cheque Made Payable To" bindTextValue="@PaymentDetails.GetValue("Cheque Made Payable To")" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Cheque Number:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Cheque Number" bindTextValue="@PaymentDetails.GetValue("Cheque Number")" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 right-col-padding">
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Receipt Number:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Receipt Number" bindTextValue="@PaymentDetails.GetValue("Receipt Number")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Payment Made To:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Payment Made To" bindTextValue="@PaymentDetails.GetValue("Payment Made To")" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Castle Contact For Payment:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Castle Contact For Payment" bindTextValue="@PaymentDetails.GetValue("Castle Contact For Payment")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Our Contact For Payment:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Our Contact For Payment" bindTextValue="@PaymentDetails.GetValue("Our Contact For Payment")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Customer Proof Of Bank Transaction Seen:
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Customer Proof Of Bank Transaction Seen" bindTextValue="@PaymentDetails.GetValue("Customer Proof Of Bank Transaction Seen")" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <RadzenPager HorizontalAlign="HorizontalAlign.Left" Count="count" PageSize="@pageSize" PageNumbersCount="5" PageChanged="@PageChanged" />
+                            </RadzenAccordionItem>
+                            <RadzenAccordionItem Text="Extra Meter Information">
+                                <div class="col-12 d-flex main-col-padding">
+                                    <div class="col-6 left-col-padding">
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Arrange Set Today:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Arrange Set Today" bindTextValue="@PaymentDetails.GetValue("Arrange Set Today")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Arrangement Type:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Arrangement Type" bindTextValue="@PaymentDetails.GetValue("Arrangement Type")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Arrangement Frequency:
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Arrangement Frequency" bindTextValue="@PaymentDetails.GetValue("Arrangement Frequency")" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 right-col-padding">
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Arrangement Amount:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Arrangement Amount" bindTextValue="@PaymentDetails.GetValue("Arrangement Amount")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                1st Installment Date:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="1st Installment Date" bindTextValue="@PaymentDetails.GetValue("1st Installment Date")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Arrangement Client Contact:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Arrangement Client Contact" bindTextValue="@PaymentDetails.GetValue("Arrangement Client Contact")" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <RadzenPager HorizontalAlign="HorizontalAlign.Left" Count="count" PageSize="@pageSize" PageNumbersCount="5" PageChanged="@PageChanged" />
+                            </RadzenAccordionItem>
+                            <RadzenAccordionItem Text="Proof Of Direct Payment">
+                                <div class="col-12 d-flex main-col-padding">
+                                    <div class="col-6 left-col-padding">
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Details Of Payment Confirmed:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Details Of Payment Confirmed" bindTextValue="@PaymentDetails.GetValue("Details Of Payment Confirmed")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Proof Of Payment Amount:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Proof Of Payment Amount" bindTextValue="@PaymentDetails.GetValue("Proof Of Payment Amount")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Proof Of Payment Method:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Proof Of Payment Method" bindTextValue="@PaymentDetails.GetValue("Proof Of Payment Method")" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-6 right-col-padding">
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Proof Of Paid To:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Proof Of Paid To" bindTextValue="@PaymentDetails.GetValue("Proof Of Paid To")" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Date Of Payment:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Date Of Payment" bindTextValue="@PaymentDetails.GetValue("Date Of Payment")" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Verified Payment With:
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Verified Payment With" bindTextValue="@PaymentDetails.GetValue("Verified Payment With")" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="col-12 main-col-padding">
+                                    <RadzenDataGrid AllowAlternatingRows="false" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                                    Data="@clientConfirmedAdjustmentViews" TItem="ClientConfirmedAdjustmentView" ColumnWidth="auto" LogicalFilterOperator="LogicalFilterOperator.Or">
+                                        <Columns>
+                                            <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="AdjType" Filterable="false" Title="Adj Type" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+
+                                            <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="AdjDate" Filterable="false" Title="Adj Date " Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="AdjAmount" Title="Adj Amount" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="NewBalance" Title="New Balance" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+
+                                            <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="AdjRef" Title="Adj Date " Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="Reason" Title="Adj Amount" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                            <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="File Name" Title="File Name" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                        </Columns>
+                                    </RadzenDataGrid>
+                                </div>
+                                <RadzenPager HorizontalAlign="HorizontalAlign.Left" Count="count" PageSize="@pageSize" PageNumbersCount="5" PageChanged="@PageChanged" />
+                            </RadzenAccordionItem>
+
+                        </Items>
+                    </RadzenAccordion>
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [Parameter]
+    public PaymentDetails PaymentDetails { get; set; } = new();
+
+    public List<ClientConfirmedAdjustmentView> clientConfirmedAdjustmentViews { get; set; } = new();
+    int pageSize = 3;
+    int count = 22;
+    void PageChanged(PagerEventArgs args)
+    {
+
+    }
+}

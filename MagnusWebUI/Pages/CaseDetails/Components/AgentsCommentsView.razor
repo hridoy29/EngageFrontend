@@ -1,0 +1,194 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="" style="display: flex;/* border: 1px solid gray; */padding:10px;border-radius: 10px;box-shadow: 0 3px 10px rgb(0 0 0 / 20%);">
+            <div class="col-12">
+                <div class="row">
+                <div class="col-6">
+                    <RadzenFieldset Text="Agents Comments" Style="height:100% !important">
+                        <div class="row">
+                            <div class="col-12 
+
+
+
+
+
+
+
+
+
+
+" style="">
+                                Visit 1:
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenTextArea Placeholder="New Occupier as Details" Class="w-100" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Visit 2:
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenTextArea Placeholder="New Occupier as Details" Class="w-100" />
+                            </div>
+                        </div>
+                    </RadzenFieldset>
+                </div>
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenFieldset Text="Location" Style="height:100% !important">
+                                <div class="row">
+                                    <div class="col-4 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Longitude:
+                                    </div>
+                                    <div class="col-8">
+                                        <RadzenTextBox Placeholder="Longitude" Class="w-100" />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-4 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Latitude:
+                                    </div>
+                                    <div class="col-8">
+                                        <RadzenTextArea Placeholder="Latitude" Class="w-100" />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-4 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Location URL:
+                                    </div>
+                                    <div class="col-8">
+                                        <RadzenTextArea Placeholder="Location URL" Class="w-100" />
+                                    </div>
+                                </div>
+
+
+                            </RadzenFieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenFieldset Text="HHT Visit Details" Style="height:100% !important">
+                                <div class="row">
+                                    <div class="col-4 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Uploaded:
+                                    </div>
+                                    <div class="col-8">
+                                        <RadzenTextBox Placeholder="Uploaded" Class="w-100" />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-4 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Revisit Req:
+                                    </div>
+                                    <div class="col-8">
+                                        <RadzenTextBox Placeholder="Revisit Req" Class="w-100" />
+                                    </div>
+                                </div>
+
+                            </RadzenFieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <RadzenFieldset Text="Visit Dates" Style="height:100% !important">
+                        <div class="col-12 d-flex">
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-4 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Date Of 1st Visit:
+                                </div>
+                                <div class="col-8">
+                                    <RadzenTextBox Placeholder="Date Of 1st Visit" Class="w-100" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-4 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Date Of 2nd Visit:
+                                </div>
+                                <div class="col-8">
+                                    <RadzenTextArea Placeholder="Date Of 2nd Visit" Class="w-100" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-4 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Date Of 3rd Visit:
+                                </div>
+                                <div class="col-8">
+                                    <RadzenTextBox Placeholder="Date Of 3rd Visit" Class="w-100" />
+                                </div>
+                            </div>
+                        </div>
+
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-4 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Date Of 1st Visit:
+                                    </div>
+                                    <div class="col-8">
+                                        <RadzenTextBox Placeholder="Date Of 1st Visit" Class="w-100" />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-4 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Date Of 2nd Visit:
+                                    </div>
+                                    <div class="col-8">
+                                        <RadzenTextArea Placeholder="Date Of 2nd Visit" Class="w-100" />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-4 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Date Of 3rd Visit:
+                                    </div>
+                                    <div class="col-8">
+                                        <RadzenTextBox Placeholder="Date Of 3rd Visit" Class="w-100" />
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                    </RadzenFieldset>
+                </div>
+            </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    public List<ClientConfirmedAdjustmentView> clientConfirmedAdjustmentViews { get; set; } = new();
+}

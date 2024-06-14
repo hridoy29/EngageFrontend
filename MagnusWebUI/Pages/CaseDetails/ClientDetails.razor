@@ -1,0 +1,533 @@
+﻿@page "/case-details"
+@*@page "/case-details/{ourReference:int}/{ClientID:int}/{CaseStatus:int}/{OurRef?}/{ClientAccountNumber?}/{SecondaryRef?}/{CustomerName?}/{PostCode?}/{DateProcessedFrom?}/{DateProcessedTo?}"*@
+@using System.Linq.Dynamic.Core
+@using Blazored.Toast.Services
+@using Radzen
+@using Radzen.Blazor
+@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject NavigationManager Navigation
+@inject EnagageNavigationManager navigation
+@inject IJSRuntime JSRuntime
+@inject DialogService DialogService
+@inject DialogService DialogService
+@inject Blazored.LocalStorage.ILocalStorageService _storageService
+<AuthorizeView>
+    <Authorized>
+        @{
+            if (IsLoading)
+            {
+                <div class="preloader" style="">
+                    <img src="Gif/EnagePreloader.gif" />
+                </div>
+            }
+            else
+            {
+                <div class="card card-For-Pages">
+                    <div class="card-header card-header-color">
+                        <h4 onclick="@returnToSearch" style="cursor:pointer"><i class="fa-solid fa-arrow-left" /> Case Details: @CaseDetails.BaseDetails.ID</h4>
+                        @*<h4>Case Details</h4>*@
+                    </div>
+                    <div class="row " style="margin-left:13px;margin-top: 17px;">
+                        <div class="col-12">
+                            <div class="row">
+                                @*<div class="small-screen-header" style="width:100%">
+                        <div class="col-12 d-flex ">
+                        <div class="tab-card-style-all" style="width: 100%;margin-right: 16px;margin-left: -13px;/*! padding-top: 1%; *//*! padding-bottom: 0; */padding: 14px;">
+                        <div class="col-2">
+
+                        <div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size">
+                        Client Name:  <span class="contactDetailsTopBarFont"> @CaseDetails.BaseDetails.ClientName</span>
+                        </div>
+                        <div style="height: 8px;"></div>
+                        <div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size">
+                        Client Ref:  <span class="contactDetailsTopBarFont"> @CaseDetails.BaseDetails.ClientRef</span>
+                        </div>
+                        <div style="height: 8px;"></div>
+                        <div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size">
+                        Work Type:  <span class="contactDetailsTopBarFont"> @CaseDetails.BaseDetails.WorkFlow</span>
+                        </div>
+
+
+                        </div>
+                        <div class="col-7">
+                        <div class="row button-header-row" style="justify-content:center; gap:1%; /*! padding-top:82px; */align-items: end;height: 100%;">
+                        <div class="btn btn-effect header-of-dropdown-and-texbox" style="width:200px;" onclick="">Add Note</div>
+                        <div class="btn btn-effect header-of-dropdown-and-texbox" style="width:200px;" onclick="">Placeholder Button 1</div>
+                        <div class="btn btn-effect header-of-dropdown-and-texbox" style="width:200px;" onclick="">Placeholder Button 2</div>
+                        </div>
+                        </div>
+                        <div class="col-3 right-section" style="padding:0px;">
+                        <div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size" style="overflow-wrap:anywhere">
+                        <div class="col-6 col-small-header-text">
+                        Account Status:
+                        </div>
+                        <div class="col-6 col-small-header-value">
+                        <span class="contactDetailsTopBarFont "> @CaseDetails.BaseDetails.Status</span>
+                        </div>
+                        </div>
+                        <div style="height: 8px;"></div>
+                        <div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size" style="overflow-wrap:anywhere">
+                        <div class="col-6 col-small-header-text">
+                        Load Date:
+                        </div>
+                        <div class="col-6 col-small-header-value">
+                        <span class="contactDetailsTopBarFont "> @CaseDateLoaded</span>
+                        </div>
+                        </div>
+                        <div style="height: 8px;"></div>
+                        <div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size" style="overflow-wrap:anywhere">
+                        <div class="col-6 col-small-header-text">
+                        Closure Date:
+                        </div>
+                        <div class="col-6 col-small-header-value">
+                        <span class="contactDetailsTopBarFont "> </span>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>*@
+                                <div class="" style="width:100%">
+                                    <div class="col-12 d-flex ">
+                                        <div class="tab-card-style-all" style="width: 100%;justify-content:space-between ;margin-right: 16px;margin-left: -13px;/*! padding-top: 1%; *//*! padding-bottom: 0; */padding: 14px 40px;">
+                                            <div class="">
+
+                                                <div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size">
+                                                    Client Name:  <span class="contactDetailsTopBarFont"> @CaseDetails.BaseDetails.ClientName</span>
+                                                </div>
+                                                <div style="height: 8px;"></div>
+                                                <div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size">
+                                                    Client Ref:  <span class="contactDetailsTopBarFont"> @CaseDetails.BaseDetails.ClientRef</span>
+                                                </div>
+                                                <div style="height: 8px;"></div>
+                                                <div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size">
+                                                    Work Type:  <span class="contactDetailsTopBarFont"> @CaseDetails.BaseDetails.WorkFlow</span>
+                                                </div>
+
+
+                                            </div>
+                                            <div class="" style="width:700px;">
+                                                <div class="row button-header-row" style="justify-content:center; gap:1%;  align-items: end;height: 100%;">
+                                                    <div class="btn btn-effect header-of-dropdown-and-texbox" style="width:200px;" @onclick="OpenNote">Add Note</div>
+                                                    <div class="btn btn-effect header-of-dropdown-and-texbox" style="width:200px;" onclick="">Placeholder Button 1</div>
+                                                    <div class="btn btn-effect header-of-dropdown-and-texbox" style="width:200px;" onclick="">Placeholder Button 2</div>
+                                                </div>
+                                            </div>
+                                            <div class=" " style="padding:0px;">
+                                                <div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size">
+                                                    Account Status:  <span class="contactDetailsTopBarFont "> @CaseDetails.BaseDetails.Status</span>
+                                                </div>
+                                                <div style="height: 8px;"></div>
+                                                <div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size">
+                                                    Load Date:  <span class="contactDetailsTopBarFont "> @CaseDateLoaded</span>
+                                                </div>
+                                                <div style="height: 8px;"></div>
+                                                <div class="row  header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size">
+                                                    Closure Date:  <span class="contactDetailsTopBarFont "> </span>
+                                                </div>
+                                                @*<div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size" style="overflow-wrap:anywhere">
+                                        <div class="col-6 col-span-header-text">
+                                        Account Status:
+                                        </div>
+                                        <div class="col-6 col-span-header-value">
+                                        <span class="contactDetailsTopBarFont "> @CaseDetails.BaseDetails.Status</span>
+                                        </div>
+                                        </div>
+                                        <div style="height: 8px;"></div>
+                                        <div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size" style="overflow-wrap:anywhere">
+                                        <div class="col-6 col-span-header-text">
+                                        Load Date:
+                                        </div>
+                                        <div class="col-6 col-span-header-value">
+                                        <span class="contactDetailsTopBarFont "> @CaseDateLoaded</span>
+                                        </div>
+                                        </div>
+                                        <div style="height: 8px;"></div>
+                                        <div class="row header-of-dropdown-and-texbox d-flex align-items-center client-details-header-font-size" style="overflow-wrap:anywhere">
+                                        <div class="col-6 col-span-header-text">
+                                        Closure Date:
+                                        </div>
+                                        <div class="col-6 col-span-header-value">
+                                        <span class="contactDetailsTopBarFont "> </span>
+                                        </div>
+                                        </div*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <RadzenTabs RenderMode="TabRenderMode.Server">
+                        <Tabs>
+                            <div class="row" style="margin-left:1%;">
+                                @*@if (CaseDetails.BaseDetails is not null)
+                        {
+                        <RadzenTabsItem Text="Account Details">
+                        <AccountDetailsView BaseDetails="CaseDetails.BaseDetails" />
+                        </RadzenTabsItem>
+                        }*@
+                                @if (CaseDetails.CustomerDetails is not null)
+                                {
+                                    <RadzenTabsItem Text="Contact Details">
+                                        <ContactDetailsView CustomerDetails="CaseDetails.CustomerDetails" />
+                                    </RadzenTabsItem>
+                                }
+                                @if (CaseDetails.MeterDetails is not null)
+                                {
+                                    <RadzenTabsItem Text="Meter Details">
+                                        <MeterDetailsView MeterDetails="CaseDetails.MeterDetails" />
+                                    </RadzenTabsItem>
+                                }
+                                @if (CaseDetails.PropertyDetails is not null)
+                                {
+                                    <RadzenTabsItem Text="Property Details">
+                                        <PropertyDetailsView PropertyDetails="CaseDetails.PropertyDetails" />
+                                    </RadzenTabsItem>
+                                }
+                                @if (CaseDetails.PaymentDetails is not null)
+                                {
+                                    <RadzenTabsItem Text="Payment Details">
+                                        <PaymentDetailsView PaymentDetails="CaseDetails.PaymentDetails" />
+                                    </RadzenTabsItem>
+                                }
+                                @if (CaseDetails.VisitDetails is not null)
+                                {
+                                    <RadzenTabsItem Text="Visit Details">
+                                        <VisitDetialsView VisitDetails="CaseDetails.VisitDetails" />
+                                    </RadzenTabsItem>
+                                }
+                                @if (CaseDetails.DisputeDetails is not null)
+                                {
+                                    <RadzenTabsItem Text="Disputes">
+                                        <DisputeRowlDissatisfactionView DisputeDetails="CaseDetails.DisputeDetails" />
+                                    </RadzenTabsItem>
+                                }
+                                @if (CaseDetails.AccountActions is not null)
+                                {
+                                    <RadzenTabsItem Text="Account Actions">
+                                        <AccountAuctionsView AccountActions="CaseDetails.AccountActions" />
+                                    </RadzenTabsItem>
+                                }
+                                @if (CaseDetails.AttachmentsDetails is null)
+                                {
+                                    <RadzenTabsItem Text="Attachments">
+                                        <AttachmentsView AttachmentsDetails="CaseDetails.AttachmentsDetails" />
+                                    </RadzenTabsItem>
+                                }
+                                @if (CaseDetails.AuditDetails is not null)
+                                {
+                                    <RadzenTabsItem Text="Audit">
+                                        <AuditView AuditDetails="CaseDetails.AuditDetails" />
+                                    </RadzenTabsItem>
+                                }
+                                @if (CaseDetails.AdjustmentDetails is not null)
+                                {
+                                    <RadzenTabsItem Text="Adjustments">
+                                        <AdjustmentView AdjustmentDetails="CaseDetails.AdjustmentDetails" />
+                                    </RadzenTabsItem>
+                                }
+                                @if (CaseDetails.NotesDetails is not null)
+                                {
+                                    <RadzenTabsItem Text="Notes">
+                                        <NotesView NotesDetails="CaseDetails.NotesDetails" />
+                                    </RadzenTabsItem>
+                                }
+                            </div>
+                        </Tabs>
+                    </RadzenTabs>
+                </div>
+            }
+        }
+        
+       
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin />
+    </NotAuthorized>
+
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "oref")]
+    public int ourReference { get; set; } = 0;
+    bool hidden = true;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private Microsoft.Graph.User? user;
+    bool IsLoading = true;
+    private bool IsSideBarOpen { get; set; } = true;
+    private CaseDetails CaseDetails = new();
+    private string CaseDateLoaded => CaseDetails.BaseDetails.DateLoaded == DateTime.MinValue ? "" : CaseDetails.BaseDetails.DateLoaded.ToString("dd-MMM-yyyy");
+
+    private ActionHistoryViewParams actionHistoryViewParams = new();
+    private async Task returnToSearch()
+    {
+        //Navigation.NavigateTo("/Search");
+        var baseUri= Navigation.BaseUri;
+        Console.WriteLine("Navigation.BaseUri: " + Navigation.BaseUri);
+        var queryString = await _storageService.GetItemAsync<string>("searchQueryString");
+        navigation.BackToSearch(queryString);
+    }
+    protected async override Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        //await JSRuntime.InvokeVoidAsync("Sidebarclose");
+        await GetCaseDetailsAsync();
+        IsLoading = false;
+    }
+    private async void closesidebar()
+    {
+        IsSideBarOpen = false;
+        Console.WriteLine("In side Change: close");
+        await JSRuntime.InvokeVoidAsync("sidebarclose");
+    }
+    public async Task GetCaseDetailsAsync()
+    {
+        var Data = await _ClientDetails.GetCaseDetailsAsync(ourReference);
+        CaseDetails = Data;
+        await PostActionHistoryAsync();
+        closesidebar();
+    }
+    public async Task PostActionHistoryAsync()
+    {
+        actionHistoryViewParams.OurReference = ourReference;
+        var userFromAuth = (await authenticationStateTask).User;
+        actionHistoryViewParams.AADObjectID = userFromAuth.Claims.FirstOrDefault(x => x.Type.Equals("oid", StringComparison.OrdinalIgnoreCase))?.Value;
+        actionHistoryViewParams.ActionID = 1;
+        actionHistoryViewParams.CreatedOn = DateTime.Now;
+
+        await _ClientDetails.PostActionHistoryAsync(actionHistoryViewParams);
+    }
+    public async Task OpenNote()
+    {
+        await DialogService.OpenAsync<AddNotePopUpView>("Add note",
+         new Dictionary<string, object> {  },
+         new DialogOptions() { Draggable=true  });
+    }
+}
+<style>
+    .Side-arrow-case-details {
+        font-size: 25px;
+        position: absolute;
+        left: 0;
+        top: -23px;
+    }
+
+    .row-right-header {
+        justify-content: space-evenly;
+    }
+
+    .col-small-header-value {
+        padding-left: 0;
+        text-align: end;
+    }
+
+    .col-small-header-text {
+        left: 26%;
+    }
+
+    .small-screen-header {
+        display: none;
+    }
+
+    .right-section {
+        /*left:5%;*/
+    }
+
+    .col-span-header-text {
+        padding-right: 0;
+        padding-left: 30px;
+    }
+
+    .col-span-header-value {
+        text-align: end;
+        padding-left: 0;
+    }
+
+    .right-span {
+    }
+
+    .main-col-padding {
+        padding: 0;
+    }
+
+    .left-col-padding {
+        padding-left: 0;
+        padding-right: 8px;
+    }
+
+    .right-col-padding {
+        padding-left: 8px;
+        padding-right: 0;
+    }
+
+    .tab-card-style-all {
+        display: flex; /*border: 1px solid gray; */
+        padding: 3px 1px 15px 1px;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 20%);
+    }
+
+    @@media (min-width: 2100px) {
+
+        .col-span-header-text {
+            /* left:22%;*/
+        }
+
+        .col-span-header-value {
+        }
+
+        .header-right-side {
+            /*padding-left:7% !important;*/
+            left: 2%;
+        }
+
+        .right-section {
+            /*left:8%;*/
+        }
+    }
+
+    @@media (min-width: 2200px) {
+
+        .col-span-header-text {
+            left: 23% !important;
+        }
+
+        .col-span-header-value {
+        }
+
+        .header-right-side {
+            /*padding-left:7% !important;*/
+            left: 2%;
+        }
+
+        .right-section {
+            /*left:8%;*/
+        }
+    }
+
+    @@media (min-width: 1919px) {
+
+
+        .col-span-header-text {
+            padding-left: 13% !important;
+        }
+
+        .col-span-header-value {
+        }
+    }
+
+    @@media (min-width: 1719px) {
+
+        .header-right-side {
+            padding-right: 0;
+            margin-left: 1vw;
+        }
+
+        .col-span-header-text {
+            left: 13%;
+        }
+
+        .col-span-header-value {
+        }
+    }
+
+    @@media (min-width: 1342px) {
+
+        .col-span-header-text {
+            padding: 0;
+        }
+
+        .right-section {
+            /*left:8%;*/
+        }
+
+        .col-span-header-value {
+        }
+    }
+
+    @@media (min-width: 1544px) {
+
+        .col-span-header-text {
+            padding-right: 0;
+            padding-left: 5%;
+        }
+
+        .right-section {
+            /*left:8%;*/
+        }
+
+        .col-span-header-value {
+        }
+    }
+
+    @@media (max-width: 1543px) {
+        .header-right-side {
+            padding-left: 4%;
+        }
+
+        .small-screen-header {
+            display: unset;
+        }
+
+        .all-screen-header {
+            display: none;
+        }
+
+        .right-section {
+            /*left:8%;*/
+        }
+
+        .col-span-header-text {
+        }
+
+        .col-span-header-value {
+        }
+    }
+
+    .client-details-header-font-size {
+        font-size: 17px;
+    }
+    /*.accordian-top-margin{
+                                    margin-top:5px;
+                                }
+
+                                .tab-card-style {
+                                    display: flex;
+                                    border: 1px solid gray;
+                                    padding: 0 10px 25px 10px;
+                                    border-radius: 10px;
+                                    box-shadow: 0 3px 10px rgb(0 0 0 / 20%);
+                                }*/
+    .contactDetailsTopBarFont {
+        font-weight: 600 !important;
+        margin-left: 5px;
+        font-weight: bold !important;
+    }
+
+    .pager-radzen a {
+        margin: -5px;
+        /* margin: -1rem; */
+    }
+
+    .pager-radzen {
+        margin-left: 30px;
+    }
+</style>

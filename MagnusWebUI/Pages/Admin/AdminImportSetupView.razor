@@ -1,0 +1,575 @@
+﻿@page "/admin/import_setup"
+@using System.Data;
+@using System.IO;
+@using NPOI.XSSF.UserModel;
+@using NPOI.SS.UserModel;
+@using System.Text.RegularExpressions;
+
+@inject IImportServices _importServices
+@inject IAdminService _adminServices
+@inject SweetAlertService Swal;
+
+<AuthorizeView>
+    <Authorized>
+        <div class="card card-For-Pages">
+            <div class="card-header card-header-color">
+                <h4>Import Setup</h4>
+            </div>
+            <div class="card-body">
+                <div style="display: flex;justify-content: space-between;">
+                    <div style=" display: flex;gap: 12px;">
+                        <div>
+                            <RadzenDropDown Chips="true" MaxSelectedLabels="20" AllowClear="true" Data=@_clients @bind-Value=@SelectedAdminClientView
+                                            Placeholder="Client" Style="width: 100%" TextProperty="ClientName" ValueProperty="ClientID" Change=@(args => OnClientChange()) />
+                        </div>
+                        <div>
+                            <RadzenDropDown Chips="true" MaxSelectedLabels="20" AllowClear="true" Data=@_files @bind-Value=@SelectedFileView Disabled=@(SelectedAdminClientView ==0 ? true:false)
+                                            Placeholder="File Type" Style="width: 100%" ValueProperty="FileTypeID" TextProperty="FileType" Change=@(args => OnChange()) />
+                        </div>
+                    </div>
+                    <div class="btn btn-effect">
+
+                        <InputFile OnChange="@ImportExcelFile" accept=".csv,.xlsx" />
+                        Import File Preview
+                    </div>
+                </div>
+                <br />
+
+                @{
+                    if (dt.Columns.Count > 0)
+                    {
+                        <div class="card" style="padding:20px; border-radius:10px">
+                            <div class="row">
+                                <div class="col-2" style="padding: 0px 38px;">
+                                    <div class="row text-center textFieldHeaderColor" style="margin-right:36px;justify-content:center ">
+                                        Category
+                                    </div>
+                                    @{
+                                        for (int i = 0; i < dt.Columns.Count; i++)
+                                        {
+                                            var val = i;
+                                            <div class="row" style="margin-top:10px">
+                                                <RadzenDropDown AllowClear="true" TValue="string" Class="w-100"
+                                                Placeholder="No Mapping" Data=@(_categoryViews.DistinctBy(x=>x.Category).ToList()) ValueProperty="Category" TextProperty="Category"
+                                                Change=@(args => OnCategoryChange(args,val)) />
+                                            </div>
+
+                                        }
+                                    }
+                                </div>
+                                <br />
+                                <div class="col-2" style="padding: 0px 38px;">
+                                    <div class="row text-center textFieldHeaderColor" style="margin-right:33px; justify-content:center">
+                                        Mapping
+                                    </div>
+                                    @{
+                                        for (int i = 0; i < dt.Columns.Count; i++)
+                                        {
+                                            var val = i;
+                                            <div class="row" style="margin-top:10px">
+                                                <RadzenDropDown AllowClear="true" TValue="int"
+                                                Data=@_headerViewsArr[i] ValueProperty="HeaderID" TextProperty="Header"
+                                                Placeholder="No Mapping" Style="width: 100%" Change=@(args => OnMapperChange(args,val)) />
+
+                                            </div>
+                                        }
+                                    }
+
+                                </div>
+                                <br />
+                                <div class="col-8 " style="padding: 0px 38px;">
+
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <div class="text-center textFieldHeaderColor" style="white-space:nowrap; justify-content:center">
+                                                File Header
+                                            </div>
+                                        </div>
+                                        <div class="col-auto col-md-8 col-lg-8 col-xl-7 ">
+                                            <div class="text-center textFieldHeaderColor" style="white-space:nowrap; justify-content:center">
+                                                File Data
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @foreach (DataColumn item in dt.Columns)
+                                    {
+
+                                        <div class="row " style="margin-top:10px;gap:42px;">
+                                            <div class="col-3 col-md-3 data-row column-header" style=" background: #182A47; color:white">
+                                                @item.ColumnName
+
+                                            </div>
+                                            @{
+
+
+                                                var count = 1;
+                                                <div class="col-auto  data-row col-md-8 col-lg-8 col-xl-7  " style="width:50%">
+                                                    @foreach (DataRow item2 in dt.Rows)
+                                                    {
+
+                                                        @if (count <= 5 && item2[item.ColumnName].ToString() != null && item2[item.ColumnName].ToString() != "")
+                                                        {
+                                                            <span>"</span>
+                                                            @item2[item.ColumnName].ToString()
+                                                            <span>"@(count == 5 ? "" : ",")</span>
+                                                        }
+
+                                                        count++;
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+
+
+
+                                    }
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    }
+                }
+
+
+                <div class="" style="margin-top:10px; display:flex;justify-content:end;gap:10px;">
+                    <button class="btn btn-effect" style="font-size: 17px; @((CheckIsSaveOpen())==true?"pointer-events:auto ;filter:unset ;":"pointer-events: none;filter: grayscale(100%);")" @onclick="SaveHeader">
+                        Save Mappings
+                    </button>
+                    <button class="btn btn-effect" @onclick="@ClearAll">Reset</button>
+                </div>
+
+            </div>
+        </div>
+
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin />
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    DataTable dt = new DataTable();
+    public ImportMultiselectView multiSelect { get; set; } = new();
+
+    List<string> MultiSelectClients { get; set; }
+    List<string> MultiSelectWorkType { get; set; }
+
+    int SelectedAdminClientView { get; set; } = 0;
+    int SelectedFileView { get; set; } = 0;
+
+    List<AdminClientView> _clients { get; set; } = new();
+    List<FileView> _files { get; set; } = new();
+
+    public List<HeaderView>[] _headerViewsArr { get; set; }
+
+    List<HeaderView> _headerViews { get; set; } = new();
+    Dictionary<int, List<HeaderView>> headers = new Dictionary<int, List<HeaderView>>();
+
+    List<CategoryView> _categoryViews { get; set; } = new();
+
+    public CategoryView[] categoryViews { get; set; }
+
+    IEnumerable<ImportMappingHeaderCategoryView> importMappingHeaderCategories { get; set; }
+
+    public bool validateImport { get; set; } = false;
+    public bool sendEmail { get; set; } = false;
+    public bool validatePostcodes { get; set; } = false;
+    public bool sendInternalEmail { get; set; } = false;
+    public bool testLoad { get; set; } = false;
+
+    public HeaderView[] selectedHeader { get; set; }
+    public IEnumerable<ImportMappingFileView> importMappingFileViews { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        var DataList = await _importServices.GetAllMultiSelect();
+
+        await LoadData();
+
+        multiSelect = DataList;
+    }
+    public async Task LoadData()
+    {
+        var Mappings = await _adminServices.GetImportMappingFileAsync();
+        if (Mappings is not null)
+        {
+            foreach (var item in Mappings)
+            {
+                _clients.Add(AdminMapping.MapToClient(item));
+                //_files.Add(AdminMapping.MapToFile(item));
+            }
+            importMappingFileViews = Mappings;
+            _clients = _clients.DistinctBy(x => x.ClientID).ToList();
+            //_files = _files.DistinctBy(x => x.FileTypeID).ToList();
+        }
+    }
+    public bool CheckIsSaveOpen()
+    {
+        if (selectedHeader == null)
+        {
+            return false;
+
+        }
+        else
+        {
+            for (int i = 0; i < selectedHeader.Length - 1; i++)
+            {
+                if (selectedHeader[i] == null)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public int[] categories { get; set; }
+    public async Task ImportExcelFile(InputFileChangeEventArgs eventArgs)
+    {
+        dt = new();
+        var fileStream = eventArgs.File.OpenReadStream();
+        var name = eventArgs.File.Name;
+        var extension = Path.GetExtension(name);
+        var csv = new List<string[]>();
+        if (extension.ToUpper().Contains(".XLSX"))
+        {
+            var memoryStream = new MemoryStream();
+            await fileStream.CopyToAsync(memoryStream);
+
+            fileStream.Close();
+            memoryStream.Position = 0;
+
+            ISheet sheet;
+            var xsswb = new XSSFWorkbook(memoryStream);
+
+            sheet = xsswb.GetSheetAt(0);
+            IRow hr = sheet.GetRow(0);
+            var rl = new List<string>();
+
+            int cellCount = hr.LastCellNum;
+            categories = new int[cellCount];
+            _headerViewsArr = new List<HeaderView>[cellCount];
+            selectedHeader = new HeaderView[cellCount];
+            var cellValue = "";
+            for (int i = 0; i < cellCount; i++)
+            {
+                ICell cell = hr.GetCell(i);
+                dt.Columns.Add(cell.ToString());
+                categories[i] = i;
+            }
+            for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
+            {
+                var r = sheet.GetRow(i);
+                for (int j = r.FirstCellNum; j < cellCount; j++)
+                {
+
+                    if (r.GetCell(j) == null)
+                    {
+                        rl.Add(string.Empty);
+                    }
+                    else
+                    {
+                        var res = r.GetCell(j).ToString();
+                        rl.Add(res);
+                    }
+                }
+
+                if (rl.Count > 0)
+                {
+                    dt.Rows.Add(rl.ToArray());
+                }
+                rl.Clear();
+            }
+            memoryStream.Close();
+        }
+        else if (extension.ToUpper().Contains(".CSV"))
+        {
+
+            MemoryStream ms = new MemoryStream();
+            await fileStream.CopyToAsync(ms);
+            fileStream.Close();
+            var outputFileString = System.Text.Encoding.UTF8.GetString(ms.ToArray());
+
+            var rowData = "";
+            var count = 0;
+            foreach (var item in outputFileString.Split(Environment.NewLine))
+            {
+                if (count == 0)
+                {
+                    var HeaderColumn = item.Split(",");
+                    categories = new int[HeaderColumn.Length];
+                    _headerViewsArr = new List<HeaderView>[HeaderColumn.Length];
+                    selectedHeader = new HeaderView[HeaderColumn.Length];
+                    for (int i = 0; i < HeaderColumn.Length; i++)
+                    {
+
+                        dt.Columns.Add(HeaderColumn[i].Replace('"', ' '));
+                    }
+                    count++;
+                }
+                else
+                {
+                    var RowsColumn = item.Split(",");
+                    for (int i = 0; i < RowsColumn.Length; i++)
+                    {
+                        if (i == 0)
+                        {
+
+                            rowData += "''" + RowsColumn[i].Replace('"', ' ') + "'',";
+                        }
+                        else if (i == RowsColumn.Length - 1)
+
+                        {
+                            rowData += "''" + RowsColumn[i].Replace('"', ' ') + "''";
+                        }
+                        else
+                        {
+                            rowData += "''" + RowsColumn[i].Replace('"', ' ') + "'',";
+                        }
+
+                    }
+
+                }
+            }
+            dt.Rows.Add(rowData);
+        }
+
+    }
+
+    public async Task OnChange()
+    {
+        _headerViews = new();
+        _categoryViews = new();
+        var Mappings = await _adminServices.GetImportMappingHeaderCategoryAsync(SelectedFileView);
+        importMappingHeaderCategories = Mappings;
+        List<HeaderView> headerViews = new List<HeaderView>();
+        if (Mappings is not null)
+        {
+            foreach (var item in Mappings)
+            {
+                _categoryViews.Add(AdminMapping.MapToCategory(item));
+            }
+            _categoryViews = _categoryViews.DistinctBy(x => x.Category).ToList();
+        }
+
+    }
+    public async Task OnCategoryChange(object value, int dropDownNumber)
+    {
+        List<ImportMappingHeaderCategoryView> listsOfHeader = new();
+        _headerViews = new();
+        if (value != null)
+        {
+            listsOfHeader = importMappingHeaderCategories.Where(x => x.Category == value.ToString()).ToList();
+            if (listsOfHeader != null)
+            {
+                foreach (var item in listsOfHeader)
+                {
+                    _headerViews.Add(AdminMapping.MapToHeader(item));
+                }
+                _headerViews = _headerViews.DistinctBy(x => x.HeaderID).ToList();
+                _headerViewsArr[dropDownNumber] = _headerViews;
+                if (selectedHeader.Length > 0)
+                {
+                    for (int i = 0; i < selectedHeader.Length - 1; i++)
+                    {
+                        if (selectedHeader[i] is not null)
+                        {
+                            var selectedHeaderData = _headerViewsArr[dropDownNumber].Where(x => x.HeaderID == selectedHeader[i].HeaderID).FirstOrDefault();
+                            if (selectedHeaderData is not null)
+                            {
+                                _headerViewsArr[dropDownNumber].Remove(selectedHeaderData);
+                                _headerViewsArr[dropDownNumber] = _headerViewsArr[dropDownNumber].DistinctBy(x => x.HeaderID).ToList();
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+        else
+        {
+            _headerViewsArr[dropDownNumber] = null;
+            if (selectedHeader[dropDownNumber] is not null)
+            {
+                selectedHeader[dropDownNumber] = null;
+            }
+        }
+
+    }
+    public async Task OnMapperChange(object value, int dropDownNumber)
+    {
+        if (int.Parse(value.ToString()) != 0)
+        {
+            if (selectedHeader[dropDownNumber] is not null)
+            {
+                for (int j = 0; j < _headerViewsArr.Length - 1; j++)
+                {
+                    if (_headerViewsArr[j] is not null)
+                    {
+                        _headerViewsArr[j].Add(selectedHeader[dropDownNumber]);
+                        _headerViewsArr[j] = _headerViewsArr[j].DistinctBy(x => x.HeaderID).ToList();
+                    }
+                }
+            }
+            var result = _headerViewsArr[dropDownNumber].Where(x => x.HeaderID == int.Parse(value.ToString())).FirstOrDefault();
+            selectedHeader[dropDownNumber] = result;
+            var headerData = importMappingHeaderCategories.Where(x => x.HeaderID == result.HeaderID).FirstOrDefault();
+            var res = importMappingHeaderCategories.Where(x => x.Category == headerData.Category).ToList();
+
+            for (int i = 0; i < selectedHeader.Length - 1; i++)
+            {
+                if (selectedHeader[i] is not null)
+                {
+                    for (int j = 0; j < _headerViewsArr.Length - 1; j++)
+                    {
+                        if (_headerViewsArr[j] is not null && i != j)
+                        {
+                            var headers = _headerViewsArr[j].Where(x => x.HeaderID == selectedHeader[i].HeaderID).FirstOrDefault();
+                            _headerViewsArr[j].Remove(headers);
+                            _headerViewsArr[j] = _headerViewsArr[j].DistinctBy(x => x.HeaderID).ToList();
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (selectedHeader[dropDownNumber] is not null)
+            {
+                for (int j = 0; j < _headerViewsArr.Length - 1; j++)
+                {
+                    if (_headerViewsArr[j] is not null)
+                    {
+                        _headerViewsArr[j].Add(selectedHeader[dropDownNumber]);
+                        _headerViewsArr[j] = _headerViewsArr[j].DistinctBy(x => x.HeaderID).ToList();
+                    }
+                }
+            }
+            selectedHeader[dropDownNumber] = null;
+        }
+
+    }
+    public async Task OnClientChange()
+    {
+        _files = new();
+        var file_list = importMappingFileViews.Where(x => x.ClientID == SelectedAdminClientView).ToList();
+        foreach (var item in file_list)
+        {
+            _files.Add(AdminMapping.MapToFile(item));
+        }
+        _files = _files.DistinctBy(x => x.FileTypeID).ToList();
+    }
+    public async Task SaveHeader()
+    {
+        var importMappingView = new ImportMappingView();
+        importMappingView.ClientID = SelectedAdminClientView;
+        importMappingView.FileIypeID = SelectedFileView;
+        var headerMappingViewsList = new List<HeaderMappingView>();
+        var count = 0;
+        foreach (DataColumn item in dt.Columns)
+        {
+            headerMappingViewsList.Add(new HeaderMappingView() { HeaderID = selectedHeader[count].HeaderID, ExternalHeader = item.ColumnName });
+            count++;
+        }
+        importMappingView.headerMappingViewList = headerMappingViewsList;
+        importMappingView.statusCode = 0;
+        importMappingView.errorMessage = "";
+        await _adminServices.AddNewImportMappingsAsync(importMappingView);
+        await Swal.FireAsync("Success", "Mapping saved successfully", "success");
+        ClearAll();
+    }
+
+    public async Task ClearAll()
+    {
+        _files = new();
+        categories = null;
+        _headerViewsArr = null;
+        selectedHeader = null;
+        _clients = new();
+        SelectedAdminClientView = 0;
+        SelectedFileView = 0;
+        dt = new();
+        await LoadData();
+    }
+}
+<style>
+    .file-input-zone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: blue;
+        color: white;
+        cursor: pointer;
+        position: relative;
+        width: 120px;
+        height: 30px;
+    }
+
+        .file-input-zone:hover {
+            background-color: lightblue;
+        }
+
+    .btn input[type=file] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .data-row {
+        padding: 10px;
+        border: 1px solid gray;
+        font-size: 12px;
+        border-radius: 6px;
+    }
+
+    .disable-display-for-1234 {
+        display: unset;
+    }
+
+    .enable-display-for-1234 {
+        display: none;
+    }
+
+    @@media only screen and (max-width: 1050px) {
+        .data-row {
+            padding: 10.2px;
+            border: 1px solid gray;
+            font-size: 12px;
+        }
+    }
+
+    @@media only screen and (max-width: 1013px) {
+        .data-row {
+            padding: 9.984px;
+            border: 1px solid gray;
+            font-size: 12px;
+        }
+
+        .data-row {
+            padding: 9.93px;
+            border: 1px solid gray;
+            font-size: 12px;
+        }
+    }
+
+    @@media only screen and (max-width: 1234px) {
+        .disable-display-for-1234 {
+            display: none;
+        }
+
+        .enable-display-for-1234 {
+            display: unset;
+        }
+    }
+
+
+    @@media only screen and (max-width: 890px) {
+        .data-row {
+            padding: 9.93px;
+            border: 1px solid gray;
+            font-size: 12px;
+        }
+    }
+</style>

@@ -1,0 +1,119 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+@inject MagnusWebUI.Data.Navigation.EnagageNavigationManager _engageNavigation
+<AuthorizeView>
+    <Authorized>
+        <div class="homepage-Engage">
+            <h2 class="text-center">Welcome to Engage</h2>
+            @*<div class="row" style="margin:0px !important;min-height:300px">
+                <div class="col-md-4">
+                    <div class="card card-design-homepage" style="height:50%">
+                        <h1>
+                            <RadzenButton Click="GoToSearch" Text="Search"/>
+                        </h1>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-design-homepage" style="height:50%">
+                        <h1>
+                            <RadzenButton Click="GoToImport" Text="Import" />
+                        </h1>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-design-homepage" style="height:50%">
+                        <h1>
+                            <RadzenButton Click="GoToOnLoadAlocation" Text="On Load Alocation" />
+                        </h1>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+        
+    </Authorized>
+    <NotAuthorized>
+        <div style="margin-top: -74px;">
+            <img src="images/HomeImage.jpg" style="width:100%" />
+        </div>
+        <div class="d-flex justify-content-center" style="margin-top:-50px">
+            <div class="card" style="flex-direction: row;justify-content: center;width: 80%;padding: 20px;border-radius: 10px;align-items: center;">
+                <div class="col-4">
+                    <img src="images/engage-logo2.0.png" width="110" height="30" />
+                </div>
+                <div class="col-8" style="color:#444444">
+                    <h3>Technology-driven field services provider</h3>
+                </div>
+
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="row pFontSize" style="padding: 20px;border-radius: 10px;width: 80%; display: flex;flex-direction: column;justify-content: center;">
+                <p>
+                    Engage is a technology-driven field services provider that conducts over 50,000 visits to people, businesses and their properties every month across the UK and Ireland.
+                </p>
+                <p>
+                    A comprehensive range of end-to-end services are delivered on behalf of many sectors including:
+                </p>
+                <ul>
+                    <li>Water wholesalers (domestic and commercial)</li>
+                    <li>Water retailers</li>
+                    <li>Energy suppliers</li>
+                    <li>Financial services</li>
+                    <li>Local authorities</li>
+                    <li>Central government</li>
+                    <li>Legal</li>
+                    <li>Property</li>
+                </ul>
+                <p>
+                    Engage uses the latest innovative technologies to deliver the most efficient client services. Agents use bespoke handheld technology to deliver a professional evidence-based service, capturing photographs, signatures and all the required information, including audio recordings, from each visit. Our innovative self-service portal allows clients to access real-time management information and case updates.
+                </p>
+                <p>
+                    We are committed to developing partnerships with clients to enable dual approaches to industry hurdles and challenges whilst delivering a progressive and transparent service.
+                </p>
+                <p>
+                    With an innovative management style and agile technology, we tailor strategies to meet the ever changing environments as well as introducing new campaigns to bring out the ‘creative’ in our clients.
+                </p>
+            </div>
+        </div>
+
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    public void GoToSearch(){
+        _engageNavigation.Search();
+    }
+    public void GoToImport()
+    {
+        _engageNavigation.Import();
+    }
+    public void GoToOnLoadAlocation()
+    {
+        _engageNavigation.OnloadAlocation();
+    }
+}
+<style>
+    .homepage-Engage{
+        margin-left:250px;
+    }
+    .pFontSize {
+        font-family: "Open Sans", Sans-serif;
+        font-size: 20px;
+        font-weight: 300;
+        line-height: 30px;
+        color: #444444;
+    }
+    .card-design-homepage{
+        height: 100%;
+        padding: 10px;
+        border-radius: 10px !important;
+        background: linear-gradient(140deg, rgba(0,91,132,1) 0%, rgba(24,42,71,1) 100%);
+        color: white;
+        justify-content: center;
+        align-items: center;
+        border: 0px;
+    }
+</style>

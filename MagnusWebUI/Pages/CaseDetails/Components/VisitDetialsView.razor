@@ -1,0 +1,189 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.PaymentDetailsModels;
+@using Magnus.Core.Models.CaseDetailsModels.VisitDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using MagnusWebUI.Shared.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="tab-card-style-all" >
+            <div class="col-4" style="padding-right:8px;">
+                <div class="row">
+                    <div class="col-12 ">
+                        <RadzenFieldset Text="Visit Details">
+                            <div class="@*col-margin*@" >
+                                <div class="row">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Visit Date:
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        <DisabledTextBox placeHolder="Visit Date" bindTextValue="@VisitDetails.GetValue("Visit Date")" />
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Visit Time:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        <DisabledTextBox placeHolder="Visit Time" bindTextValue="@VisitDetails.GetValue("Visit Time")" />
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Agent Comments:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        <DisabledTextBox placeHolder="Agent Comments" bindTextValue="@VisitDetails.GetValue("Agent Comments")" />
+                                    </div>
+                                </div>
+                            </div>
+                        </RadzenFieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="pager-radzen " style="">
+                        <RadzenPager HorizontalAlign="HorizontalAlign.Left" Count="count" Style="padding-left:0;" PageSize="@pageSize" PageNumbersCount="5" PageChanged="@PageChanged" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-4" style="padding-left:8px; padding-right:8px;">
+                <RadzenFieldset Text="Locations">
+                    <div class="@*col-margin*@" >
+                        <div class="row ">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Postcode:
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Postcode" bindTextValue="@VisitDetails.GetValue("Postcode")" />
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Address:
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Address" bindTextValue="@VisitDetails.GetValue("Address")" />
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-6" style="padding-right:8px;">
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Latitude:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        <DisabledTextBox placeHolder="Latitude" bindTextValue="@VisitDetails.GetValue("Latitude")" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6" style="padding-left:8px;">
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Longitude:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        <DisabledTextBox placeHolder="Longitude" bindTextValue="@VisitDetails.GetValue("Longitude")" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Location URL:
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Location URL" bindTextValue="@VisitDetails.GetValue("Location URL")" />
+                            </div>
+                        </div>
+                    </div>
+                </RadzenFieldset>
+            </div>
+            <div class="col-4" style="padding-left:8px;">
+                <RadzenFieldset Text="Locations">
+                    <div class="@*col-margin*@">
+                        <div class="row ">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Uploaded:
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Uploaded" bindTextValue="@VisitDetails.GetValue("Uploaded")" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Revisit Required:
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Revisit Required" bindTextValue="@VisitDetails.GetValue("Revisit Required")" />
+                            </div>
+                        </div>
+                    </div>  
+                </RadzenFieldset>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [Parameter]
+    public VisitDetails VisitDetails { get; set; }
+
+    
+    string pagingSummaryFormat = "Displaying page {0} of {1} (total {2} records)";
+    int pageSize = 3;
+    int count = 22;
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+    }
+
+    void PageChanged(PagerEventArgs args)
+    {
+
+    }
+}
+<style>
+    /*.pager-radzen a {
+        margin: -5px;
+        
+    }
+    .pager-radzen{
+        margin-left:30px;
+    }*/
+</style>

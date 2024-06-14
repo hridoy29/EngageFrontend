@@ -1,0 +1,136 @@
+﻿@page "/dialler"
+@inject IContactCentreServices _contactServices
+
+
+<AuthorizeView>
+    <Authorized>
+
+        <RadzenTabs RenderMode="TabRenderMode.Server">
+            <Tabs>
+                <RadzenTabsItem Text="Working List">
+                    <div class="row d-flex justify-content-center align-items-center" style="gap:10px;">
+                        <RadzenDropDown AllowClear="true" TValue="string"
+                                        Data=@(DropDownData) FilterCaseSensitivity="FilterCaseSensitivity.Default"
+                                        AllowFiltering="true" />
+                        <div>
+                            <RadzenCheckBox TriState="false" Value="@(includeStoppedItemsCheckBox)"
+                                            TValue="bool" Change="@(args=>CheckChange())" />
+                            Include Stopped Items
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <RadzenFieldset Text="Working List">
+
+                            <RadzenDataGrid @ref="contactCentreGrid" AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnPicking="true"
+                                            AllowPaging="true" PageSize="10"
+                                            AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true"
+                                            AllowColumnResize="true" ColumnWidth="200px"
+                                            FilterCaseSensitivity="FilterCaseSensitivity.Default" Data="@contactCentreList" TItem="ContactCentreView"
+                                            Count="contactCentreCount" PagerHorizontalAlign="HorizontalAlign.Left" LoadData="LoadList"
+                                            Density="Density.Compact" PagerAlwaysVisible="true">
+                                <Columns>
+                                    <RadzenDataGridColumn TItem="ContactCentreView" Property="Chaseref" Title="Chase Ref" Frozen="true" TextAlign="TextAlign.Center" Width="140px" MinWidth="80px">
+                                        <FooterTemplate>
+                                            Total <b>@contactCentreCount</b>
+                                        </FooterTemplate>
+                                    </RadzenDataGridColumn>
+                                    <RadzenDataGridColumn TItem="ContactCentreView" Property="ClientName" Title="Client Name" Frozen="true" TextAlign="TextAlign.Center" Width="140px" MinWidth="80px" />
+                                    <RadzenDataGridColumn TItem="ContactCentreView" Property="CustomerName" Title="Customer Name" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="ContactCentreView" Property="Telephone1" Title="Telephone 1" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="ContactCentreView" Property="Telephone2" Title="Telephone 2" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="ContactCentreView" Property="Telephone3" Title="Telephone 3" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="ContactCentreView" Property="Telephone4" Title="Telephone 4" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="ContactCentreView" Property="Active" Title="Active" Width="200px" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="ContactCentreView" Property="Workstream" Title="Workstream" TextAlign="TextAlign.Center" />
+
+
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenFieldset>
+                    </div>
+
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Schemes & Priorities">
+                    <h1>This Schemes & Priorities</h1>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Generate Manual File">
+                    <h1>This Generate Manual File</h1>
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+
+    </Authorized>
+    <NotAuthorized>
+       <RedirectToLogin />
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
+
+
+
+
+@code {
+
+    RadzenDataGrid<ContactCentreView> contactCentreGrid;
+
+    List<string> DropDownData = new List<string>();
+
+    private List<ContactCentreView> contactCentreList = new List<ContactCentreView>();
+    public int contactCentreCount { get; set; } = 0;
+
+    public bool includeStoppedItemsCheckBox { get; set; } = false;
+
+    private GridViewParams contactCentreGridParams = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        contactCentreGridParams.DateFilter = string.Empty;
+        contactCentreGridParams.Filter = "";
+        contactCentreGridParams.OrderBy = "";
+        contactCentreGridParams.Skip = 0;
+        contactCentreGridParams.Take = 10;
+
+        DropDownData = await _contactServices.DropdownData();
+        var Data = await _contactServices.GetPagedAllAsync(contactCentreGridParams);
+        contactCentreList = Data.DataViewList.ToList();
+        contactCentreCount = Data.TotalDataViewCount;
+
+        Console.WriteLine("Count: " + DropDownData.Count);
+
+    }
+    public async Task Load()
+    {
+        DropDownData = await _contactServices.DropdownData();
+        var Data = await _contactServices.GetPagedAllAsync(contactCentreGridParams);
+        contactCentreList = Data.DataViewList.ToList();
+        contactCentreCount = Data.TotalDataViewCount;
+    }
+
+    public async Task LoadList(LoadDataArgs args)
+    {
+        contactCentreGridParams.DateFilter = null;
+        contactCentreGridParams.Filter = args.Filter ?? string.Empty;
+        contactCentreGridParams.OrderBy = args.OrderBy ?? string.Empty; ;
+        contactCentreGridParams.Skip = args.Skip ?? 0;
+        contactCentreGridParams.Take = 10;
+
+        await Load();
+    }
+
+
+    public void CheckChange()
+    {
+        includeStoppedItemsCheckBox = !includeStoppedItemsCheckBox;
+    }
+}
+<style>
+    .rz-group-header {
+        display: flex;
+        justify-content: end;
+    }
+</style>

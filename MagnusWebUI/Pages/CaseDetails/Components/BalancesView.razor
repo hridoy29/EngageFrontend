@@ -1,0 +1,46 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+@inject IJSRuntime JSRuntime
+
+<AuthorizeView>
+    <Authorized>
+        <div class="" style="display: flex;/* border: 1px solid gray; */padding:10px;border-radius: 10px;box-shadow: 0 3px 10px rgb(0 0 0 / 20%);">           
+            <div class="col-4">
+                    <div class="row">
+                        <div class="col-4 header-of-dropdown-and-texbox" style="">
+                            Original Balance:
+                        </div>
+                        <div class="col-8">
+                            <RadzenTextBox Placeholder="Original Balance" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-4 header-of-dropdown-and-texbox" style="">
+                            Balance Outstanding:
+                        </div>
+                        <div class="col-8">
+                            <RadzenTextBox Placeholder="Balance Outstanding" Class="w-100" />
+                        </div>
+                    </div>
+                </div>           
+        </div>
+    </Authorized>
+</AuthorizeView>
+    
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+}

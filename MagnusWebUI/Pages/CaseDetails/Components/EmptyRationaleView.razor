@@ -1,0 +1,130 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.PropertyDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using MagnusWebUI.Shared.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="col-12 main-col-padding">
+            <RadzenFieldset Text="Empty Rationale" Style="height:100% !important">
+                <div class="col-12 d-flex main-col-padding">
+                    <div class="col-12 main-col-padding">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-11 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Mail Build Up:
+                                    </div>
+                                    <div class="col-1">
+                                        <RadzenCheckBox Name="Mail Build Up" TValue="bool" Value="@ToBool(PropertyDetails.GetValue("Mail Build Up", PropertyOrd))"/>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-11 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        No Furniture:
+                                    </div>
+                                    <div class="col-1">
+                                        <RadzenCheckBox Name="No Furniture" TValue="bool" Value="@ToBool(PropertyDetails.GetValue("No Furniture", PropertyOrd))"/>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-11 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Confirmed By Neighbour:
+                                    </div>
+                                    <div class="col-1">
+                                        <RadzenCheckBox Name="Confirmed By Neighbour" TValue="bool" Value="@ToBool(PropertyDetails.GetValue("Confirmed By Neighbour", PropertyOrd))"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6" style="padding-right:22px;">
+                                <div class="row">
+                                    <div class="col-11 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        To Let/For Sale Sign:
+                                    </div>
+                                    <div class="col-1">
+                                        <RadzenCheckBox Name="To Let/For Sale Sign" TValue="bool" Value="@ToBool(PropertyDetails.GetValue("To Let/For Sale Sign", PropertyOrd))"/>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-11 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Boarded Up:
+                                    </div>
+                                    <div class="col-1">
+                                        <RadzenCheckBox Name="Boarded Up" TValue="bool" Value="@ToBool(PropertyDetails.GetValue("Boarded Up", PropertyOrd))"/>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-11 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Sealed Mailbox:
+                                    </div>
+                                    <div class="col-1">
+                                        <RadzenCheckBox Name="Sealed Mailbox" TValue="bool" Value="@ToBool(PropertyDetails.GetValue("Sealed Mailbox", PropertyOrd))"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Demolish Due:
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-12">
+                                         <DisabledTextBox placeHolder="Demolish Due" bindTextValue="@PropertyDetails.GetValue("Demolish Due", PropertyOrd)"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </RadzenFieldset>
+        </div>
+    </Authorized>
+</AuthorizeView>
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [CascadingParameter]
+    public PropertyDetails PropertyDetails { get; set; }
+
+    [CascadingParameter]
+    public int PropertyOrd { get; set; }
+
+    private static bool ToBool(string? value)
+    {
+        if (value is null)
+            return false;
+
+        bool successfulParse = bool.TryParse(value, out bool result);
+
+        if (successfulParse)
+            return result;
+
+        string[] valid = { "true", "yes" }; //etc
+
+        foreach (string v in valid)
+            if (string.Equals(value, v, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+        return false;
+    }
+}

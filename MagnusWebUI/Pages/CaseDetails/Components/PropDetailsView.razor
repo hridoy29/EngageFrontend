@@ -1,0 +1,259 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="" style="display: flex;/* border: 1px solid gray; */padding:10px;border-radius: 10px;box-shadow: 0 3px 10px rgb(0 0 0 / 20%);">
+            <div class="col-8">
+                <RadzenFieldset Text="Property Located">
+                    <div class="col-12 d-flex">
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-12 
+
+
+
+
+
+
+" style="">
+                                    Property Located:
+                                </div>                                
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Property Located" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Access Info:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Access Info" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Area Condition:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="rea Condition" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Property Condition:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Property Condition" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Door Color:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Door Color" />
+                                </div>
+                            </div>                        
+                                                       
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Someone Living at the Property:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Someone Living at the Property" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Inhabitance Confirmed By:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenTextArea Placeholder="Inhabitance Confirmed By" Class="w-100" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Inhabitance Confirmed By Unknown Detail:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenTextArea Placeholder="Inhabitance Confirmed By Unknown Detail" Class="w-100" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                   Buisness Type:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Buisness Type" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Buisness Size:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Buisness Size" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </RadzenFieldset>
+            </div>
+            <div class="col-4">
+                <RadzenFieldset Text="Occupier Details" Style="height:100% !important">
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Current Occupier:
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Current Occupier" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Current Occupier Confirmed By:
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder=" Current Occupier Confirmed By" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Confirmed By Name:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Confirmed By Name" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Confirmed By Position:
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Confirmed By Position" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Confirmed By Contact No 1:
+                        </div>
+                    </div>
+                     <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Confirmed By Contact No 1" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Confirmed By Contact No 2:
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Confirmed By Contact No 2" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Confirmed By Contact No 3:
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Confirmed By Contact No 3" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Confirmed By Email:
+                        </div>
+                    </div>
+                     <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Confirmed By Email" Class="w-100" />
+                        </div>
+                    </div>
+                </RadzenFieldset>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+    
+
+
+@code {
+
+}

@@ -1,0 +1,79 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.PropertyDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using MagnusWebUI.Shared.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="col-12 main-col-padding">
+            <RadzenFieldset Text="New Business Contact Details">
+                <div class="col-12 d-flex main-col-padding">
+                    <div class="col-6 left-col-padding">
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                New Business Name:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                 <DisabledTextBox placeHolder="New Business Name" bindTextValue="@PropertyDetails.GetValue("New Business Name", PropertyOrd)"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                New Business Contact Name:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="New Business Contact Name" bindTextValue="@PropertyDetails.GetValue("New Business Contact Name", PropertyOrd)"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 right-col-padding">
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                New Business Contact Position:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="New Business Contact Position" bindTextValue="@PropertyDetails.GetValue("New Business Contact Position", PropertyOrd)"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                New Business Contact Tel No:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="New Business Contact Tel No" bindTextValue="@PropertyDetails.GetValue("New Business Contact Tel No", PropertyOrd)"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </RadzenFieldset>
+        </div>
+    </Authorized>
+</AuthorizeView>
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [CascadingParameter]
+    public PropertyDetails PropertyDetails { get; set; }
+
+    [CascadingParameter]
+    public int PropertyOrd { get; set; }
+}

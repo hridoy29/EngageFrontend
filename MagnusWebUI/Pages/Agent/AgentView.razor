@@ -1,0 +1,1352 @@
+﻿@page "/agent"
+<AuthorizeView>
+        <Authorized>
+            
+          <div class="row">
+    <div class="col-md-7 d-flex">
+        <div class="col-md-2 d-flex align-items-center">
+            <RadzenTextBox />
+        </div>
+        <div class="col-md-3 d-flex align-items-center">
+            <RadzenDropDown AllowClear="true" TValue="string" Class="w-100"
+                            Data=@FirstNameList Placeholder="First Name" />
+        </div>
+        <div class="col-md-2 d-flex align-items-center">
+            <RadzenTextBox />
+        </div>
+        <div class="col-md-2 d-flex align-items-center">
+            <RadzenTextBox />
+        </div>
+        <div class="col-md-3 d-flex align-items-center">
+            <RadzenTextBox />
+        </div>
+    </div>
+    <div class="col-md-5 d-flex">
+
+        <div class="col-md-6 d-flex align-items-center" style="gap:10px">
+            Region
+            <RadzenDropDown AllowClear="true" Placeholder="Region" TValue="string" Class="w-100"
+                            Data=@RegionList />
+        </div>
+        <div class="col-md-6 d-flex align-items-center" style="gap:10px">
+            Status
+            <RadzenDropDown AllowClear="true" Placeholder="Status" TValue="string" Class="w-100"
+                            Data=@StatusList />
+        </div>
+    </div>
+</div>
+<div class="row w-100">
+    <div class="col-12">
+        <RadzenTabs RenderMode="TabRenderMode.Server" Style="width:100%">
+            <Tabs>
+                <RadzenTabsItem Text="Details">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-2 d-flex align-items-center" style="padding: 0px !important">
+                                        Name:
+                                    </div>
+                                    <div class="col-10">
+                                        <RadzenTextBox Placeholder="Name" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-2 d-flex align-items-center" style="padding: 0px !important">
+                                        Agent Name:
+                                    </div>
+                                    <div class="col-10">
+                                        <RadzenTextBox Placeholder="Agent Name" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-6 d-flex">
+                                    <div class="col-4 d-flex align-items-center" style="padding: 0px !important">
+                                        Agent Mobile:
+                                    </div>
+                                    <div class="col-8" style="margin-left:5px;">
+                                        <RadzenTextBox Placeholder="Agent Mobile" />
+                                    </div>
+                                </div>
+                                <div class="col-6 d-flex">
+                                    <div class="col-5 d-flex align-items-center" style="padding: 0px !important">
+                                        House Tel. No:
+                                    </div>
+                                    <div class="col-7">
+                                        <RadzenTextBox Placeholder="House Tel. No" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-2 d-flex align-items-center" style="padding: 0px !important">
+                                        Marital Status:
+                                    </div>
+                                    <div class="col-10">
+                                        <RadzenDropDown AllowClear="true" Placeholder="Marital Status" TValue="string" Class="w-100"
+                                                        Data=@MaritalStatusList />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-6 d-flex">
+                                    <div class="col-4 d-flex align-items-center" style="padding: 0px !important">
+                                        Dob:
+                                    </div>
+                                    <div class="col-8" style="margin-left:5px;">
+                                        <RadzenDatePicker DateFormat="d" Placeholder="To" Class="w-100" @bind-Value="@DOB" />
+                                    </div>
+                                </div>
+                                <div class="col-6 d-flex">
+                                    <div class="col-5 d-flex align-items-center justify-content-center">
+                                        Nino:
+                                    </div>
+                                    <div class="col-7">
+                                        <RadzenTextBox Placeholder="Nino" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-2 d-flex align-items-center" style="padding: 0px !important">
+                                        Nationality:
+                                    </div>
+                                    <div class="col-10">
+                                        <RadzenDropDown AllowClear="true" Placeholder="Nationality" TValue="string" Class="w-100"
+                                                        Data=@NationalitiesList />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-2 d-flex " style="padding: 0px !important">
+                                        Notes:
+                                    </div>
+                                    <div class="col-10">
+                                        <RadzenTextArea Placeholder="Notes" Style="height:100px;width:100%" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-6 d-flex">
+                                    <div class="col-4 d-flex align-items-center" style="padding: 0px !important">
+                                        Start Date:
+                                    </div>
+                                    <div class="col-8" style="margin-left:5px;">
+                                        <RadzenDatePicker DateFormat="d" Placeholder="To" Class="w-100" @bind-Value="@DOB" />
+                                    </div>
+                                </div>
+                                <div class="col-6 d-flex">
+                                    <div class="col-4 d-flex align-items-center justify-content-center">
+                                        Leave Date:
+                                    </div>
+                                    <div class="col-8">
+                                        <RadzenDatePicker DateFormat="d" Placeholder="To" Class="w-100" @bind-Value="@DOB" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-2 d-flex align-items-center" style=" padding:0px !important;">
+                                        Current Ranking:
+                                    </div>
+                                    <div class="col-10">
+                                        <RadzenTextBox Placeholder="Current Ranking" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-5 d-flex">
+                                    <div class="col-4 d-flex align-items-center" style=" padding:0px !important;">
+                                        HHT Enabled:
+                                    </div>
+                                    <div class="col-8 d-flex align-items-center justify-content-center" style="margin-left:5px; ">
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                        Change="@(args=> { hhtEnabled = !hhtEnabled; })" />
+                                    </div>
+                                </div>
+                                <div class="col-7 d-flex">
+                                    <div class="col-4 d-flex align-items-center justify-content-center">
+                                        Work Mobile Id:
+                                    </div>
+                                    <div class="col-8">
+                                        <RadzenTextBox Placeholder="Work Mobile Id" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-2 d-flex align-items-center" style=" padding:0px !important;">
+                                        Regional Manager:
+                                    </div>
+                                    <div class="col-10">
+                                        <RadzenTextBox Placeholder="Regional Manager" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-5 d-flex">
+                                    <div class="col-4 d-flex align-items-center" style=" padding:0px !important;">
+                                        SSE Id:
+                                    </div>
+                                    <div class="col-8 d-flex align-items-center justify-content-center" style="margin-left:28px; ">
+                                        <RadzenTextBox Placeholder="SSE Id" />
+                                    </div>
+                                </div>
+                                <div class="col-7 d-flex">
+                                    <div class="col-4 d-flex align-items-center justify-content-center" style="padding: 0px !important">
+                                        Agent Signed Off By:
+                                    </div>
+                                    <div class="col-8">
+                                        <RadzenDropDown AllowClear="true" Placeholder="Agent Signed Off By" TValue="string" Class="w-100"
+                                                        Data=@NationalitiesList />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-5 d-flex">
+                                    <div class="col-4 d-flex align-items-center" style=" padding:0px !important;">
+                                        HMRC Id:
+                                    </div>
+                                    <div class="col-8 d-flex align-items-center justify-content-center" style="margin-left:28px; ">
+                                        <RadzenTextBox Placeholder="SSE Id" />
+                                    </div>
+                                </div>
+                                <div class="col-7 d-flex">
+                                    <div class="col-4 d-flex align-items-center justify-content-center" style="padding: 0px !important">
+                                        Agent Sign Off By:
+                                    </div>
+                                    <div class="col-8">
+                                        <RadzenDropDown AllowClear="true" Placeholder="Agent Signed Off By" TValue="string" Class="w-100"
+                                                        Data=@NationalitiesList />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-2 d-flex align-items-center" style="padding: 0px !important">
+
+                                    </div>
+                                    <div class="col-10">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                                Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                                DHS Worker
+                                            </div>
+                                            <div class="col-4">
+                                                <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                                Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                                Warrents Worker
+                                            </div>
+                                            <div class="col-4">
+                                                <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                                Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                                Sole Trader
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                                Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                                DOMS
+                                            </div>
+                                            <div class="col-4">
+                                                <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                                Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                                Engage
+                                            </div>
+                                            <div class="col-4">
+                                                <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                                Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                                Smart Works
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                                Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                                Burlingtons
+                                            </div>
+                                            <div class="col-4">
+                                                <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                                Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                                Groswenors
+                                            </div>
+                                            <div class="col-4">
+                                                <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                                Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                                Locksmith
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                                Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                                Multi Skilled
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-2 d-flex align-items-center" style=" padding:0px !important;">
+                                        Image:
+                                    </div>
+                                    <div class="col-10">
+                                        <RadzenFileInput @bind-Value=@Photo TValue="string" Class="w-100" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <RadzenCard Style="border-radius: 10px; background-color: #f5f5f5; padding-top: 24px; padding-left: 26px;">
+                                <div style=" padding:35px">
+                                    <div class="row">
+                                        <div class="col-md-12 d-flex">
+                                            <div class="col-2 d-flex align-items-center" style="padding: 0px !important">
+                                                Building Name:
+                                            </div>
+                                            <div class="col-10">
+                                                <RadzenTextBox Placeholder=" Building Name" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-6 d-flex">
+                                            <div class="col-4 d-flex align-items-center" style="padding: 0px !important">
+                                                Building No:
+                                            </div>
+                                            <div class="col-8" style="margin-left:5px;">
+                                                <RadzenTextBox Placeholder="Building No" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 d-flex">
+                                            <div class="col-5 d-flex align-items-center" style="padding: 0px !important">
+                                                Flat No:
+                                            </div>
+                                            <div class="col-7">
+                                                <RadzenTextBox Placeholder="Flat No" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12 d-flex">
+                                            <div class="col-2 d-flex align-items-center" style="padding: 0px !important">
+                                                Street:
+                                            </div>
+                                            <div class="col-10">
+                                                <RadzenTextBox Placeholder=" Street" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12 d-flex">
+                                            <div class="col-2 d-flex align-items-center" style="padding: 0px !important">
+                                                City:
+                                            </div>
+                                            <div class="col-10">
+                                                <RadzenTextBox Placeholder=" City" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12 d-flex">
+                                            <div class="col-2 d-flex align-items-center" style="padding: 0px !important">
+                                                Country:
+                                            </div>
+                                            <div class="col-10">
+                                                <RadzenTextBox Placeholder=" Country" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12 d-flex">
+                                            <div class="col-2 d-flex align-items-center" style="padding: 0px !important">
+                                                Post Code:
+                                            </div>
+                                            <div class="col-10">
+                                                <RadzenTextBox Placeholder=" Post Code" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12 d-flex">
+                                            <div class="col-2 d-flex align-items-center" style="padding: 0px !important">
+                                                Country:
+                                            </div>
+                                            <div class="col-10">
+                                                <RadzenTextBox Placeholder=" Country" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12 d-flex">
+                                            <div class="col-2 d-flex align-items-center" style="padding: 0px !important">
+                                                Vat No:
+                                            </div>
+                                            <div class="col-10">
+                                                <RadzenTextBox Placeholder=" Vat No" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12 d-flex">
+                                            <div class="col-2 d-flex align-items-center" style="padding: 0px !important">
+                                                Banking:
+                                            </div>
+                                            <div class="col-10">
+                                                <RadzenTextBox Placeholder=" Banking" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12 d-flex justify-content-end" style=" margin-left:-14px">
+                                            <button class="btn btn-effect" style="font-size: 17px; ">Update</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </RadzenCard>
+                        </div>
+                    </div>
+
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Documents">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row " style="margin-bottom:5px">
+                                <div class="col-md-12 d-flex justify-content-end">
+                                    <span class="text-muted">Not Req.</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        ID Card Issued:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenDatePicker DateFormat="d" Placeholder="To" Class="documents" Style="border-color: red; width:100%" @bind-Value="@CardIssuedCheck" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="false"
+                                                        Name="DHS Worker" Disabled="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Search Auth Consent:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Search Auth Consent" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@SearchAuthCheck"
+                                                        Change="@(args=> { SearchAuthCheck = !SearchAuthCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Data Protection Consent:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Data Protection Consent" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@DataProtectionCheck"
+                                                        Change="@(args=> { DataProtectionCheck = !DataProtectionCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Previous Employment:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Previous Employment" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@PreviousEmplymentCheck"
+                                                        Change="@(args=> { PreviousEmplymentCheck = !PreviousEmplymentCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Self Employed Confirmation:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Self Employed Confirmation" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@SelfEmploymentCheck"
+                                                        Change="@(args=> { SelfEmploymentCheck = !SelfEmploymentCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        CRB Isse Date:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenDatePicker DateFormat="d" Placeholder="To" Class="w-100" Style="border-color: red;" @bind-Value="@CRBIssuedDate" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@CRBIssuedCheck"
+                                                        Change="@(args=> { CRBIssuedCheck = !CRBIssuedCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        CRB Number:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="CRB Number" Style="border-color:red" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@CRBNumberCheck"
+                                                        Change="@(args=> { CRBNumberCheck = !CRBNumberCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Recruitment Credit Search:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Recruitment Credit Search" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@RecruitmentCheck"
+                                                        Change="@(args=> { RecruitmentCheck = !RecruitmentCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Residency Check:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Residency Check" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@ResidencyCheck"
+                                                        Change="@(args=> { ResidencyCheck = !ResidencyCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Chase Agreement:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenDatePicker DateFormat="d" Placeholder="To" Class="w-100 " Style="border-color: red;" @bind-Value="@ChaseAgreementDate" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@ChaseCheck"
+                                                        Change="@(args=> { ChaseCheck = !ChaseCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        MLR:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="MLR Credit Search" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@MLRCheck"
+                                                        Change="@(args=> { MLRCheck = !MLRCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Bank Details:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Bank Details" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@BankDetailsCheck"
+                                                        Change="@(args=> { BankDetailsCheck = !BankDetailsCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Cash Collect:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Cash Collect" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@CashCollectionCheck"
+                                                        Change="@(args=> { CashCollectionCheck = !CashCollectionCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Code Of Conduct:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Code Of Conduct" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@CodeOfConductCheck"
+                                                        Change="@(args=> { CodeOfConductCheck = !CodeOfConductCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Utilities COC:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Utilities COC" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@UtilitiesCOCCheck"
+                                                        Change="@(args=> { UtilitiesCOCCheck = !UtilitiesCOCCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        DP Declaration:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="DP Declaration" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@DBDeclarationCheck"
+                                                        Change="@(args=> { DBDeclarationCheck = !DBDeclarationCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        BG Site Access:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="BG Site Access" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@BGSiteCheck"
+                                                        Change="@(args=> { BGSiteCheck = !BGSiteCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Driving Lic. Copy:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Driving Lic. Copy" Style="border-color:red" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@DrivingLICCheck"
+                                                        Change="@(args=> { DrivingLICCheck = !DrivingLICCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Driving Lic. Expiry:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Driving Lic. Expiry" Style="border-color:red" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@DrivingLICExpireCheck"
+                                                        Change="@(args=> { DrivingLICExpireCheck = !DrivingLICExpireCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Passport Copy:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Passport Copy" Style="border-color:red" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@PassportCopyCheck"
+                                                        Change="@(args=> { PassportCopyCheck = !PassportCopyCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Birth Certificate:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Birth Certificate" Style="border-color:red" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@BirthCertificateCheck"
+                                                        Change="@(args=> { BirthCertificateCheck = !BirthCertificateCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex">
+                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                        Home Off RTW:
+                                    </div>
+                                    <div class="col-9 d-flex align-items-center" style="gap:10px">
+                                        <RadzenTextBox Placeholder="Home Off RTW" />
+                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@HomeOffRTWCheck"
+                                                        Change="@(args=> { HomeOffRTWCheck = !HomeOffRTWCheck; })" Name="DHS Worker" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex justify-content-center">
+                                    <h4>Update Audit Appointed Rep</h4>
+                                </div>
+                                <div class="col-md-12" style="margin-bottom:10px">
+                                    <RadzenTextBox />
+                                </div>
+                                <div class="col-md-12">
+                                    <RadzenTextBox />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 d-flex justify-content-center">
+                                    <h4>Water Discon.</h4>
+                                </div>
+                                <div class="col-md-12" style="margin-bottom:10px">
+                                    <RadzenTextBox />
+                                </div>
+                                <div class="col-md-12">
+                                    <RadzenTextBox />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-1" style="margin-right:17px">
+
+                                </div>
+                                <div class="col-2">
+                                    <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                    Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                    Sole Trader
+                                </div>
+                                <div class="col-2">
+                                    <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                    Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                    Groswenors
+                                </div>
+                                <div class="col-2">
+                                    <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                    Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                    Locksmith
+                                </div>
+                                <div class="col-2">
+                                    <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                    Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                    Multi Skilled
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenFieldset Style="padding: 23px ;background: #f5f5f5;">
+                                        <HeaderTemplate>
+                                            <span class="d-inline-flex align-items-center align-middle">
+                                                <b>Licence Details</b>
+                                            </span>
+                                        </HeaderTemplate>
+                                        <ChildContent>
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-4 d-flex align-items-center" style="padding: 0px !important">
+                                                        FCA FRN:
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <RadzenTextBox Placeholder="FCA FRN" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-4 d-flex align-items-center" style="padding: 0px !important">
+                                                        Interim Permission?:
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <RadzenDropDown AllowClear="true" Placeholder="Interim Permission" TValue="string" Class="w-100"
+                                                                        Data=@InterimPermissionList />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-4 d-flex align-items-center" style="padding: 0px !important">
+                                                        Interim Permission Copy Seen?:
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <RadzenDropDown AllowClear="true" Placeholder="Interim Permission Copy Seen?" TValue="string" Class="w-100"
+                                                                        Data=@InterimPermissionList />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-4 d-flex align-items-center" style="padding: 0px !important">
+                                                        Water Disconnection?:
+                                                    </div>
+                                                    <div class="col-8">
+                                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@WaterDisconnectionCheck"
+                                                                        Change="@(args=> { WaterDisconnectionCheck = !WaterDisconnectionCheck; })" Name="DHS Worker" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex justify-content-end">
+                                                    <button class="btn btn-effect" style="font-size: 17px; ">Update</button>
+                                                </div>
+                                            </div>
+                                        </ChildContent>
+
+                                    </RadzenFieldset>
+                                </div>
+                                
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenFieldset Style="padding: 23px ;background: #f5f5f5;">
+                                        <HeaderTemplate>
+                                            <span class="d-inline-flex align-items-center align-middle">
+                                                <b>Employed Documents</b>
+                                            </span>
+                                        </HeaderTemplate>
+                                        <ChildContent>
+                                            <div class="row">
+                                                <div class="col-12 d-flex align-items-center" style="gap:10px">
+                                                    <RadzenCheckBox TriState="false" TValue="bool" Value="@VehicleBusiness"
+                                                                    Change="@(args=> { VehicleBusiness = !VehicleBusiness; })" Name="DHS Worker" />
+                                                    Vehicle used for Business
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        Reg No.:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="Reg No" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        Ins Cert Date Seen:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="Ins Cert Date Seen" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        Ins Expiry:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="Ins Expiry" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        MOT Cert Date Seen:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="MOT Cert Date Seen" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        MOT Expiry:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="MOT Expiry" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        DBS/Fin DateIssue:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="DBS/Fin DateIssue" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        DBS/Fin Date RCVD:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="DBS/Fin Date RCVD" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        COE Date Issue:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="COE Date Issue" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        COE Date Rcvd:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="COE Date Rcvd" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        CA Date Issue:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="CA Date Issue" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        CA Date Rcvd:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="CA Date Rcvd" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        Medical Q Date Issue:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="Medical Q Date Issue" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        Medical Q Date Rcvd:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="Medical Q Date Rcvd" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        Emplooyee HB Issue:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="Emplooyee HB Issue" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        P45/46 Date Received:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="P45/46 Date Received" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex justify-content-center">
+                                                    <h4>Reference</h4>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        Received and Accepted:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenCheckBox TriState="false" TValue="bool" Value="@RcvdAndAccpt"
+                                                                        Change="@(args=> { RcvdAndAccpt = !RcvdAndAccpt; })" Name="DHS Worker" />
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        Reviewed By:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="Reviewed By" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        Date Reviewed:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="Date Reviewed" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex justify-content-center">
+                                                    <h4>Blue Card</h4>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        Blue Card Issue Date:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="Blue Card Issue Date" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-12 d-flex">
+                                                    <div class="col-3 d-flex align-items-center" style="padding: 0px !important">
+                                                        Blue Card Expiry Date:
+                                                    </div>
+                                                    <div class="col-9">
+                                                        <RadzenTextBox Placeholder="Blue Card Expiry Date" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ChildContent>
+
+                                    </RadzenFieldset>
+                                </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Postcode Areas">
+                    <div class="row">
+                        <div class="col-md-6 order-md-1 order-md-0">
+                            <RadzenFieldset>
+                                <HeaderTemplate>
+                                    <span class="d-inline-flex align-items-center align-middle">
+                                        <b>Selected Areas</b>
+                                    </span>
+                                </HeaderTemplate>
+                                <ChildContent>
+
+                                    <RadzenDataGrid AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnPicking="true"
+                                                    AllowPaging="true" PageSize="10"
+                                                    AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true"
+                                                    AllowColumnResize="true" ColumnWidth="200px"
+                                                    FilterCaseSensitivity="FilterCaseSensitivity.Default" Data="@agentViewPostCodes" TItem="PostCodeAreasView"
+                                                    PagerHorizontalAlign="HorizontalAlign.Left"
+                                                    Density="Density.Compact" PagerAlwaysVisible="true">
+
+                                        <EmptyTemplate>
+                                            <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No records to display.</p>
+                                        </EmptyTemplate>
+
+                                        <Columns>
+                                            <RadzenDataGridColumn TItem="PostCodeAreasView" Property="PostCodeSector" Title="Post Code Sector"
+                                                                  TextAlign="TextAlign.Center">
+
+                                            </RadzenDataGridColumn>
+                                            <RadzenDataGridColumn TItem="PostCodeAreasView" Property="DateAdded" Title="Date Added" TextAlign="TextAlign.Center" />
+                                        </Columns>
+                                    </RadzenDataGrid>
+
+                                </ChildContent>
+
+                            </RadzenFieldset>
+                        </div>
+
+                        <div class="col-md-6 order-md-0 order-md-1">
+                            <RadzenFieldset>
+                                <HeaderTemplate>
+                                    <span class="d-inline-flex align-items-center align-middle">
+                                        <b>Add Post Code Areas</b>
+                                    </span>
+                                </HeaderTemplate>
+                                <ChildContent>
+                                    <div class="row d-flex justify-content-center">
+                                        <span style="font-size:16px;color:gray">Enter PostCode Range</span>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-6 d-flex">
+                                            <div class="col-2 d-flex" style="padding: 0px !important">
+                                                From:
+                                            </div>
+                                            <div class="col-10">
+                                                <RadzenTextBox Placeholder="From"></RadzenTextBox>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 d-flex">
+                                            <div class="col-2 d-flex " style="padding: 0px !important">
+                                                To:
+                                            </div>
+                                            <div class="col-10">
+                                                <RadzenTextBox Placeholder="From"></RadzenTextBox>
+                                                <span class="text-muted" style="font-size:12px">(Leave blank to add a single PostCode)</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-12 d-flex justify-content-center">
+                                            <button class="btn btn-effect" style=" font-size: 17px; ">@arrowIcon Add Range</button>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-12 d-flex justify-content-center">
+                                            <b style="font-size:17px;">OR</b>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row ">
+                                        <div class="col-12 d-flex justify-content-center">
+                                            <span style="font-size: 16px; color: gray">Enter PostCode Area</span>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-12 d-flex">
+                                            <div class="col-1 d-flex align-items-center" style="padding: 0px !important">
+                                                Area:
+                                            </div>
+                                            <div class="col-11">
+                                                <RadzenTextBox Placeholder="Area" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-12 d-flex justify-content-center">
+                                                    <button class="btn btn-effect" style=" font-size: 17px; ">@arrowIcon Add PostCode</button>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-1" style="margin-right:17px">
+
+                                        </div>
+                                        <div class="col-2">
+                                            <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                            Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                            Sole Trader
+                                        </div>
+                                        <div class="col-2">
+                                            <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                            Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                            Groswenors
+                                        </div>
+                                        <div class="col-2">
+                                            <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                            Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                            Locksmith
+                                        </div>
+                                        <div class="col-2">
+                                            <RadzenCheckBox TriState="false" TValue="bool" Value="@hhtEnabled"
+                                                            Change="@(args=> { hhtEnabled = !hhtEnabled; })" Name="DHS Worker" />
+                                            Multi Skilled
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-12 d-flex justify-content-end" style=" margin-left: -11px;">
+                                                    <button class="btn btn-effect" style=" font-size: 17px; ">Update</button>
+                                        </div>
+                                    </div>
+                                </ChildContent>
+
+                            </RadzenFieldset>
+
+                        </div>
+                    </div>
+                    <br />
+
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Training"></RadzenTabsItem>
+                <RadzenTabsItem Text="Notes"></RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+        <div style="display: flex;gap: 35px;">
+            <button class="btn btn-effect" style="font-size: 17px; ">Add Agent</button>
+            <button class="btn btn-effect" style="font-size: 17px; ">Delete Agent</button>
+            <button class="btn btn-effect" style="font-size: 17px; ">Save Details</button>
+        </div>
+
+        <br />
+    </div>
+</div>
+
+        </Authorized>
+        <NotAuthorized>
+            <RedirectToLogin />
+        </NotAuthorized>
+    </AuthorizeView>
+
+
+
+@code {
+
+    public List<string> FirstNameList = new List<string>() { "Mr", "Mrs" };
+    public List<string> RegionList = new List<string>() { "1", "2" };
+    public List<string> StatusList = new List<string>() { "New", "Old" };
+    public List<string> MaritalStatusList = new List<string>() { "Married", "Unmarried" };
+    public List<string> NationalitiesList = new List<string>() { "UK", "BD" };
+    public List<string> InterimPermissionList = new List<string>() { "UK", "BD" };
+    public DateTime DOB { get; set; }
+    public bool hhtEnabled { get; set; }
+    public bool VehicleBusiness { get; set; }
+    public bool RcvdAndAccpt { get; set; }
+
+    public bool WaterDisconnectionCheck { get; set; }
+
+    public DateTime CardIssuedCheck { get; set; }
+    public bool SearchAuthCheck { get; set; }
+    public bool DataProtectionCheck { get; set; }
+    public bool PreviousEmplymentCheck { get; set; }
+    public bool SelfEmploymentCheck { get; set; }
+    public bool CRBIssuedCheck { get; set; }
+    public bool CRBNumberCheck { get; set; }
+    public bool RecruitmentCheck { get; set; }
+    public bool ResidencyCheck { get; set; }
+    public bool ChaseCheck { get; set; }
+
+    public bool MLRCheck { get; set; }
+    public bool BankDetailsCheck { get; set; }
+    public bool CashCollectionCheck { get; set; }
+    public bool CodeOfConductCheck { get; set; }
+    public bool UtilitiesCOCCheck { get; set; }
+    public bool DBDeclarationCheck { get; set; }
+    public bool BGSiteCheck { get; set; }
+    public bool DrivingLICCheck { get; set; }
+    public bool DrivingLICExpireCheck { get; set; }
+    public bool PassportCopyCheck { get; set; }
+    public bool BirthCertificateCheck { get; set; }
+    public bool HomeOffRTWCheck { get; set; }
+
+    public DateTime CRBIssuedDate { get; set; }
+    public DateTime ChaseAgreementDate { get; set; }
+
+
+    public string Photo { get; set; } = "~/images/manager.png";
+
+    string arrowIcon = "<<";
+
+    List<PostCodeAreasView> agentViewPostCodes = new List<PostCodeAreasView>();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+}
+<style>
+    .rz-textbox {
+        width: 100% !important;
+    }
+
+    .documents input.rz-inputtext {
+        border-color: red !important;
+    }
+</style>

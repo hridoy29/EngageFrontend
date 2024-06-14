@@ -1,0 +1,204 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.CustomerDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using Microsoft.AspNetCore.Authorization
+
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@using Magnus.Core.Models.CaseDetailsModels;
+@inject IClientDetailsServices _ClientDetails
+
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="tab-card-style">
+            <div class="col-12">
+                <div class="row card-top-margin">
+                    <div class="col-6">
+                        <br />
+                        <div class="row ">
+                            <div class="col-6 header-of-dropdown-and-texbox margin-bottom-for-textboxHeader" style="">
+                                Customer Name:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 header-of-dropdown-and-texbox" style="">
+                                <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Customer Name"
+                                                TextProperty="Name.FullName" ValueProperty="Name.CustomerID" Data=@(clientDetailsView.CustomerDetails.Customers) Change="@OnChange" />
+
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <RadzenFieldset Text="Contact Details" Style="height:100% ">
+                            <div class="col-margin" style="margin-left:2%; margin-right:2%;">
+                                <div class="row ">
+                                    <div class="col-5 header-of-dropdown-and-texbox margin-bottom-for-textboxHeader" style="">
+                                        Full Name:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-6 margin-bottom-for-textboxHeader">
+                                        <RadzenTextBox Placeholder="Full Name" Class="w-100" Value="@fullName" />
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-6 header-of-dropdown-and-texbox margin-bottom-for-textboxHeader" style="">
+                                        Email Address:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-6 margin-bottom-for-textboxHeader">
+                                        <RadzenTextBox Placeholder="Email Address" Class="w-100" Value="@emailAddress" />
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-6 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox" style="">
+                                        Phone Number:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-6 margin-bottom-for-textboxHeader">
+                                        <RadzenTextBox Placeholder="Phone Number" Class="w-100" Value="@phoneNumber" />
+                                    </div>
+                                </div>
+                            </div>
+                        </RadzenFieldset>
+                    </div>
+                    <div class="col-6">
+                        <RadzenFieldset Text="Contact Details" Style="height:100% ">
+                            <div class="col-margin" style="margin-left:2%; margin-right:2%;">
+                                <div class="row">
+                                    <div class="col-6 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox" style="">
+                                        Address Type:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-6 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox" style="">
+                                        <RadzenTextBox Placeholder="Address Type" Class="w-100" ReadOnly Value="@addressType" />
+                                        @*<RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Address Type"
+                                        TextProperty="AddressType" ValueProperty="ID" Data=@(addressesList) Change="@OnChangeAddress" />*@
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-6 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox" style="">
+                                        Postcode:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-6 margin-bottom-for-textboxHeader">
+                                        <RadzenTextBox Placeholder="Postcode" Class="w-100" Value="@postCode" />
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-6 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Address:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-6 margin-bottom-for-textboxHeader">
+                                        <RadzenTextArea Placeholder="Address" Class="w-100" Value="@fullAddress" />
+                                    </div>
+                                </div>
+                            </div>
+                            <RadzenPager HorizontalAlign="HorizontalAlign.Left" Count="@count" PageSize="@pageSize" PageNumbersCount="5" PageChanged="@PageChanged" />
+                        </RadzenFieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    [Parameter]
+    public CaseDetails clientDetailsView { get; set; } = new();
+    public List<Customer> customers = new();
+    public List<Address> addressesList = new();
+
+    string pagingSummaryFormat = "Displaying page {0} of {1} (total {2} records)";
+    string fullName = string.Empty;
+    string emailAddress = string.Empty;
+    string phoneNumber = string.Empty;
+    string addressType = string.Empty;
+    string postCode = string.Empty;
+    string fullAddress = string.Empty;
+    int pageSize = 3;
+    int count = 22;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        customers = clientDetailsView.CustomerDetails.Customers;
+    }
+    void OnChange(object customerId)
+    {
+        //bool validID = int.TryParse(customerId.ToString(), out int id);
+
+        //SelectedCustomer = validID ? new() : clientDetailsView.Customers.FirstOrDefault(c => c.ID == id, new Customer());
+
+        GetUserName(Convert.ToInt32(customerId));
+        GetUserEmailAddress(Convert.ToInt32(customerId));
+        GetUserPhoneNumbers(Convert.ToInt32(customerId));
+        GetUserAddresses(Convert.ToInt32(customerId));
+    }
+    void OnChangeAddress(object addressId)
+    {
+        int addrID = int.Parse(addressId.ToString());
+
+        //GetUserPostCode(Convert.ToInt32(addressId));
+        postCode = addressesList.Where(x => x.ID == addrID).Select(x => x.PostCode).FirstOrDefault(string.Empty);
+        addressType = addressesList.Where(x => x.ID == addrID).Select(x => x.PostCode).FirstOrDefault(string.Empty);
+        fullAddress = string.Join(Environment.NewLine, addressesList.Where(x => x.ID == addrID).FirstOrDefault(new Address()).Lines.Select(x => x.Line));
+    }
+    void GetUserName(int customerId)
+    {
+        fullName = customers.Where(x => x.Name.CustomerID == customerId).Select(x => x.Name.FullName).FirstOrDefault();
+    }
+    void GetUserEmailAddress(int customerId)
+    {
+        var emailAddressList = customers.Where(x => x.ID == customerId).Select(x => x.EmailAddresses).FirstOrDefault();
+        emailAddress = emailAddressList.Where(x => x.CustomerID == customerId).Select(x => x.Email).FirstOrDefault();
+
+    }
+    void GetUserPhoneNumbers(int customerId)
+    {
+        var phoneNumbersList = customers.Where(x => x.ID == customerId).Select(x => x.PhoneNumbers).FirstOrDefault();
+        phoneNumber = phoneNumbersList.Where(x => x.CustomerID == customerId).Select(x => x.Number).FirstOrDefault();
+
+    }
+    void GetUserAddresses(int customerId)
+    {
+        addressesList = customers.Where(x => x.ID == customerId).Select(x => x.Addresses).FirstOrDefault();
+        addressesList = addressesList.Where(x => x.CustomerID == customerId).ToList();
+        var Address = addressesList.FirstOrDefault();
+        addressType = Address.AddressType;
+        postCode = Address.PostCode;
+        //fullAddress=string.Join()
+
+    }
+    void GetUserPostCode(int addressId)
+    {
+
+        postCode = addressesList.Where(x => x.ID == addressId).Select(x => x.PostCode).FirstOrDefault();
+        var addressLineList = addressesList.Where(x => x.ID == addressId).Select(x => x.Lines).ToList();
+        //addressLineList = addressLineList.Where(x => x.AddressID == addressId);
+
+    }
+    void PageChanged(PagerEventArgs args)
+    {
+
+    }
+}

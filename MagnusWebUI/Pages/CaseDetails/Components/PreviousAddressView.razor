@@ -1,0 +1,70 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.PropertyDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using MagnusWebUI.Shared.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="col-12 main-col-padding">
+            <RadzenFieldset Text="Previous Address">
+                <div class="col-12 d-flex main-col-padding">
+                    <div class="col-6 left-col-padding">
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Previous Address Postcode:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                @*<RadzenTextBox Placeholder="Postcode" Class="w-100" />*@
+                                <DisabledTextBox placeHolder="Previous Address Postcode" bindTextValue="@PropertyDetails.GetValue("Previous Address Postcode", PropertyOrd)"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Date Moved:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Date Moved" bindTextValue="@PropertyDetails.GetValue("Date Moved", PropertyOrd)"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 right-col-padding">
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Previous Address:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Previous Address" bindTextValue="@PropertyDetails.GetValue("Previous Address", PropertyOrd)"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </RadzenFieldset>
+        </div>
+    </Authorized>
+</AuthorizeView>
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [CascadingParameter]
+    public PropertyDetails PropertyDetails { get; set; }
+
+    [CascadingParameter]
+    public int PropertyOrd { get; set; }
+}

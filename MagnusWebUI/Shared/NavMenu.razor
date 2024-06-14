@@ -1,0 +1,847 @@
+﻿
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject IJSRuntime JSRuntime
+@inject EnagageNavigationManager navigation
+
+@*********Topbar************@
+<LoginDisplay />
+@*********End-Topbar************@
+
+@*left pannel*@
+<div class="card sidebarcard">
+    <ul class="list-group list-group-flush" style="overflow:auto">
+        <li class="list-group-item list-group-item-sidebar" @onclick="@(e=> importClick("Import"))">
+            <div class="d-inline-flex list-group-item-div @(isImportClick?" Import-click":"")" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/import.png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Import</div>
+                </div>
+                <div class="ml-auto mt-1">
+                    <i class="fas fa-solid mt-1"></i>
+                </div>
+            </div>
+
+        </li>
+        <li class="list-group-item list-group-item-sidebar">
+            <div class="d-inline-flex list-group-item-div   @(isSearchClick?" Import-click":"")" @onclick="@(e=> importClick("Search"))" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/search.png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Search</div>
+                </div>
+                <div class="mr-2 mt-1">
+                    <i class="fas fa-solid mt-1"></i>
+                </div>
+            </div>
+
+        </li>
+
+        <li class="list-group-item   list-group-item-sidebar">
+            <div class="d-inline-flex list-group-item-div  @(isAtomClick?" Import-click":"")" @onclick="@(e=> importClick("Atom"))" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/atom.png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Planning</div>
+
+                </div>
+                <div style="position: absolute; right: 15px;">
+                    <i class="@(isAtomClick?"fa-solid fa-arrow-down":" fa-solid fa-arrow-right")"></i>
+                </div>
+            </div>
+
+            @if (isAtomClick)
+            {
+                <ul>
+                    @foreach (AtomEnum category in Enum.GetValues(typeof(AtomEnum)))
+                    {
+                        <li class="list-group-item list-group-item-div @(AtomFilters.Contains(category)?"Import-click":"")" style="background: transparent; margin-top: 10px;" @onclick="@(e=>Submenuclick(@category))">
+                            @category.ToString()
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+        <li class="list-group-item list-group-item-sidebar">
+            <div class="d-inline-flex list-group-item-div   @(isContactCenterClick?" Import-click":"")" @onclick="@(e=> importClick("Contact"))" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/call-center-service (1).png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Contact Center</div>
+                </div>
+                <div style="position: absolute; right: 15px;">
+                    <i class="@(isContactCenterClick?"fa-solid fa-arrow-down":" fa-solid fa-arrow-right")"></i>
+                </div>
+            </div>
+            @if (isContactCenterClick)
+            {
+                <ul>
+                    @foreach (ContactCentreEnums category in Enum.GetValues(typeof(ContactCentreEnums)))
+                    {
+                        <li class="list-group-item list-group-item-div @(ContactCentreFilters.Contains(category)?"Import-click":"")" style="background: transparent; margin-top: 10px;" @onclick="@(e=>SubmenuContactCentreclick(@category))">
+                            @{
+                                if (category.ToString().Contains('_'))
+                                {
+                                    var SplitedData = category.ToString().Split('_');
+                                    <span>@SplitedData[0]  @SplitedData[1]</span>
+                                }
+                                else
+                                {
+                                    <span>@category.ToString()</span>
+                                }
+
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+        <li class="list-group-item list-group-item-sidebar">
+            <div class="d-inline-flex list-group-item-div   @(isReportClick?" Import-click":"")" @onclick="@(e=> importClick("Reports"))" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/report.png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Reports</div>
+                </div>
+                <div class="mr-2 mt-1">
+                    <i class="fas fa-solid mt-1"></i>
+                </div>
+            </div>
+
+        </li>
+        <li class="list-group-item list-group-item-sidebar">
+            <div class="d-inline-flex list-group-item-div   @(isFinanceClick?" Import-click":"")" @onclick="@(e=> importClick("Finance"))" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/budget (1).png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Finance</div>
+                </div>
+                <div class="mr-2 mt-1">
+                    <i class="fas fa-solid mt-1"></i>
+                </div>
+            </div>
+
+        </li>
+        <li class="list-group-item list-group-item-sidebar" @onclick="@(e=> importClick("Audit"))">
+            <div class="d-inline-flex list-group-item-div   @(isAuditClick?" Import-click":"")" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/audit (1).png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Audit</div>
+                </div>
+                <div class="mr-2 mt-1">
+                    <i class="fas fa-solid mt-1"></i>
+                </div>
+            </div>
+
+        </li>
+        <li class="list-group-item list-group-item-sidebar" @onclick="@(e=> importClick("alocation"))">
+            <div class="d-inline-flex list-group-item-div   @(isloadClick?" Import-click":"")" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/data-transformation.png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Planning</div>
+                </div>
+                <div class="mr-2 mt-1">
+                    <i class="fas fa-solid mt-1"></i>
+                </div>
+            </div>
+
+        </li>
+        <li class="list-group-item list-group-item-sidebar" @onclick="@(e=> importClick("Audio"))">
+            <div class="d-inline-flex list-group-item-div   @(isAudioClick?" Import-click":"")" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/audio.png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Recordings</div>
+                </div>
+                <div class="mr-2 mt-1">
+                    <i class="fas fa-solid mt-1"></i>
+                </div>
+            </div>
+
+        </li>
+        <li class="list-group-item list-group-item-sidebar">
+            <div class="d-inline-flex list-group-item-div   @(isClientClick?" Import-click":"")" @onclick="@(e=> importClick("Clients"))" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/manager.png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Agents</div>
+                </div>
+                <div style="position: absolute; right: 15px;">
+                    <i class="@(isClientClick?"fa-solid fa-arrow-down":" fa-solid fa-arrow-right")"></i>
+                </div>
+            </div>
+            @if (isClientClick)
+            {
+                <ul style=" margin-left: -10px;">
+                    @foreach (AgentEnums category in Enum.GetValues(typeof(AgentEnums)))
+                    {
+                        <li class="list-group-item list-group-item-div @(AgentFilters.Contains(category)?"Import-click":"")" style="background: transparent; margin-top: 10px;" @onclick="@(e=>SubmenuAgentClick(@category))">
+                            @{
+                                if (category.ToString().Contains('_'))
+                                {
+                                    var SplitedData = category.ToString().Split('_');
+                                    string nameOfEnums = "";
+                                    for (int i = 0; i <= SplitedData.Length - 1; i++)
+                                    {
+                                        nameOfEnums += SplitedData[i] + " ";
+                                    }
+                                    <span>@nameOfEnums</span>
+                                }
+                                else
+                                {
+                                    <span>@category.ToString()</span>
+                                }
+
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+        <li class="list-group-item list-group-item-sidebar" @onclick="@(e=> importClick("Quality"))">
+            <div class="d-inline-flex list-group-item-div   @(isQualityClick?" Import-click":"")" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/quality-control.png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Quality Control</div>
+                </div>
+                <div class="mr-2 mt-1">
+                    <i class="fas fa-solid mt-1"></i>
+                </div>
+            </div>
+
+        </li>
+        @*<li class="list-group-item list-group-item-sidebar" @onclick="@(e=> importClick("Company"))">
+            <div class="d-inline-flex list-group-item-div   @(isCompanyClick?" Import-click":"")" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/office-building.png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Company specific</div>
+                </div>
+                <div class="mr-2 mt-1">
+                    <i class="fas fa-solid mt-1"></i>
+                </div>
+            </div>
+
+        </li>*@
+       @* <li class="list-group-item list-group-item-sidebar" @onclick="@(e=> importClick("Bussiness"))">
+            <div class="d-inline-flex list-group-item-div   @(isBSupportClick?" Import-click":"")" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/teamwork.png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Bussiness Support</div>
+                </div>
+                <div class="mr-2 mt-1">
+                    <i class="fas fa-solid mt-1"></i>
+                </div>
+            </div>
+
+        </li>*@
+        @*<li class="list-group-item list-group-item-sidebar" @onclick="@(e=> importClick("Client"))">
+            <div class="d-inline-flex list-group-item-div   @(isCSpecificClick?" Import-click":"")" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/client.png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Client specific</div>
+                </div>
+                <div class="mr-2 mt-1">
+                    <i class="fas fa-solid mt-1"></i>
+                </div>
+            </div>
+
+        </li>*@
+        <li class="list-group-item list-group-item-sidebar" @onclick="@(e=> importClick("Setup"))">
+            <div class="d-inline-flex list-group-item-div   @(isSetupClick?" Import-click":"")" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/setup.png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Admin</div>
+                </div>
+                <div style="position: absolute; right: 15px;">
+                    <i class="@(isSetupClick?"fa-solid fa-arrow-down":" fa-solid fa-arrow-right")"></i>
+                </div>
+            </div>
+            @if (isSetupClick)
+            {
+                <ul style=" margin-left: -10px;">
+                    @foreach (AdminNavigationEnums category in Enum.GetValues(typeof(AdminNavigationEnums)))
+                    {
+                        if (category.ToString() != "UAT")
+                        {
+                            <li class="list-group-item list-group-item-div @(adminNavigationFilters.Contains(category)?"Import-click":"")" style="background: transparent; margin-top: 10px;" @onclick="@(e=>SubmenuAdminClick(@category))">
+                                @{
+                                    if (category.ToString().Contains('_'))
+                                    {
+                                        var SplitedData = category.ToString().Split('_');
+                                        string nameOfEnums = "";
+                                        for (int i = 0; i <= SplitedData.Length - 1; i++)
+                                        {
+                                            nameOfEnums += SplitedData[i] + " ";
+                                        }
+                                        <span>@nameOfEnums</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@category.ToString()</span>
+                                    }
+
+                                }
+                            </li>
+                        }
+                       else if (category.ToString() == "UAT" && IsUatUser)
+                        {
+                            <li class="list-group-item list-group-item-div @(adminNavigationFilters.Contains(category)?"Import-click":"")" style="background: transparent; margin-top: 10px;" @onclick="@(e=>SubmenuAdminClick(@category))">
+                                @{
+                                    <span>@category.ToString()</span>
+                                }
+                            </li>
+                        }
+                    }
+                </ul>
+            }
+        </li>
+      @*  <li class="list-group-item list-group-item-sidebar" @onclick="@(e=> importClick("Exit"))">
+            <div class="d-inline-flex list-group-item-div   @(isExitClick?" Import-click":"")" style="width:95%">
+                <div class="mr-2 mt-1" style="display:flex">
+                    <img src="images/exit.png" width="20" height="20" />
+                </div>
+                <div class="search-filter-wrapper text-align-center">
+                    <div class="search-filter text-left"> Exit</div>
+                </div>
+                <div class="mr-2 mt-1">
+                    <i class="fas fa-solid mt-1"></i>
+                </div>
+            </div>
+        </li>*@
+        @{
+            if (IsValid)
+            {
+                <li class="list-group-item list-group-item-sidebar" @onclick="@(e=> importClick("Dev tools"))">
+                    <div class="d-inline-flex list-group-item-div   @(isDevTools?" Import-click":"")" style="width:95%">
+                        <div class="mr-2 mt-1" style="display:flex">
+                            <img src="images/dev-tools.png" width="20" height="20" />
+                        </div>
+                        <div class="search-filter-wrapper text-align-center">
+                            <div class="search-filter text-left"> Dev tools</div>
+                        </div>
+                        <div class="mr-2 mt-1">
+                            <i class="fas fa-solid mt-1"></i>
+                        </div>
+                    </div>
+                </li>
+            }
+        }
+       
+    </ul>
+</div>
+
+
+@code {
+    private bool collapseNavMenu = true;
+    private bool isImportClick = false;
+    private bool isSearchClick = false;
+    private bool isAtomClick = false;
+    private bool isContactCenterClick = false;
+    private bool isReportClick = false;
+    private bool isFinanceClick = false;
+    private bool isAuditClick = false;
+    private bool isloadClick = false;
+    private bool isAudioClick = false;
+    private bool isClientClick = false;
+    private bool isQualityClick = false;
+    private bool isCompanyClick = false;
+    private bool isBSupportClick = false;
+    private bool isCSpecificClick = false;
+    private bool isSetupClick = false;
+    private bool isExitClick = false;
+    private bool isDevTools = false;
+
+    private bool IsValid = false;
+    private bool IsUatUser = false;
+
+    private HashSet<AtomEnum> AtomFilters = new();
+    private HashSet<ContactCentreEnums> ContactCentreFilters = new();
+    private HashSet<AgentEnums> AgentFilters = new();
+    private HashSet<AdminNavigationEnums> adminNavigationFilters = new();
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private Microsoft.Graph.User? user;
+    public List<string> policyMessage { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userFromAuth = (await authenticationStateTask).User;
+        if ((await AuthorizationService.AuthorizeAsync(userFromAuth,
+            "Magnus-Devs")).Succeeded)
+        {
+            IsValid = true;
+        }
+        else
+        {
+            IsValid = false;
+        }
+        if ((await AuthorizationService.AuthorizeAsync(userFromAuth,
+            "Magnus-UAT")).Succeeded)
+        {
+            IsUatUser = true;
+        }
+        else
+        {
+            IsUatUser = false;
+        }
+    }
+
+    private async Task importClick(string name)
+    {
+
+        switch (name)
+        {
+            case "Import":
+                if (!isImportClick)
+                {
+                    isImportClick = true;
+                    isSearchClick = false;
+                    isAtomClick = false;
+                    isContactCenterClick = false;
+                    isReportClick = false;
+                    isFinanceClick = false;
+                    isAuditClick = false;
+                    isloadClick = false;
+                    isAudioClick = false;
+                    isClientClick = false;
+                    isQualityClick = false;
+                    isCompanyClick = false;
+                    isBSupportClick = false;
+                    isCSpecificClick = false;
+                    isSetupClick = false;
+                    isExitClick = false;
+                    isDevTools = false;
+                    navigation.Import();
+                    await JSRuntime.InvokeVoidAsync("sidebarclose");
+                }
+                else
+                {
+                    isImportClick = false;
+                }
+
+                break;
+            case "Search":
+                if (!isSearchClick)
+                {
+                    isSearchClick = true;
+                    isImportClick = false;
+                    isAtomClick = false;
+                    isContactCenterClick = false;
+                    isReportClick = false;
+                    isFinanceClick = false;
+                    isAuditClick = false;
+                    isloadClick = false;
+                    isAudioClick = false;
+                    isClientClick = false;
+                    isQualityClick = false;
+                    isCompanyClick = false;
+                    isBSupportClick = false;
+                    isCSpecificClick = false;
+                    isSetupClick = false;
+                    isExitClick = false;
+                    isDevTools = false;
+                    navigation.Search();
+                    await JSRuntime.InvokeVoidAsync("sidebarclose");
+                }
+                else
+                {
+                    isSearchClick = false;
+                }
+                break;
+            case "Atom":
+                if (!isAtomClick)
+                {
+                    isAtomClick = true;
+                    isSearchClick = false;
+                    isImportClick = false;
+                    isContactCenterClick = false;
+                    isReportClick = false;
+                    isFinanceClick = false;
+                    isAuditClick = false;
+                    isloadClick = false;
+                    isAudioClick = false;
+                    isClientClick = false;
+                    isQualityClick = false;
+                    isCompanyClick = false;
+                    isBSupportClick = false;
+                    isCSpecificClick = false;
+                    isSetupClick = false;
+                    isExitClick = false;
+                    isDevTools = false;
+                }
+                else
+                {
+                    isAtomClick = false;
+                }
+                break;
+            case "Contact":
+                if (!isContactCenterClick)
+                {
+                    isAtomClick = false;
+                    isSearchClick = false;
+                    isImportClick = false;
+                    isContactCenterClick = true;
+                    isReportClick = false;
+                    isFinanceClick = false;
+                    isAuditClick = false;
+                    isloadClick = false;
+                    isAudioClick = false;
+                    isClientClick = false;
+                    isQualityClick = false;
+                    isCompanyClick = false;
+                    isBSupportClick = false;
+                    isCSpecificClick = false;
+                    isSetupClick = false;
+                    isExitClick = false;
+                    isDevTools = false;
+                }
+                else
+                {
+                    isContactCenterClick = false;
+                }
+                break;
+            case "alocation":
+                if (!isContactCenterClick)
+                {
+                    isAtomClick = false;
+                    isSearchClick = false;
+                    isImportClick = false;
+                    isContactCenterClick = false;
+                    isReportClick = false;
+                    isFinanceClick = false;
+                    isAuditClick = false;
+                    isloadClick = true;
+                    isAudioClick = false;
+                    isClientClick = false;
+                    isQualityClick = false;
+                    isCompanyClick = false;
+                    isBSupportClick = false;
+                    isCSpecificClick = false;
+                    isSetupClick = false;
+                    isExitClick = false;
+                    isDevTools = false;
+                    //navigation.NavigateTo("/atom");
+                    navigation.OnloadAlocation();
+                    await JSRuntime.InvokeVoidAsync("sidebarclose");
+                }
+                else
+                {
+                    isContactCenterClick = false;
+                }
+                break;
+            case "Clients":
+                if (!isClientClick)
+                {
+                    isAtomClick = false;
+                    isSearchClick = false;
+                    isImportClick = false;
+                    isContactCenterClick = false;
+                    isReportClick = false;
+                    isFinanceClick = false;
+                    isAuditClick = false;
+                    isloadClick = false;
+                    isAudioClick = false;
+                    isClientClick = true;
+                    isQualityClick = false;
+                    isCompanyClick = false;
+                    isBSupportClick = false;
+                    isCSpecificClick = false;
+                    isSetupClick = false;
+                    isExitClick = false;
+                    isDevTools = false;
+                }
+                else
+                {
+                    isClientClick = false;
+                }
+                break;
+            case "Setup":
+                if (!isClientClick)
+                {
+                    isAtomClick = false;
+                    isSearchClick = false;
+                    isImportClick = false;
+                    isContactCenterClick = false;
+                    isReportClick = false;
+                    isFinanceClick = false;
+                    isAuditClick = false;
+                    isloadClick = false;
+                    isAudioClick = false;
+                    isClientClick = false;
+                    isQualityClick = false;
+                    isCompanyClick = false;
+                    isBSupportClick = false;
+                    isCSpecificClick = false;
+                    isSetupClick = true;
+                    isExitClick = false;
+                    isDevTools = false;
+                }
+                else
+                {
+                    isClientClick = false;
+                }
+                break;
+            case "Dev tools":
+                if (!isDevTools)
+                {
+                    isAtomClick = false;
+                    isSearchClick = false;
+                    isImportClick = false;
+                    isContactCenterClick = false;
+                    isReportClick = false;
+                    isFinanceClick = false;
+                    isAuditClick = false;
+                    isloadClick = false;
+                    isAudioClick = false;
+                    isClientClick = false;
+                    isQualityClick = false;
+                    isCompanyClick = false;
+                    isBSupportClick = false;
+                    isCSpecificClick = false;
+                    isSetupClick = false;
+                    isExitClick = false;
+                    isDevTools = true;
+                    navigation.Devtools();
+                    await JSRuntime.InvokeVoidAsync("sidebarclose");
+                }
+                else
+                {
+                    isDevTools = false;
+                }
+                break;
+            default:
+                //toastService.ShowInfo("Coming Soon");
+                break;
+
+
+        }
+
+    }
+    private async Task Submenuclick(AtomEnum menuName)
+    {
+        if (menuName.ToString() == "Home")
+        {
+            AtomFilters.Clear();
+            AtomFilters.Add(menuName);
+            navigation.Atom();
+            isAtomClick = true;
+            await JSRuntime.InvokeVoidAsync("sidebarclose");
+        }
+        else
+        {
+            
+        }
+    }
+    private async Task SubmenuContactCentreclick(ContactCentreEnums menuName)
+    {
+        if (menuName.ToString() == "Dialler")
+        {
+            ContactCentreFilters.Clear();
+            ContactCentreFilters.Add(menuName);
+            navigation.ContactCentre();
+            isContactCenterClick = true;
+            await JSRuntime.InvokeVoidAsync("sidebarclose");
+        }
+        else
+        {
+        }
+    }
+    private async Task SubmenuAgentClick(AgentEnums menuName)
+    {
+        if (menuName.ToString() == "Add_New_Agent")
+        {
+            AgentFilters.Clear();
+            AgentFilters.Add(menuName);
+            navigation.Agent();
+            isClientClick = true;
+            await JSRuntime.InvokeVoidAsync("sidebarclose");
+        }
+        else
+        {
+            //toastService.ShowInfo("Coming Soon");
+            //toastService.ShowError("Coming Soon");
+            //toastService.ShowSuccess("Coming Soon");
+            //toastService.ShowWarning("Coming Soon");
+        }
+    }
+    private async Task SubmenuAdminClick(AdminNavigationEnums menuName)
+    {
+        if (menuName.ToString() == "Import_Setup")
+        {
+            adminNavigationFilters.Clear();
+            adminNavigationFilters.Add(menuName);
+            navigation.AdminImportSetup();
+            isSetupClick = true;
+            await JSRuntime.InvokeVoidAsync("sidebarclose");
+        }
+        else if (menuName.ToString() == "UAT")
+        {
+            adminNavigationFilters.Clear();
+            adminNavigationFilters.Add(menuName);
+            navigation.AdminUAT();
+            isSetupClick = true;
+            await JSRuntime.InvokeVoidAsync("sidebarclose");
+        }     
+        else
+        {
+            //toastService.ShowInfo("Coming Soon");
+            //toastService.ShowError("Coming Soon");
+            //toastService.ShowSuccess("Coming Soon");
+            //toastService.ShowWarning("Coming Soon");
+        }
+    }
+}
+<style>
+    div#sidebar {
+        /*  width: 20%;*/
+        transition: width .5s;
+    }
+
+    .Import-click {
+        background-color: #005A8A !important;
+        color: white;
+        box-shadow: 3px 3px 20px 0 rgb(6 86 255 / 40%);
+    }
+
+    .sidebarcardIcon {
+        position: fixed;
+        width: 5vw;
+        height: 100vh;
+        font-weight: 700;
+    }
+
+    .text-align-center {
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .Sidebar-with-submenu {
+        display: flex !important;
+        align-items: center;
+        margin-right: 15px;
+    }
+
+    .sidebarcard {
+        position: fixed;
+        width: 18vw;
+        height: 100vh;
+        font-weight: 700;
+        transition: width .5s;
+        z-index: 3;
+    }
+
+    button#btn close {
+        background-color: white;
+        color: black;
+        border-radius: 299px;
+        border: 0;
+    }
+
+    .list-group-item-div {
+        position: relative;
+        display: block;
+        padding: 0.55rem 1.50rem;
+        border: 10px;
+        background-color: transparent;
+        border-radius: 5px !important;
+    }
+
+        .list-group-item-div:hover {
+            background-color: #005A8A !important;
+            color: white;
+            box-shadow: 3px 3px 20px 0 rgb(6 86 255 / 40%);
+            border-radius: 5px !important;
+        }
+
+    .list-group-item {
+        position: relative;
+        display: block;
+        padding: 0.5rem 1.25rem;
+        border: 0px;
+        background-color: transparent;
+    }
+
+    .list-group-item-sidebar {
+        padding: 0px !important;
+    }
+
+
+
+    @@media (min-width: 1050px) {
+
+        div #sidebar {
+            transition: width .5s;
+        }
+
+        .sidebarcardIcon {
+            position: fixed;
+            width: 70px;
+            height: 100vh;
+            font-weight: 700;
+            margin-top: 55px;
+        }
+
+        .sidebarcard {
+            position: fixed;
+            width: 250px;
+            height: 100vh;
+            font-weight: 700;
+            transition: width .5s;
+        }
+
+        button#btn close {
+            display: none;
+        }
+    }
+
+    @@media (max-width: 1050px) {
+        div#sidebar {
+        }
+
+        .card.sidebarcard {
+            width: 0vw;
+            overflow: hidden;
+        }
+
+        .sidebarcardIcon {
+            position: fixed;
+            width: 50px;
+            height: 100vh;
+            font-weight: 700;
+            margin-top: 55px;
+        }
+
+        .sidebarcard .list-group {
+            opacity: 0;
+        }
+    }
+</style>

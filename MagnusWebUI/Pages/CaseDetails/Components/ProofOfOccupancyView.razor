@@ -1,0 +1,59 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.PropertyDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using MagnusWebUI.Shared.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="col-12 main-col-padding">
+            <RadzenFieldset Text="Proof Of Occupancy">
+                <div class="col-12 d-flex main-col-padding">
+                    <div class="col-6 left-col-padding">
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox margin-bottom-for-textboxHeader" style="">
+                                Proof Of Occupancy Seen:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Proof Of Occupancy Seen" bindTextValue="@PropertyDetails.GetValue("Proof Of Occupancy Seen", PropertyOrd)"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 right-col-padding">
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox margin-bottom-for-textboxHeader" style="">
+                                Type Of Proof Seen:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                               <DisabledTextBox placeHolder="Type Of Proof Seen" bindTextValue="@PropertyDetails.GetValue("Type Of Proof Seen", PropertyOrd)"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </RadzenFieldset>
+        </div>
+    </Authorized>
+</AuthorizeView>
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [CascadingParameter]
+    public PropertyDetails PropertyDetails { get; set; }
+
+    [CascadingParameter]
+    public int PropertyOrd { get; set; }
+}

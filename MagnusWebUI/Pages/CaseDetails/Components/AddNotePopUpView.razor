@@ -1,0 +1,24 @@
+﻿<div class="row ">
+    <div class="col-12">
+        <RadzenDropDown AllowClear="true" TValue="int" Data=@(addNoteDropDown) Placeholder="Note Type" />
+    </div>
+    <div class="col-12 mt-2">
+        <RadzenHtmlEditor @bind-Value=@value style="height: 500px;" UploadUrl="upload/image" />
+    </div>
+</div>
+<div class="d-flex justify-content-end  mt-2" style="gap:10px">
+    <button class="btn btn-effect" style="font-size: 17px; ">Cancel</button>
+   <button class="btn btn-effect " style="font-size: 17px; ">Save</button>
+</div>
+@{Console.WriteLine(value);}
+@code {
+    public List<string> addNoteDropDown { get; set; } = new();
+    public string value { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        addNoteDropDown.Add("Note Type 1");
+        addNoteDropDown.Add("Note Type 2");
+        addNoteDropDown.Add("Note Type 3");
+    }
+}

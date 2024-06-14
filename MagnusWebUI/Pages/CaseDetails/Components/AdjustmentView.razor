@@ -1,0 +1,47 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.AdjustmentDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="tab-card-style-all">
+            <div class="col-12" style="margin-top: 17px; margin-bottom: 2px;">
+                
+                        <RadzenDataGrid  AllowAlternatingRows="false" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                    Data="@adjustmentViews" TItem="AdjustmentView" ColumnWidth="auto" LogicalFilterOperator="LogicalFilterOperator.Or">
+                            <Columns>
+                        <RadzenDataGridColumn TItem="AdjustmentView" Property="ChaseRef" Filterable="false" Title="Our Reference" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                        <RadzenDataGridColumn TItem="AdjustmentView" Property="UpdateType" Filterable="false" Title="Update type" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                        <RadzenDataGridColumn TItem="AdjustmentView" Property="ClientReference" Title="Client Ref" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                        <RadzenDataGridColumn TItem="AdjustmentView" Property="ClientCancellationReason" Title="Client Cancellation Reason" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                        <RadzenDataGridColumn TItem="AdjustmentView" Property="EngageCancellattionReason" Title="Enagage Cancellation Reason" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                        <RadzenDataGridColumn TItem="AdjustmentView" Property="BalanceUpdateValue" Title="Balance Update Value" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                        <RadzenDataGridColumn TItem="AdjustmentView" Property="FileName" Title="File Name" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                        <RadzenDataGridColumn TItem="AdjustmentView" Property="DateTimeProcessed" Title="Date Time processed" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                        <RadzenDataGridColumn TItem="AdjustmentView" Property="ActionComments" Title="Action Comments" Width="auto" CssClass="hober" TextAlign="TextAlign.Center"  />
+                            <RadzenDataGridColumn TItem="AdjustmentView" Property="Success" Title="Success" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                            </Columns>
+                        </RadzenDataGrid>                   
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+    
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    public List<AdjustmentView> adjustmentViews { get; set; } = new();
+
+    [Parameter]
+    public AdjustmentDetails AdjustmentDetails { get; set; }
+}

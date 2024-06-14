@@ -1,0 +1,751 @@
+﻿@page "/on-load-alocation"
+@inject ILoadAlocationServices _loadAlocationService
+
+<AuthorizeView>
+    <Authorized>
+
+        <RadzenTabs RenderMode="TabRenderMode.Server" Change="ChangeTab">
+            <Tabs>
+                <RadzenTabsItem Text="Not Available">
+                    <div class="row">
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                                Region (@(MultiselectForRegion == null ? "0" : MultiselectForRegion.Count()))
+                            </div>
+                            <div class="col-12">
+                                <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@MultiSelectViews @bind-Value=@MultiselectForRegion
+                                                TextProperty="Region" ValueProperty="Region"
+                                                Placeholder="Region" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                                Area  (@(MultiselectForArea == null ? "0" : MultiselectForArea.Count()))
+                            </div>
+                            <div class="col-12">
+                                <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@MultiSelectViews @bind-Value=@MultiselectForArea
+                                                TextProperty="Area" ValueProperty="Area"
+                                                Placeholder="Area" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                                Company (@(MultiselectForCompany == null ? "0" : MultiselectForCompany.Count()))
+                            </div>
+                            <div class="col-12">
+                                <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@MultiSelectViews @bind-Value=@MultiselectForCompany
+                                                TextProperty="Company" ValueProperty="Company"
+                                                Placeholder="Company" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                                Load Date  (@(MultiselectForLoadDate == null ? "0" : MultiselectForLoadDate.Count()))
+                            </div>
+                            <div class="col-12">
+                                <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@MultiSelectViews @bind-Value=@MultiselectForLoadDate
+                                                TextProperty="LoadDate" ValueProperty="LoadDate"
+                                                Placeholder="Load Date" />
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                                LetterDate (@(MultiselectForLetterDate == null ? "0" : MultiselectForLetterDate.Count()))
+                            </div>
+                            <div class="col-12">
+                                <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@MultiSelectViews @bind-Value=@MultiselectForLetterDate
+                                                TextProperty="LetterDate" ValueProperty="LetterDate"
+                                                Placeholder="Letter Date" />
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                                Due Off Hold (@(MultiselectForDueOffHold == null ? "0" : MultiselectForDueOffHold.Count()))
+                            </div>
+                            <div class="col-12">
+                                <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@MultiSelectViews @bind-Value=@MultiselectForDueOffHold
+                                                TextProperty="DueOffHold" ValueProperty="DueOffHold"
+                                                Placeholder="Due Off Hold" />
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                                Status  (@(MultiselectForStatus == null ? "0" : MultiselectForStatus.Count()))
+                            </div>
+                            <div class="col-12">
+                                <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@MultiSelectViews @bind-Value=@MultiselectForStatus
+                                                TextProperty="Status" ValueProperty="Status"
+                                                Placeholder="Status " />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                                Selected
+                            </div>
+                            <div class="col-12">
+                                <RadzenRadioButtonList @bind-Value=@multipleValuesSelected TValue="int">
+                                    <Items>
+                                        <RadzenRadioButtonListItem Text="Yes" Value="1" />
+                                        <RadzenRadioButtonListItem Text="No" Value="2" />
+                                    </Items>
+                                </RadzenRadioButtonList>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                            </div>
+                            <div class="col-12 d-flex justify-content-between" style="margin-top:28px">
+                                <button class="btn btn-effect" style="width: 100%;font-size: 17px; ">Reset All</button>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                            </div>
+                            <div class="col-12 d-flex justify-content-between" style="margin-top:28px">
+                                <button class="btn btn-effect" style="width: 100%;font-size: 17px; ">Multi Select</button>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                            </div>
+                            <div class="col-12 d-flex justify-content-between" style="margin-top:28px">
+                                <button class="btn btn-effect" style="width: 100%;font-size: 17px; ">Request Override</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <RadzenFieldset Text="Not Available List">
+
+                            <RadzenDataGrid @ref="onLoadAlocationGrid" AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnPicking="true"
+                                            AllowPaging="true" PageSize="10"
+                                            AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true"
+                                            AllowColumnResize="true" ColumnWidth="200px"
+                                            FilterCaseSensitivity="FilterCaseSensitivity.Default" Data="@onLoadAlocationList" TItem="OnLoadAlocationView"
+                                            Count="onLoadAlocationCount" PagerHorizontalAlign="HorizontalAlign.Left" LoadData="LoadPagedList"
+                                            Density="Density.Compact" PagerAlwaysVisible="true">
+                                <Columns>
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Width="100px" Sortable="false" Filterable="false" TextAlign="TextAlign.Center" Frozen="true" MinWidth="50px"
+                                                          Pickable="false">
+                                        <HeaderTemplate>
+                                            <RadzenCheckBox TriState="false" TValue="bool" Value="@(onLoadAlocationList.Any(i => selectedAlocation != null && selectedAlocation.ToList().Where(x => x.OurRef == i.OurRef).FirstOrDefault()!=null))"
+                                                            Change="@(args => CheckChangeAllNotAvailable())" />
+
+                                        </HeaderTemplate>
+                                        <Template Context="data">
+                                            <RadzenCheckBox TriState="false" Value="@(data.Selection)"
+                                                            TValue="bool" Change="@(args=>CheckChangeForNoAvailable(data))" />
+                                        </Template>
+                                        <FooterTemplate>
+                                            <span>Select: <b>@(selectedAlocation != null ? selectedAlocation.Count : "0")</b> </span>
+                                        </FooterTemplate>
+                                    </RadzenDataGridColumn>
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Property="OurRef" Title="Our Ref" TextAlign="TextAlign.Center" Width="140px" MinWidth="80px">
+                                        <FooterTemplate>
+                                            Total <b>@onLoadAlocationCount</b>
+                                        </FooterTemplate>
+                                    </RadzenDataGridColumn>
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Property="ClientRef" Title="Client Ref" TextAlign="TextAlign.Center" Width="140px" MinWidth="80px" />
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Property="Company" Title="Company" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Property="Region" Title="Region" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Property="PostCode" Title="Post Code" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Property="Area" Title="Area" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Property="AltPostCode" Title="Alt Post Code" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Property="LoadDate" Title="LoadDate" Width="200px" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Property="Lettered" Title="Lettered" TextAlign="TextAlign.Center">
+                                        <Template Context="data">
+                                            <RadzenCheckBox TriState="false" Value="@(data.Lettered)"
+                                                            TValue="bool" Change="@(args=> { data.Lettered = !data.Lettered; })" />
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Property="LetterDate" Title="Letter Date" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Property="Hold" Title="Hold" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Property="DueOnHold" Title="DueOnHold" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="OnLoadAlocationView" Property="Status" Title="Status" TextAlign="TextAlign.Center" />
+
+
+
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenFieldset>
+                    </div>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Letter Selection">
+                    <div class="row">
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                                Region (@(MultiselectForRegion == null ? "0" : MultiselectForRegion.Count()))
+                            </div>
+                            <div class="col-12">
+                                <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@MultiSelectViews @bind-Value=@MultiselectForRegion
+                                                TextProperty="Region" ValueProperty="Region"
+                                                Placeholder="Region" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                                Area  (@(MultiselectForArea == null ? "0" : MultiselectForArea.Count()))
+                            </div>
+                            <div class="col-12">
+                                <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@MultiSelectViews @bind-Value=@MultiselectForArea
+                                                TextProperty="Area" ValueProperty="Area"
+                                                Placeholder="Area" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                                Company (@(MultiselectForCompany == null ? "0" : MultiselectForCompany.Count()))
+                            </div>
+                            <div class="col-12">
+                                <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@MultiSelectViews @bind-Value=@MultiselectForCompany
+                                                TextProperty="Company" ValueProperty="Company"
+                                                Placeholder="Company" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                                Selected
+                            </div>
+                            <div class="col-12">
+                                <RadzenRadioButtonList @bind-Value=@multipleValuesSelected TValue="int">
+                                    <Items>
+                                        <RadzenRadioButtonListItem Text="Yes" Value="1" />
+                                        <RadzenRadioButtonListItem Text="No" Value="2" />
+                                    </Items>
+                                </RadzenRadioButtonList>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                            </div>
+                            <div class="col-12 d-flex justify-content-between" style="margin-top:28px">
+                                <button class="btn btn-effect" style="width: 100%;font-size: 17px; ">Reset All</button>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                            </div>
+                            <div class="col-12 d-flex justify-content-between" style="margin-top:28px">
+                                <button class="btn btn-effect" style="width: 100%;font-size: 17px; ">Submit</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <RadzenFieldset Text="Letter Selection List">
+
+                            <RadzenDataGrid @ref="letterSelectionGrid" AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnPicking="true"
+                                            AllowPaging="true" PageSize="10"
+                                            AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true"
+                                            AllowColumnResize="true" ColumnWidth="200px"
+                                            FilterCaseSensitivity="FilterCaseSensitivity.Default" Data="@letterSelectionList" TItem="LetterSelectionView"
+                                            Count="letterSelectionCount" PagerHorizontalAlign="HorizontalAlign.Left" LoadData="LoadPagedLetterSelection"
+                                            Density="Density.Compact" PagerAlwaysVisible="true">
+                                <Columns>
+                                    <RadzenDataGridColumn TItem="LetterSelectionView" Width="100px" Sortable="false" Filterable="false" TextAlign="TextAlign.Center" Frozen="true" MinWidth="50px"
+                                                          Pickable="false">
+                                        <HeaderTemplate>
+                                            <RadzenCheckBox TriState="false" TValue="bool" Value="@(letterSelectionList.Any(i => selectedletterSelection != null && selectedletterSelection.ToList().Where(x => x.OurRef == i.OurRef).FirstOrDefault()!=null))"
+                                                            Change="@(args => CheckChangeAllLetterSelection())" />
+
+                                        </HeaderTemplate>
+                                        <Template Context="data">
+                                            <RadzenCheckBox TriState="false" Value="@(data.Selected)"
+                                                            TValue="bool" Change="@(args=>CheckChangeForLetterSelection(data))" />
+                                        </Template>
+                                        <FooterTemplate>
+                                            <span>Select: <b>@(selectedletterSelection != null ? selectedletterSelection.Count : "0")</b> </span>
+                                        </FooterTemplate>
+                                    </RadzenDataGridColumn>
+                                    <RadzenDataGridColumn TItem="LetterSelectionView" Property="OurRef" Title="Our Ref" TextAlign="TextAlign.Center" Width="140px" MinWidth="80px">
+                                        <FooterTemplate>
+                                            Total <b>@letterSelectionCount</b>
+                                        </FooterTemplate>
+                                    </RadzenDataGridColumn>
+
+                                    <RadzenDataGridColumn TItem="LetterSelectionView" Property="PostCode" Title="Post Code" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="LetterSelectionView" Property="Area" Title="Area" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="LetterSelectionView" Property="Balance" Title="Balance" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="LetterSelectionView" Property="SLADate" Title="SLA Date" Width="200px" TextAlign="TextAlign.Center" />
+
+                                    <RadzenDataGridColumn TItem="LetterSelectionView" Property="PotentialAvail" Title="PotentialAvail" TextAlign="TextAlign.Center" />
+
+
+
+
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenFieldset>
+                    </div>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Postcode Checker">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                                Company (@(MultiselectForCompany == null ? "0" : MultiselectForCompany.Count()))
+                            </div>
+                            <div class="col-12">
+                                <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                                FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@MultiSelectViews @bind-Value=@MultiselectForCompany
+                                                TextProperty="Company" ValueProperty="Company"
+                                                Placeholder="Company" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                            </div>
+                            <div class="col-12 d-flex justify-content-between" style="margin-top:28px">
+                                <button class="btn btn-effect" style="width: 100%;font-size: 17px; ">Reset All</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <RadzenFieldset Text="Post Code Checker List">
+
+                            <RadzenDataGrid @ref="postCodeCheckerGrid" AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnPicking="true"
+                                            AllowPaging="true" PageSize="10"
+                                            AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true"
+                                            AllowColumnResize="true" ColumnWidth="200px"
+                                            FilterCaseSensitivity="FilterCaseSensitivity.Default" Data="@postCodeCheckerList" TItem="PostCodeCheckerView"
+                                            Count="postCodeCheckerCount" PagerHorizontalAlign="HorizontalAlign.Left" LoadData="LoadPagedPostCodeChecker"
+                                            Density="Density.Compact" PagerAlwaysVisible="true">
+                                <Columns>
+
+                                    <RadzenDataGridColumn TItem="PostCodeCheckerView" Property="OurRef" Title="Our Ref" TextAlign="TextAlign.Center" Width="140px" MinWidth="80px">
+                                        <FooterTemplate>
+                                            Total <b>@postCodeCheckerCount</b>
+                                        </FooterTemplate>
+                                    </RadzenDataGridColumn>
+
+                                    <RadzenDataGridColumn TItem="PostCodeCheckerView" Property="CompanyName" Title="Company Name" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="PostCodeCheckerView" Property="JobPostCode" Title="Job PostCode" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="PostCodeCheckerView" Property="AltPostCode" Title="Alt PostCode" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="PostCodeCheckerView" Property="Incorrect" Title="Incorrect?" Width="200px" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="PostCodeCheckerView" Title="Update" Width="80px" MinWidth="80px" TextAlign="TextAlign.Center">
+                                        <Template Context="data">
+                                            @* <button class="btn  btn -danger btn -effect-save" style="width: 100%;font-size: 17px; ">Update</button>*@
+                                            <RadzenButton Shade="Shade.Dark" Icon="update" title="Update" ButtonStyle="ButtonStyle.Info" />
+                                        </Template>
+                                    </RadzenDataGridColumn>
+
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenFieldset>
+                    </div>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Settings">
+                    <div class="row">
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                            <div class="col-12">
+                            </div>
+                            <div class="col-12 d-flex justify-content-between" style="margin-top:28px">
+                                <button class="btn btn-effect" style="width: 100%;font-size: 17px; ">Hold Settings</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <RadzenFieldset Text="Settings List">
+
+                            <RadzenDataGrid @ref="olAFSettingGrid" AllowFiltering="true" FilterMode="FilterMode.Simple" AllowColumnPicking="true"
+                                            AllowPaging="true" PageSize="10"
+                                            AllowSorting="true" AllowMultiColumnSorting="true" ShowMultiColumnSortingIndex="true"
+                                            AllowColumnResize="true" ColumnWidth="200px"
+                                            FilterCaseSensitivity="FilterCaseSensitivity.Default" Data="@olAFSettingList" TItem="OlAFSettingView"
+                                            Count="olAFSettingCount" PagerHorizontalAlign="HorizontalAlign.Left" LoadData="LoadPagedOlafSetting"
+                                            Density="Density.Compact" PagerAlwaysVisible="true">
+                                <Columns>
+
+                                    <RadzenDataGridColumn TItem="OlAFSettingView" Property="Company" Title="Company" TextAlign="TextAlign.Center" Width="140px" MinWidth="80px">
+                                        <FooterTemplate>
+                                            Total <b>@olAFSettingCount</b>
+                                        </FooterTemplate>
+                                    </RadzenDataGridColumn>
+
+                                    <RadzenDataGridColumn TItem="OlAFSettingView" Property="Field" Title="Field" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="OlAFSettingView" Property="Contact" Title="Contact" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="OlAFSettingView" Property="Lettered" Title="Lettered" TextAlign="TextAlign.Center">
+                                        <Template Context="data">
+                                            <RadzenCheckBox TriState="false" Value="@(data.Lettered)"
+                                                            TValue="bool" Change="@(args=>{ data.Lettered = !data.Lettered; })" />
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                    <RadzenDataGridColumn TItem="OlAFSettingView" Property="Active" Title="Active" TextAlign="TextAlign.Center">
+                                        <Template Context="data">
+                                            <RadzenCheckBox TriState="false" Value="@(data.Active)"
+                                                            TValue="bool" Change="@(args=>{ data.Active = !data.Active; })" />
+                                        </Template>
+                                    </RadzenDataGridColumn>
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenFieldset>
+                    </div>
+
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin />
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
+@code {
+
+    RadzenDataGrid<OnLoadAlocationView> onLoadAlocationGrid;
+    RadzenDataGrid<LetterSelectionView> letterSelectionGrid;
+    RadzenDataGrid<PostCodeCheckerView> postCodeCheckerGrid;
+    RadzenDataGrid<OlAFSettingView> olAFSettingGrid;
+
+    List<NotAvailableMultiSelectView> MultiSelectViews { get; set; } = new();
+    List<string> MultiselectForRegion { get; set; } = new();
+    List<string> MultiselectForArea { get; set; } = new();
+    List<string> MultiselectForCompany { get; set; } = new();
+    List<string> MultiselectForLoadDate { get; set; } = new();
+    List<string> MultiselectForLetterDate { get; set; } = new();
+    List<string> MultiselectForDueOffHold { get; set; } = new();
+    List<string> MultiselectForStatus { get; set; } = new();
+    int multipleValuesSelected { get; set; }
+
+
+    GridViewParams ViewParams { get; set; } = new();
+    GridViewParams letterSelectionViewParams { get; set; } = new();
+    GridViewParams postCodeCheckerViewParams { get; set; } = new();
+    GridViewParams oLAFSettingsViewParams { get; set; } = new();
+
+    private List<OnLoadAlocationView> onLoadAlocationList = new List<OnLoadAlocationView>();
+    private int onLoadAlocationCount { get; set; } = 0;
+    private List<OnLoadAlocationView> selectedAlocation = new();
+
+    private List<LetterSelectionView> letterSelectionList = new List<LetterSelectionView>();
+    private int letterSelectionCount { get; set; } = 0;
+    private List<LetterSelectionView> selectedletterSelection = new();
+
+    private List<PostCodeCheckerView> postCodeCheckerList = new List<PostCodeCheckerView>();
+    private int postCodeCheckerCount { get; set; } = 0;
+
+    private List<OlAFSettingView> olAFSettingList = new List<OlAFSettingView>();
+    private int olAFSettingCount { get; set; } = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        MultiSelectViews = await _loadAlocationService.GetAllNotAvailableMultiSelectViews();
+        ViewParams.DateFilter = string.Empty;
+        ViewParams.Filter = "";
+        ViewParams.OrderBy = "";
+        ViewParams.Skip = 0;
+        ViewParams.Take = 10;
+        var DataList = await _loadAlocationService.GetAllAsync(ViewParams);
+        onLoadAlocationList = DataList.DataViewList.ToList();
+        onLoadAlocationCount = DataList.TotalDataViewCount;
+        selectedCheck();
+    }
+    public int TabSelected { get; set; } = 0;
+    public async Task ChangeTab(int index)
+    {
+        Console.WriteLine("index: " + index);
+
+
+        if (index == 0)
+        {
+            TabSelected = 0;
+            ViewParams.DateFilter = string.Empty;
+            ViewParams.Filter = "";
+            ViewParams.OrderBy = "";
+            ViewParams.Skip = 0;
+            ViewParams.Take = 10;
+            await Load();
+        }
+        else if (index == 1)
+        {
+            TabSelected = 1;
+            letterSelectionViewParams.DateFilter = string.Empty;
+            letterSelectionViewParams.Filter = "";
+            letterSelectionViewParams.OrderBy = "";
+            letterSelectionViewParams.Skip = 0;
+            letterSelectionViewParams.Take = 10;
+            await LoadletterSelection();
+        }
+        else if (index == 2)
+        {
+            TabSelected = 2;
+            postCodeCheckerViewParams.DateFilter = string.Empty;
+            postCodeCheckerViewParams.Filter = "";
+            postCodeCheckerViewParams.OrderBy = "";
+            postCodeCheckerViewParams.Skip = 0;
+            postCodeCheckerViewParams.Take = 10;
+            await LoadPostCodeChecker();
+        }
+        else if (index == 3)
+        {
+            TabSelected = 3;
+            oLAFSettingsViewParams.DateFilter = string.Empty;
+            oLAFSettingsViewParams.Filter = "";
+            oLAFSettingsViewParams.OrderBy = "";
+            oLAFSettingsViewParams.Skip = 0;
+            oLAFSettingsViewParams.Take = 10;
+            await LoadOLAFSettings();
+        }
+    }
+    private void selectedCheck()
+    {
+        Console.WriteLine("TabSelected " + TabSelected);
+
+        switch (TabSelected)
+        {
+            case 0:
+                if (selectedAlocation != null)
+                {
+                    foreach (var item in selectedAlocation)
+                    {
+                        var onLoadAlocation = onLoadAlocationList.Where(x => x.OurRef == item.OurRef).FirstOrDefault();
+                        if (onLoadAlocation != null)
+                        {
+                            onLoadAlocation.Selection = true;
+                        }
+                    }
+                }
+                break;
+            case 1:
+                if (selectedAlocation != null)
+                {
+                    foreach (var item in selectedletterSelection)
+                    {
+                        var letterSelection = letterSelectionList.Where(x => x.OurRef == item.OurRef).FirstOrDefault();
+                        if (letterSelection != null)
+                        {
+                            letterSelection.Selected = true;
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    private async Task CheckChangeForNoAvailable(OnLoadAlocationView loadView)
+    {
+        var SelectData = selectedAlocation.ToList().Where(e => e.OurRef == loadView.OurRef).FirstOrDefault();
+        if (SelectData != null)
+        {
+            selectedAlocation = selectedAlocation.Distinct().ToList();
+            selectedAlocation.Remove(SelectData);
+            loadView.Selection = false;
+        }
+        else
+        {
+            selectedAlocation.Add(loadView);
+            loadView.Selection = true;
+        }
+
+    }
+    private async Task CheckChangeForLetterSelection(LetterSelectionView loadView)
+    {
+        var SelectData = selectedletterSelection.ToList().Where(e => e.OurRef == loadView.OurRef).FirstOrDefault();
+        if (SelectData != null)
+        {
+            selectedletterSelection = selectedletterSelection.Distinct().ToList();
+            selectedletterSelection.Remove(SelectData);
+            loadView.Selected = false;
+        }
+        else
+        {
+            selectedletterSelection.Add(loadView);
+            loadView.Selected = true;
+        }
+
+    }
+    private async Task CheckChangeAllNotAvailable()
+    {
+
+        if (selectedAlocation.Count == 0)
+        {
+            foreach (var planning in onLoadAlocationList)
+            {
+                planning.Selection = true;
+                selectedAlocation.Add(planning);
+            }
+        }
+        else
+        {
+            bool IsSelected = false;
+            var Selectedlist = (from onLoadAlocation in onLoadAlocationList
+                                where onLoadAlocation.Selection == true
+                                select onLoadAlocation).ToList();
+
+            if (Selectedlist != null && Selectedlist.Count != 0)
+            {
+                IsSelected = true;
+            }
+            foreach (var planning in onLoadAlocationList)
+            {
+                onLoadAlocationList = onLoadAlocationList.Distinct().ToList();
+                var SelectData = selectedAlocation.Where(x => x.OurRef == planning.OurRef).FirstOrDefault();
+                if (SelectData != null)
+                {
+                    planning.Selection = false;
+                    selectedAlocation.Remove(SelectData);
+                }
+                else if (!IsSelected)
+                {
+                    planning.Selection = true;
+                    selectedAlocation.Add(planning);
+                }
+
+            }
+        }
+        onLoadAlocationList = onLoadAlocationList.Distinct().ToList();
+    }
+    private async Task CheckChangeAllLetterSelection()
+    {
+
+        if (selectedletterSelection.Count == 0)
+        {
+            foreach (var planning in letterSelectionList)
+            {
+                planning.Selected = true;
+                selectedletterSelection.Add(planning);
+            }
+        }
+        else
+        {
+            bool IsSelected = false;
+            var Selectedlist = (from letterSelection in letterSelectionList
+                                where letterSelection.Selected == true
+                                select letterSelection).ToList();
+
+            if (Selectedlist != null && Selectedlist.Count != 0)
+            {
+                IsSelected = true;
+            }
+            foreach (var planning in letterSelectionList)
+            {
+                letterSelectionList = letterSelectionList.Distinct().ToList();
+                var SelectData = selectedletterSelection.Where(x => x.OurRef == planning.OurRef).FirstOrDefault();
+                if (SelectData != null)
+                {
+                    planning.Selected = false;
+                    selectedletterSelection.Remove(SelectData);
+                }
+                else if (!IsSelected)
+                {
+                    planning.Selected = true;
+                    selectedletterSelection.Add(planning);
+                }
+
+            }
+        }
+        onLoadAlocationList = onLoadAlocationList.Distinct().ToList();
+    }
+
+    public async Task Load()
+    {
+        var DataList = await _loadAlocationService.GetAllAsync(ViewParams);
+        onLoadAlocationList = DataList.DataViewList.ToList();
+        onLoadAlocationCount = DataList.TotalDataViewCount;
+    }
+    public async Task LoadletterSelection()
+    {
+        var DataList = await _loadAlocationService.LetterSelectionGetPagedAsync(letterSelectionViewParams);
+        letterSelectionList = DataList.DataViewList.ToList();
+        letterSelectionCount = DataList.TotalDataViewCount;
+        selectedCheck();
+    }
+    public async Task LoadPostCodeChecker()
+    {
+        var DataList = await _loadAlocationService.PostCodeCheckerGetPagedAsync(postCodeCheckerViewParams);
+        postCodeCheckerList = DataList.DataViewList.ToList();
+        postCodeCheckerCount = DataList.TotalDataViewCount;
+        selectedCheck();
+    }
+    public async Task LoadOLAFSettings()
+    {
+        var DataList = await _loadAlocationService.olAFSettingGetPagedAsync(oLAFSettingsViewParams);
+        olAFSettingList = DataList.DataViewList.ToList();
+        olAFSettingCount = DataList.TotalDataViewCount;
+
+    }
+    public async Task LoadPagedLetterSelection(LoadDataArgs args)
+    {
+        letterSelectionViewParams.DateFilter = null;
+        letterSelectionViewParams.Filter = args.Filter ?? string.Empty;
+        letterSelectionViewParams.OrderBy = args.OrderBy ?? string.Empty; ;
+        letterSelectionViewParams.Skip = args.Skip ?? 0;
+        letterSelectionViewParams.Take = 10;
+
+        await LoadletterSelection();
+        selectedCheck();
+    }
+    public async Task LoadPagedPostCodeChecker(LoadDataArgs args)
+    {
+        postCodeCheckerViewParams.DateFilter = null;
+        postCodeCheckerViewParams.Filter = args.Filter ?? string.Empty;
+        postCodeCheckerViewParams.OrderBy = args.OrderBy ?? string.Empty; ;
+        postCodeCheckerViewParams.Skip = args.Skip ?? 0;
+        postCodeCheckerViewParams.Take = 10;
+
+        await LoadPostCodeChecker();
+        selectedCheck();
+    }
+    public async Task LoadPagedOlafSetting(LoadDataArgs args)
+    {
+        oLAFSettingsViewParams.DateFilter = null;
+        oLAFSettingsViewParams.Filter = args.Filter ?? string.Empty;
+        oLAFSettingsViewParams.OrderBy = args.OrderBy ?? string.Empty; ;
+        oLAFSettingsViewParams.Skip = args.Skip ?? 0;
+        oLAFSettingsViewParams.Take = 10;
+
+        await LoadOLAFSettings();
+
+    }
+    public async Task LoadPagedList(LoadDataArgs args)
+    {
+        ViewParams.DateFilter = null;
+        ViewParams.Filter = args.Filter ?? string.Empty;
+        ViewParams.OrderBy = args.OrderBy ?? string.Empty; ;
+        ViewParams.Skip = args.Skip ?? 0;
+        ViewParams.Take = 10;
+
+        await Load();
+        selectedCheck();
+    }
+}
+

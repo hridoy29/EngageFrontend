@@ -1,0 +1,46 @@
+﻿@inherits LayoutComponentBase
+@using Blazored.Toast.Configuration
+<BlazoredToasts Position="ToastPosition.BottomRight"
+                Timeout="5"
+                IconType="IconType.FontAwesome"
+                ShowProgressBar="true" 
+                ErrorIcon="fa-solid fa-shield-halved"
+                SuccessIcon="fa-solid fa-thumbs-up"
+                InfoIcon="fa-solid fa-circle-info"
+                WarningIcon="fa-solid fa-triangle-exclamation"
+               />
+<RadzenDialog />
+<div class="page">
+    <AuthorizeView>
+        <Authorized>
+            
+            <div id="sidebar">
+                <NavMenu />
+            </div>
+            <div class="main">
+
+                <div class="content px-4" style=" margin-top: 55px;">
+                    @Body
+                </div>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+           <Landing/>
+            <div class="main">
+
+                <div class="content" style=" margin-top: 55px;">
+                    @Body
+                </div>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+   
+</div>
+<style>
+    #sidebar {
+        width: 250px;
+    }
+    .main {
+        width: /*100vw*/ 100%;
+    }
+</style>

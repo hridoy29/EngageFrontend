@@ -1,0 +1,222 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels;
+@using Magnus.Core.Models.CaseDetailsModels.MeterDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@using MagnusWebUI.Shared.Components
+@using System.Diagnostics;
+@using System.Text.Json;
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+@inject IJSRuntime JSRuntime
+<AuthorizeView>
+    <Authorized>
+        <div class="tab-card-style">
+            <div class="col-12" style="padding:0px">
+                <div class="row">
+                    <div class="col-4" style="margin-bottom: 8px;">
+                        <div class="row ">
+                            <div class="col-10 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox" style="">
+                                Meter:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-10 header-of-dropdown-and-texbox" style="">
+                                <RadzenDropDown AllowClear="true" Class="w-100 " TValue="int" Placeholder="Meter" @bind-Value="MeterOrd"
+                                                Data="@(MeterDetails.Meters)" ValueProperty="ID" TextProperty="MeterTypeID"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-7" style="padding-right:8px">
+                        <RadzenFieldset Text="Meter Details">
+                            <div class="col-12" style="padding:0px">
+                                <div class="row">
+                                    <div class="col-6" style="padding-right:8px">
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center " style="">
+                                                Meter Type:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Meter Type" bindTextValue="@MeterDetails.Meters[MeterOrd - 1].Type" />
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center " style="">
+                                                Meter Serial Number:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Meter Serial Number" bindTextValue="@MeterDetails.Meters[MeterOrd - 1].MSN" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6" style="padding-left:8px">
+
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                @MPxNTitle:
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="@MPxNTitle" bindTextValue="@MeterDetails.Meters[MeterOrd - 1].MPxN" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 accordian-top-margin meterdetails" style="padding:0px">
+                                        <RadzenAccordion Multiple="true" Collapse=@(args => Change(args, "Accordion with multiple expand", "collapsed"))
+                                                         Expand=@(args => Change(args, "Accordion with multiple expand", "expanded"))>
+                                            <Items>
+                                                <RadzenAccordionItem Text="Extra Meter Information">
+                                                        <MeterExtraView MeterOrd="@MeterOrd" MeterDetails="@MeterDetails"/>
+                                                </RadzenAccordionItem>
+                                            </Items>
+                                        </RadzenAccordion>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                        </RadzenFieldset>
+                    </div>
+                    <div class="col-5" style="padding-left:8px">
+                        <RadzenFieldset Text="Readings" Style="height:100% !important">
+                            <div class="col-12" style="padding:0px">
+                                <div class="row">
+                                    <div class="col-6"style="padding-right:8px">
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Reading Date:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Reading Date" bindTextValue="@MeterDetails.GetValue("Reading Date", MeterOrd, ReadingOrd)"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6" style="padding-left:8px">
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                                Reading:
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                                <DisabledTextBox placeHolder="Reading" bindTextValue="@MeterDetails.GetValue("Reading", MeterOrd, ReadingOrd)" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Agent Comments:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        <DisabledTextBox placeHolder="Agent Comments" bindTextValue="@MeterDetails.GetValue("Agent Comments", MeterOrd, ReadingOrd)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <RadzenPager HorizontalAlign="HorizontalAlign.Left" Count=ReadingCount PageSize=1 PageChanged="@ReadingPageSelected" />
+                        </RadzenFieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [Parameter]
+    public MeterDetails MeterDetails { get; set; }
+
+    public int MeterOrd { get; set; } = 1;
+    public int ReadingOrd { get; set; } = 1;
+
+    protected int ReadingCount
+        => GetNumberOfReadings();
+
+    List<(int meterOrd, string display)> DropdownOptions = new();
+    string pagingSummaryFormat = "Displaying page {0} of {1} (total {2} records)";
+
+    int pageSize = 3;
+    int count = 22;
+    string Location = string.Empty;
+    string MPxNTitle => GetMPxNTitle();
+    string MeterType = string.Empty;
+    List<MeterReading> SelectedReadingDetails = new();
+
+    void Change(object value, string name, string action)
+    {
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    //Gets the number of readings for the selected meter
+    protected int GetNumberOfReadings() 
+    => MeterDetails.Results.Where(r => r.ReadingOrd is not null && r.MeterOrd == MeterOrd).Select(x => (int)x.ReadingOrd!).Distinct().Count();
+
+    protected string GetMPxNTitle()
+    {
+        string? MPRN = MeterDetails.GetValue("MPRN", MeterOrd, null);
+        string? MPAN = MeterDetails.GetValue("MPAN", MeterOrd, null);
+
+        if (MPRN is not null)
+            return "MPRN";
+        if (MPAN is not null)
+            return "MPAN";
+
+        return "MPRN/MPAN";
+    }
+
+    void ReadingPageSelected(PagerEventArgs args) 
+        => ReadingOrd = args.PageIndex + 1;
+
+    public void OnMeterOrdChange(object ord)
+    {
+        MeterOrd = Convert.ToInt32(ord);
+    }
+
+    public void getSelectedReadingDetails(int id)
+    {
+        var readings = MeterDetails.Meters.Where(x => x.ID == id).FirstOrDefault();
+        //SelectedReadingDetails = readings.Readings;
+    }
+}
+<style>
+    .rz-datalist-data > li {
+        border: none;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    .rz-datalist-data {
+        padding: 0px;
+    }
+</style>

@@ -1,0 +1,259 @@
+﻿@using Magnus.Core.Models.CaseDetailsModels.MeterDetailsModels;
+@using MagnusWebUI.Shared.Components
+@using System.Text.Json;
+<div class="col-12 d-flex" style="padding:0px">
+    <div class="col-6" style="padding-right:8px">
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Location:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Location", MeterOrd, null)" placeHolder="Location" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Location" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Client Location Confirmed?:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Client Location Confirmed", MeterOrd, null)" placeHolder="Client Location Confirmed?" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Client Location Confirmed?" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                2 Person Man Hole Cover:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">                
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("2 Person Man Hole Cover", MeterOrd, null)" placeHolder="2 Person Man Hole Cover" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="2 Person Man Hole Cover" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Seen:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Seen", MeterOrd, null)" placeHolder="Seen" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Seen" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Extract Location:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Extract Location", MeterOrd, null)" placeHolder="Extract Location" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Extract Location" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Located Public Or Private:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Located Public Or Private", MeterOrd, null)" placeHolder="Located Public Or Private" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Located Public Or Private" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Submerged:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Submerged", MeterOrd, null)" placeHolder="Submerged" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Submerged" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Semi-Concealed:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Semi-Concealed", MeterOrd, null)" placeHolder="Semi-Concealed" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Semi-Concealed" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Damaged:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Damaged", MeterOrd, null)" placeHolder="Damaged" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Damaged" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Serial Number:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Serial Number", MeterOrd, null)" placeHolder="Serial Number" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Serial Number" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Stop Valve:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Stop Valve", MeterOrd, null)" placeHolder="Stop Valve" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Stop Valve" />*@
+            </div>
+        </div>
+    </div>
+    <div class="col-6" style="padding-left:8px">
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Shared Supply:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Shared Supply", MeterOrd, null)" placeHolder="Shared Supply" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Shared Supply" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Shared Supply Unknown Comments:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Shared Supply Unknown Comments", MeterOrd, null)" placeHolder="Shared Supply Unknown Comments" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Shared Supply Unknown Comments" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Domestic Elements:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Domestic Elements", MeterOrd, null)" placeHolder="Domestic Elements" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Domestic Elements" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Flats Present:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Flats Present", MeterOrd, null)" placeHolder="Flats Present" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Flats Present" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Number Of Flats:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Number Of Flats", MeterOrd, null)" placeHolder="Number Of Flats" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Number Of Flats" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Domestic Element Unknown Comments:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Domestic Element Unknown Comments", MeterOrd, null)" placeHolder="Domestic Element Unknown Comments" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Domestic Element Unknown Comments" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Locksmith Required:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Locksmith Required", MeterOrd, null)" placeHolder="Locksmith Required" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Locksmith Required" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Lock Type:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Lock Type", MeterOrd, null)" placeHolder="Lock Type" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Lock Type" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Shutter Engineer Required:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Shutter Engineer Required", MeterOrd, null)" placeHolder="Shutter Engineer Required" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Shutter Engineer Required" />*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                Dog Handler Required:
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 margin-bottom-for-textboxHeader">
+                <DisabledTextBox bindTextValue="@MeterDetails.GetValue("Dog Handler Required", MeterOrd, null)" placeHolder="Dog Handler Required" />
+                @*<DisabledTextBox bindTextValue="@MeterOrd.ToString()" placeHolder="Dog Handler Required" />*@
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public MeterDetails MeterDetails { get; set; }
+
+    [Parameter]
+    public int MeterOrd { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine($"Cascaded meter ordinal: {MeterOrd}");
+        //Console.WriteLine($"Received meter details: {JsonSerializer.Serialize(MeterDetails)}");
+    }
+}
+<style>
+    .meterdetails .rz-accordion-content {
+        padding: 4px 10px 10px 0px;
+    }
+</style>

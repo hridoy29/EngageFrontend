@@ -1,0 +1,565 @@
+﻿@*@page "/Search/{from:bool}"*@
+@page "/Search"
+@*@page "/Search/{ourReference:int}/{ClientID:int}/{CaseStatus:int}/{OurRef?}/{ClientAccountNumber?}/{SecondaryRef?}/{CustomerName?}/{PostCode?}/{DateProcessedFrom?}/{DateProcessedTo?}"*@
+@using Magnus.Core.Models
+@using System.Collections.Specialized;
+@inject Blazored.LocalStorage.ILocalStorageService _storageService
+@inject ISearchServices _SearchService
+@inject SweetAlertService Swal;
+@inject EnagageNavigationManager navigation
+@inject NavigationManager navigationManager
+
+<AuthorizeView>
+    <Authorized>
+        <div class="card card-For-Pages">
+            <div class="card-header card-header-color">
+                <h4>Search</h4>
+            </div>
+            <div class="card-body" style="padding-bottom:0;padding-top: 0.3rem !important;">
+                <div class="row" @onkeyup="@Enter">
+
+                    <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2 ">
+                        <div class="col-12 d-flex padding-zero-for-label-textbox">
+                            <div class="col-12 d-flex header-of-dropdown-and-texbox margin-top-for-textboxHeader " style="    margin-bottom: 2px !important;padding:0px !important;">
+                                <div class="col-6 " style="padding: 0; display: flex;align-content: space-evenly; ">
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H4">@(clientStatus ? "Active Clients" : "All Clients")</RadzenText>
+                                    </div>
+                                    <div class="col-6">
+                                        <RadzenSwitch Change="@(args=>clientStatusChange(args))" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12  padding-zero-for-label-textbox" style="margin-top: -2px;">
+                                <RadzenDropDown AllowClear="true" Class="w-100"
+                                            Data=@(clientList) TextProperty="Name" ValueProperty="ClientID" Placeholder="Client" @bind-Value="@(SearchViewParams.ClientId)" onkeypress="@Enter" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2 padding-zero-for-label-textbox">
+                            <div class="col-12 header-of-dropdown-and-texbox margin-top-for-textboxHeader margin-bottom-for-textboxHeader " style="">
+                                Our Reference
+                            </div>
+                            <div class="col-12 ">
+                                <RadzenTextBox Placeholder="Our Reference" Class="w-100" @bind-Value="@(SearchViewParams.OurRef)" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2 padding-zero-for-label-textbox">
+                            <div class="col-12 header-of-dropdown-and-texbox margin-top-for-textboxHeader margin-bottom-for-textboxHeader " style="">
+                                Client Account No.
+                            </div>
+                            <div class="col-12 ">
+                                <RadzenTextBox Placeholder="Client Account No." Class="w-100" @bind-Value="@(SearchViewParams.ClientAccountNumber)" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2  padding-zero-for-label-textbox">
+                            <div class="col-12 header-of-dropdown-and-texbox margin-top-for-textboxHeader margin-bottom-for-textboxHeader " style="">
+                                Secondary Reference
+                            </div>
+                            <div class="col-12  ">
+                                <RadzenTextBox Placeholder="Secondary Reference" Class="w-100" @bind-Value="@(SearchViewParams.SecondaryRef)" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2 padding-zero-for-label-textbox">
+                            <div class="col-12 header-of-dropdown-and-texbox margin-top-for-textboxHeader margin-bottom-for-textboxHeader " style="">
+                                Customer Name
+                            </div>
+                            <div class="col-12 ">
+                                <RadzenTextBox Placeholder="Customer Name" Class="w-100" @bind-Value="@(SearchViewParams.CustomerName)" />
+                            </div>
+
+                        </div>
+                        @*<div class="col-sm-5 col-md-4 col-lg-3 col-xl-2">
+                    <div class="col-12">
+                    1<sup>st</sup> Line Of Address
+                    </div>
+                    <div class="col-12">
+                    <RadzenTextBox Placeholder="1st Line Of Address" Class="w-100" @bind-Value="@(SearchViewParams.FirstLineAddress)" />
+                    </div>
+
+                    </div>*@
+
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2 padding-zero-for-label-textbox">
+                            <div class="col-12 header-of-dropdown-and-texbox margin-top-for-textboxHeader margin-bottom-for-textboxHeader " style="">
+                                Postcode
+                            </div>
+                            <div class="col-12 ">
+                                <RadzenTextBox Placeholder="Postcode" Class="w-100" @bind-Value="@(SearchViewParams.PostCode)" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2 padding-zero-for-label-textbox">
+                            <div class="col-12 header-of-dropdown-and-texbox margin-top-for-textboxHeader margin-bottom-for-textboxHeader " style="">
+                                Case Status
+                            </div>
+                            <div class="col-12 ">
+                                <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " @bind-Value="@(SearchViewParams.CaseStatus)" TextProperty="Status" ValueProperty="StatusID"
+                                            Data=@(caseStatusList) Placeholder="Case Status" onkeypress="@Enter" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2 padding-zero-for-label-textbox">
+                            <div class="col-12 header-of-dropdown-and-texbox margin-top-for-textboxHeader margin-bottom-for-textboxHeader " style="">
+                                Date Processed (From)
+                            </div>
+                            <div class="col-12 d-flex ">
+                                <RadzenDatePicker DateFormat="d" Placeholder="From" class="" @bind-Value="@(SearchViewParams.DateProcessedFrom)" Style="width:102% !important" />
+                                @* <div class="col-2 d-flex justify-content-center header-of-dropdown-and-texbox margin-top-for-textboxHeader margin-bottom-for-textboxHeader" style="padding:0px !important">
+                            To
+                            </div>
+                            <div class="col-5" style="padding:0px !important">
+                            <RadzenDatePicker DateFormat="d" Placeholder="To" class="margin-top-for-textboxHeader margin-bottom-for-textboxHeader" @bind-Value="@(SearchViewParams.DateProcessedTo)" Style="width:102% !important" />
+                            </div>*@
+                            </div>
+
+                        </div>
+                        @*<div class="col-sm-10 col-md-8 col-lg-6 col-xl-4">
+                    <div class="col-12 header-of-dropdown-and-texbox margin-top-for-textboxHeader margin-bottom-for-textboxHeader" style="">
+                    Date Processed (From)
+                    </div>
+                    <div class="col-12 d-flex">
+                    <div class="col-5" style="padding:0px !important">
+                    <RadzenDatePicker DateFormat="d" Placeholder="From" class="margin-top-for-textboxHeader margin-bottom-for-textboxHeader" @bind-Value="@(SearchViewParams.DateProcessedFrom)" Style="width:102% !important" />
+                    </div>
+                    @* <div class="col-2 d-flex justify-content-center header-of-dropdown-and-texbox margin-top-for-textboxHeader margin-bottom-for-textboxHeader" style="padding:0px !important">
+                    To
+                    </div>
+                    <div class="col-5" style="padding:0px !important">
+                    <RadzenDatePicker DateFormat="d" Placeholder="To" class="margin-top-for-textboxHeader margin-bottom-for-textboxHeader" @bind-Value="@(SearchViewParams.DateProcessedTo)" Style="width:102% !important" />
+                    </div>*@
+                        @*</div>
+
+                    </div>*@
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2 padding-zero-for-label-textbox">
+                            <div class="col-12 header-of-dropdown-and-texbox margin-top-for-textboxHeader margin-bottom-for-textboxHeader " style="">
+                                Date Processed (To)
+                            </div>
+                            <div class="col-12 d-flex ">
+                                <RadzenDatePicker DateFormat="d" Placeholder="To" class="" @bind-Value="@(SearchViewParams.DateProcessedTo)" Style="width:102% !important" />
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2 padding-zero-for-label-textbox">
+                            <div class="col-12 margin-top-for-textboxHeader margin-bottom-for-textboxHeader">
+                            </div>
+                            <div class="col-12 d-flex justify-content-between " style="margin-top: 39px !important;">
+                                <button class="btn btn-effect " style="width: 100%;font-size: 17px; " @onclick="FindBtnCliked">Find</button>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3 col-xl-2 padding-zero-for-label-textbox">
+                            <div class="col-12 margin-top-for-textboxHeader margin-bottom-for-textboxHeader">
+                            </div>
+                            <div class="col-12 d-flex justify-content-between " style="margin-top: 39px !important;">
+                                <button class="btn btn-effect" style="width: 100%;font-size: 17px; " @onclick="ClearClicked">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+                <div class="row" style="padding:0 30px 20px;">
+                    @{
+                    if (isSearchClicked)
+                    {
+                        if (isSearch)
+                        {
+                            <RadzenFieldset Text="Search Result">
+                                <RadzenDataGrid AllowFiltering="false" AllowColumnResize="true" AllowAlternatingRows="false"
+                                    AllowSorting="true" PageSize="@ItemPerPage"
+                                    AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center"
+                                    Data="@SearchList" TItem="SearchView" ColumnWidth="200px" PagerAlwaysVisible="true"
+                                    LoadData="LoadList" Count="SearchCount" FilterCaseSensitivity="FilterCaseSensitivity.Default" IsLoading="@IsLoading" PageSizeOptions="@TakeDropDownList"
+                                    ShowPagingSummary="@showPagerSummary" PagingSummaryFormat="@pagingSummaryFormat" GridLines="DataGridGridLines.Both"
+                                    SelectionMode="DataGridSelectionMode.Single" @bind-Value=@SelectedSearchResult CellClick="@GoToClientDetails">
+
+
+                                    <EmptyTemplate>
+                                        <p style="color: lightgrey; font-size: 24px; text-align: center; margin: 2rem;">No results found.</p>
+                                    </EmptyTemplate>
+                                    <Columns>
+                                        <RadzenDataGridColumn TItem="SearchView" Property="ClientName" Filterable="false" Title="Company Name" TextAlign="TextAlign.Center" CssClass="hober">
+                                            <FooterTemplate>
+
+                                            </FooterTemplate>
+                                        </RadzenDataGridColumn>
+                                        <RadzenDataGridColumn TItem="SearchView" Property="CaseID" Title="Our Reference" TextAlign="TextAlign.Center" Width="140px" MinWidth="80px" CssClass="hober" />
+                                        <RadzenDataGridColumn TItem="SearchView" Property="ClientRef" Title="Client Account No." TextAlign="TextAlign.Center" Width="180px" MinWidth="80px" CssClass="hober" />
+                                        <RadzenDataGridColumn TItem="SearchView" Property="SecondaryReference" Title="Secondary Reference" TextAlign="TextAlign.Center" CssClass="hober" />
+                                        <RadzenDataGridColumn TItem="SearchView" Property="CustomerName" Title="Customer Name" TextAlign="TextAlign.Center" CssClass="hober" />
+                                        <RadzenDataGridColumn TItem="SearchView" Property="FirstLineAddress" Title="1st Line Of Address" TextAlign="TextAlign.Center" CssClass="hober" />
+                                        <RadzenDataGridColumn TItem="SearchView" Property="PostCode" Title="Postcode" TextAlign="TextAlign.Center" CssClass="hober" />
+                                        <RadzenDataGridColumn TItem="SearchView" Property="DateLoaded" Title="Date Loaded" TextAlign="TextAlign.Center" CssClass="hober" />
+                                        <RadzenDataGridColumn TItem="SearchView" Property="Outcome" Title="Outcome" TextAlign="TextAlign.Center" CssClass="hober" />
+                                        <RadzenDataGridColumn TItem="SearchView" Property="CaseStatus" Title="CaseStatus" TextAlign="TextAlign.Center" CssClass="hober" />
+
+
+                                    </Columns>
+                                </RadzenDataGrid>
+                            </RadzenFieldset>
+                            //if (SearchList != null && SearchCount > 20)
+                            //{
+                            //    <div class="row d-flex @(SearchList.Count<=ItemPerPage?"Take-DropDown-Search-Status-For-Count-Greater-then-ActualList":"Take-DropDown-Search-Status") " style="margin-left: -10px;margin-top: -65px; ">
+                            //        <RadzenDropDown TValue="string"
+                            //        Data=@(TakeDropDownList)
+                            //        Change=@(args => TakeDropDownChange(args)) Placeholder="Default Item Count 20" />
+                            //    </div>
+                            //}
+
+                        }
+                        else if (initialLoad)
+                        {
+                            <div class="preloader d-flex justify-content-center" style="margin-left:0px !important; width:100% ">
+                                <img src="Gif/EnagePreloader.gif" />
+                            </div>
+                        }
+                    }
+
+                }
+            </div>
+        </div>
+
+        @*  </div>*@
+
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin />
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    [Parameter]
+    public bool from { get; set; } = false;
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "oref")]
+    public int ourReference { get; set; } = 0;
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "dpf")]
+    public string DateProcessedFrom { get; set; } = null;
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "dpt")]
+    public string DateProcessedTo { get; set; } = null;
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "cno")]
+    public string ClientAccountNumber { get; set; } = null;
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "cn")]
+    public string CustomerName { get; set; } = null;
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "cid")]
+    public string ClientId { get; set; } = null;
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "pc")]
+    public string PostCode { get; set; } = null;
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "sr")]
+    public string SecondaryRef { get; set; } =null;
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "cs")]
+    public int CaseStatus { get; set; } = 0;
+
+    RadzenDataGrid<SearchView> searchViewGrid;
+    string pagingSummaryFormat = "Displaying page {0} of {1} (total {2} records)";
+    bool showPagerSummary = true;
+    int ItemPerPage = 20;
+    DateTime? value = DateTime.Now;
+    List<ClientView> clientList { get; set; }
+    List<CaseStatusView> caseStatusList { get; set; }
+    List<string> agentList = new List<string>() { "Agent 1", "Agent 2" };
+    List<int> TakeDropDownList = new List<int>() { 10, 15, 20, 25 };
+    public int RadioBindValueForSearch { get; set; } = 1;
+    public int RadioBindValueForClient { get; set; } = 1;
+    public bool isSearch { get; set; } = false;
+    public bool initialLoad { get; set; } = false;
+    public bool isSearchClicked { get; set; } = false;
+    public bool IsLoading { get; set; } = false;
+    public bool clientStatus { get; set; } = false;
+    private int SearchCount = 0;
+    private IList<SearchView> SearchList = new List<SearchView>();
+    IList<SearchView> SelectedSearchResult;
+    private SearchViewParams SearchViewParams = new();
+    private readonly NavigationManager _navigate;
+
+    protected async override Task OnInitializedAsync()
+    {
+        await LoadData();
+
+        initialLoad = true;
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadData();
+    }
+
+    public async Task LoadData()
+    {
+        SearchViewParams.DateProcessedTo = DateTime.Now;
+        SearchViewParams.DateProcessedFrom = DateTime.Now.AddYears(-2);
+        var clients = await _SearchService.GetAllClient(true);
+        clientList = clients.ToList();
+        var caseStatus = await _SearchService.GetAllCaseStatus();
+        caseStatusList = caseStatus.ToList();
+        SearchViewParams.Skip = 0;
+        SearchViewParams.Take = ItemPerPage;
+        SearchViewParams.OrderBy = null;
+
+
+        if (ourReference != 0 || DateProcessedTo != null || DateProcessedFrom != null 
+            || CaseStatus != 0 || SecondaryRef != null || PostCode != null
+            || CustomerName != null || ClientId != null || ClientAccountNumber != null)
+        {
+
+            var searchData = await _storageService.GetItemAsync<SearchViewParams>("searchViewData");
+            if (searchData is not null)
+            {
+                SearchViewParams = searchData;
+                await FindData();
+                await _storageService.ClearAsync();
+            }
+        }
+        else
+        {
+            if (navigationManager.Uri.Contains("?"))
+            {
+                await FindData();
+
+            }
+        }
+    }
+
+    public async Task clientStatusChange(bool? value)
+    {
+        clientStatus = !clientStatus;
+        var clients = await _SearchService.GetAllClient(clientStatus);
+        clientList = clients.ToList();
+    }
+    public async Task TakeDropDownChange(object value)
+    {
+        var count = int.Parse(value.ToString());
+        ItemPerPage = count;
+        await FindData();
+    }
+
+    public async Task FindData()
+    {
+
+        isSearchClicked = true;
+        SearchViewParams.Skip = 0;
+        SearchViewParams.Take = ItemPerPage;
+        SearchViewParams.OrderBy = null;
+        await GetPagedSearch();
+    }
+
+    public async Task FindBtnCliked()
+    {
+        await _storageService.SetItemAsync<SearchViewParams>("searchViewData", SearchViewParams);
+
+        await _storageService.SetItemAsync<string>("searchQueryString", getQueryString().ToString());
+
+        navigation.BackToSearch(getQueryString().ToString()); ;
+    }
+
+    public async Task GetPagedSearch()
+    {
+        if (SearchViewParams.OurRef == "" || SearchViewParams.OurRef == null)
+        {
+            SearchViewParams.OurRef = "";
+        }
+        bool isSuccessfullyParsed = int.TryParse(SearchViewParams.OurRef, out int output);
+        if (!isSuccessfullyParsed)
+        {
+
+            SearchViewParams.OurRef = "";
+        }
+        if (SearchViewParams.SecondaryRef == "" || SearchViewParams.SecondaryRef == null)
+        {
+            SearchViewParams.SecondaryRef = "";
+        }
+        if (SearchViewParams.ClientAccountNumber == "" || SearchViewParams.ClientAccountNumber == null)
+        {
+            SearchViewParams.ClientAccountNumber = "";
+        }
+        if (SearchViewParams.CustomerName == "" || SearchViewParams.CustomerName == null)
+        {
+            SearchViewParams.CustomerName = "";
+        }
+        if (SearchViewParams.FirstLineAddress == "" || SearchViewParams.FirstLineAddress == null)
+        {
+            SearchViewParams.FirstLineAddress = "";
+        }
+        if (SearchViewParams.PostCode == "" || SearchViewParams.PostCode == null)
+        {
+            SearchViewParams.PostCode = "";
+        }
+
+
+        SearchList = await _SearchService.GetAllAsync(SearchViewParams);
+        SearchCount = SearchList.Count;
+        isSearch = true;
+    }
+
+    public async Task ClearClicked()
+    {
+        SearchList = new List<SearchView>();
+        SearchViewParams = new()
+            {
+
+                ClientAccountNumber = null,
+                CustomerName = null,
+                DateProcessedFrom = DateTime.Now.AddYears(-2),
+                DateProcessedTo = DateTime.Now,
+                FirstLineAddress = null,
+                OurRef = null,
+                SecondaryRef = null,
+                PostCode = null,
+                Skip = 0,
+                Take = ItemPerPage,
+                OrderBy = null
+            };
+        isSearch = false;
+        isSearchClicked = false;
+        SearchCount = 0;
+        navigation.Search();
+    }
+
+    public async Task GoToClientDetails(DataGridCellMouseEventArgs<SearchView> args)
+    {
+        await _storageService.SetItemAsync<SearchViewParams>("searchViewData", SearchViewParams);
+
+        await _storageService.SetItemAsync<string>("searchQueryString", getQueryString().ToString());
+
+        navigation.CaseDetails(args.Data.CaseID);
+    }
+
+    public NameValueCollection getQueryString()
+    {
+        var dateFrom = DateTime.Now;
+        var dateTo = DateTime.Now;
+        if (SearchViewParams.DateProcessedFrom is not null)
+        {
+            dateFrom = (DateTime)SearchViewParams.DateProcessedFrom;
+        }
+        if (SearchViewParams.DateProcessedTo is not null)
+        {
+            dateTo = (DateTime)SearchViewParams.DateProcessedTo;
+        }
+
+        NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+
+        if (SearchViewParams.ClientAccountNumber != null && SearchViewParams.ClientAccountNumber != string.Empty)
+        {
+            queryString.Add("cno", SearchViewParams.ClientAccountNumber);
+        }
+        if (SearchViewParams.CustomerName != null && SearchViewParams.CustomerName != string.Empty)
+        {
+            queryString.Add("cn", SearchViewParams.CustomerName);
+        }
+        if (SearchViewParams.ClientId != 0)
+        {
+            queryString.Add("cid", SearchViewParams.ClientId.ToString());
+        }
+        if (SearchViewParams.OurRef != null && SearchViewParams.OurRef != string.Empty)
+        {
+            queryString.Add("oref", SearchViewParams.OurRef);
+        }
+        if (SearchViewParams.PostCode != null && SearchViewParams.PostCode != string.Empty)
+        {
+            queryString.Add("pc", SearchViewParams.PostCode);
+        }
+        if (SearchViewParams.SecondaryRef != null && SearchViewParams.SecondaryRef != string.Empty)
+        {
+            queryString.Add("sr", SearchViewParams.SecondaryRef);
+        }
+        if (SearchViewParams.CaseStatus != 0)
+        {
+            queryString.Add("cs", SearchViewParams.CaseStatus.ToString());
+        }
+        queryString.Add("dpf", dateFrom.ToString("yyyy-MM-dd"));
+        queryString.Add("dpt", dateTo.ToString("yyyy-MM-dd"));
+        return queryString;
+    }
+    public async Task ShowAlert(string SelectedData)
+    {
+
+        if (SelectedData == "Client")
+        {
+            await Swal.FireAsync("Active Client Toggle", "This alerts the clients available in the Client DropDown Also,Only Active client account will be returned in the Search", "info");
+        }
+        else
+        {
+            await Swal.FireAsync("Search Type", "Extensive Searches can be used when Searching for use when only Partial Information is Available.This will take longer", "info");
+        }
+
+    }
+    public async Task LoadList(LoadDataArgs args)
+    {
+        IsLoading = true;
+        SearchViewParams.Skip = args.Skip ?? 0;
+        SearchViewParams.Take = args.Top ?? 20;
+
+        args.OrderBy = args.OrderBy.Contains("CaseID") ? args.OrderBy.Replace("CaseID", "ChaseRef") : args.OrderBy;
+        args.OrderBy = args.OrderBy.Contains("ClientRef") ? args.OrderBy.Replace("ClientRef", "CompanyName") : args.OrderBy;
+        args.OrderBy = args.OrderBy.Contains("SecondaryReference") ? args.OrderBy.Replace("SecondaryReference", "AccountNo") : args.OrderBy;
+
+        args.OrderBy = args.OrderBy.Contains("CustomerName") ? args.OrderBy.Replace("CustomerName", "Name") : args.OrderBy;
+        args.OrderBy = args.OrderBy.Contains("FirstLineAddress") ? args.OrderBy.Replace("FirstLineAddress", "Address1") : args.OrderBy;
+
+
+
+
+        if (args.OrderBy != "" || args.OrderBy != null)
+        {
+            SearchViewParams.OrderBy = args.OrderBy;
+        }
+        else
+        {
+            SearchViewParams.OrderBy = null;
+        }
+
+        await GetPagedSearch();
+        IsLoading = false;
+    }
+    public async Task Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            await FindBtnCliked();
+        }
+    }
+}
+<style>
+    .Take-DropDown-Search-Status {
+        //position: absolute;
+        //right: 39px;
+        //bottom: 29px;
+        width: 100%;
+        justify-content: end;
+        margin-top: -70px;
+        margin-left: -30px !important
+    }
+
+    .Take-DropDown-Search-Status-For-Count-Greater-then-ActualList {
+        justify-content: end !important;
+        width: 99%;
+    }
+
+    .hober:hover {
+        cursor: pointer;
+    }
+
+    .padding-zero-for-label-textbox {
+        padding: 0px !important;
+    }
+</style>

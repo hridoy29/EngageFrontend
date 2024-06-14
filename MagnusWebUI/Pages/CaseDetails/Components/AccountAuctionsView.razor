@@ -1,0 +1,56 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.AccountActionsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="tab-card-style-all">
+            <div class="col-12">
+                <RadzenFieldset Text="Proof Of Direct Payment" Style="height:100% ">
+                    <div class="row">
+                    <div class="col-12">
+                        <RadzenDataGrid AllowAlternatingRows="false" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                        Data="@accountAuctionViews" TItem="AccountAuctionView" ColumnWidth="auto" >
+                            <Columns>
+                                    <RadzenDataGridColumn TItem="AccountAuctionView" Property="Date" Filterable="false" Title="Date" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+
+                                    <RadzenDataGridColumn TItem="AccountAuctionView" Property="Time" Title="Time " CssClass="hober" Width="auto" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="AccountAuctionView" Property="Action" Title="Action" CssClass="hober" Width="auto" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="AccountAuctionView" Property="ActionDetails" Title="ActionDetails" CssClass="hober" Width="auto" TextAlign="TextAlign.Center" />
+
+                                    <RadzenDataGridColumn TItem="AccountAuctionView" Property="User" Title="User" CssClass="hober" Width="auto" TextAlign="TextAlign.Center" />
+                            </Columns>
+                        </RadzenDataGrid>                            
+                    </div>                     
+                                        
+                   </div>
+                   <br />
+                   <div class="row" style="margin-left:0.2%;">
+                        <button class="btn btn-effect">Add New Action</button>
+                   </div>
+                </RadzenFieldset>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    public List<AccountAuctionView> accountAuctionViews { get; set; } = new();
+    
+    [Parameter]
+    public AccountActions AccountActions { get; set; } 
+}

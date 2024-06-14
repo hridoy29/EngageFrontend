@@ -1,0 +1,223 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.PropertyDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using MagnusWebUI.Shared.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="tab-card-style-all" >
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-4" style="padding-right:8px;">
+                        <RadzenFieldset Text="Address Details" Style="height:100% !important">
+                            <div class="@*col-margin*@">
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Address Type:
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        @*<RadzenTextBox Placeholder="Address Type" Class="w-100" />*@
+                                        <DisabledTextBox placeHolder="Address Type" bindTextValue="@PropertyDetails.Addresses[PropertyOrd - 1].AddressType"/>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Postcode:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        @*<RadzenTextBox Placeholder="Postcode" Class="w-100" />*@
+                                        <DisabledTextBox placeHolder="Postcode" bindTextValue="@PropertyDetails.Addresses[PropertyOrd - 1].PostCode"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Address:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        @*<RadzenTextArea Placeholder="Address" Class="w-100" />*@
+                                        <DisabledTextBox placeHolder="Address" bindTextValue="@PropertyDetails.Addresses[PropertyOrd - 1].JoinedLines"/>
+                                    </div>
+                                </div>
+                                <RadzenPager HorizontalAlign="HorizontalAlign.Left" Count="count" PageSize="@pageSize" PageNumbersCount="5" PageChanged="@PageChanged" />
+                            </div>      
+                        </RadzenFieldset>
+                    </div>
+                    <div class="col-8" style="padding-left:8px;">
+                    <RadzenFieldset Text="Occupier Details" Style="height:100% !important">
+                        <div class="col-12 d-flex" style="padding:0;">
+                            <div class="col-6 left-col-padding">
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Current Occupier:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        <DisabledTextBox placeHolder="Current Occupier" bindTextValue="@PropertyDetails.GetValue("Current Occupier", PropertyOrd)" />
+                                    </div>
+                                </div>
+                                    <div class="row">
+                                        <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Current Occupier Confirmed By:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                         <DisabledTextBox placeHolder="Current Occupier Confirmed By" bindTextValue="@PropertyDetails.GetValue("Current Occupier Confirmed By", PropertyOrd)" />
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Confirmed By Name:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                            <DisabledTextBox placeHolder="Confirmed By Name" bindTextValue="@PropertyDetails.GetValue("Confirmed By Name", PropertyOrd)" />
+                                    </div>
+                                </div>
+                                    <div class="row ">
+                                        <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Confirmed By Position:
+                                    </div>
+                                </div>
+                                 <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        <DisabledTextBox placeHolder="Confirmed By Position" bindTextValue="@PropertyDetails.GetValue("Confirmed By Position", PropertyOrd)" />
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Confirmed By Email:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        <DisabledTextBox placeHolder="Confirmed By Email" bindTextValue="@PropertyDetails.GetValue("Confirmed By Email", PropertyOrd)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 right-col-padding">                                
+                                <div class="row">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Confirmed By Contact No #1:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        <DisabledTextBox placeHolder="Confirmed By Contact No #1" bindTextValue="@PropertyDetails.GetValue("Confirmed By Contact No #1", PropertyOrd)" />
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Confirmed By Contact No #2:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        <DisabledTextBox placeHolder="Confirmed By Contact No #2" bindTextValue="@PropertyDetails.GetValue("Confirmed By Contact No #2", PropertyOrd)" />
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Confirmed By Contact No #3:
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        <DisabledTextBox placeHolder="Confirmed By Contact No #3" bindTextValue="@PropertyDetails.GetValue("Confirmed By Contact No #3", PropertyOrd)" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                        Meter Read Upon Occupancy:
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 margin-bottom-for-textboxHeader">
+                                        <DisabledTextBox placeHolder="Meter Read Upon Occupancy" bindTextValue="@PropertyDetails.GetValue("Meter Read Upon Occupancy", PropertyOrd)" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <CascadingValue Value="@PropertyDetails">
+                        <CascadingValue Value="@PropertyOrd" Name="PropertyOrd">
+                            <RadzenAccordion Multiple="true" Style="margin-top:10px;" Collapse=@(args => Change(args, "Accordion with multiple expand", "collapsed"))
+                                                Expand=@(args => Change(args, "Accordion with multiple expand", "expanded"))>
+                                <Items>
+                                    <RadzenAccordionItem Text="Proof Of Occupancy">
+                                        <ProofOfOccupancyView />
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Previous Address">
+                                        <PreviousAddressView />
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="New Business Contact Details">
+                                        <NewBuisnessContactDetailsView />
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Empty Rationale">
+                                        <EmptyRationaleView />
+                                    </RadzenAccordionItem>
+                                    <RadzenAccordionItem Text="Property Located">
+                                        <PropertyLocatedView />
+                                    </RadzenAccordionItem>
+                                </Items>
+                            </RadzenAccordion>
+                        </CascadingValue>
+                        </CascadingValue>
+                    </RadzenFieldset>
+                </div>
+                </div>
+                <div class="row">
+                
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [Parameter]
+    public PropertyDetails PropertyDetails { get; set; }
+
+    public int PropertyOrd { get; set; } = 1;
+
+    string pagingSummaryFormat = "Displaying page {0} of {1} (total {2} records)";
+    int pageSize = 3;
+    int count = 22;
+    void Change(object value, string name, string action)
+    {
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+    }
+
+    void PageChanged(PagerEventArgs args)
+    {
+
+    }
+}

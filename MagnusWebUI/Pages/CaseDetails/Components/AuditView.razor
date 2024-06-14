@@ -1,0 +1,124 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.AuditDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using MagnusWebUI.Shared.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="tab-card-style-all" >
+            <div class="col-6">
+                <RadzenFieldset Text="Audit" Style="height:100% !important">
+                    <div class="@*col-margin*@">
+                        <div class="@*col-margin*@"
+                            <div class="row">
+                                <div class="col-3 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Response Date/User:
+                                </div>
+                                <br />
+                                <div class="col-4 " style="padding-right:8px;">
+                                    @*<RadzenTextBox Placeholder="Date" Class="w-100" />*@
+                                    <DisabledTextBox placeHolder="Date" />
+                                </div>
+                                <div class="col-5" style="padding-left:8px;">
+                                    @*<RadzenTextBox Placeholder="User" Class="w-100" />*@
+                                    <DisabledTextBox placeHolder="User" />
+                                </div>
+                            </div>
+                            <br />
+                            @*<div class="row">
+                                <div class="col-3 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Result Email:
+                                </div>
+                                <div class="col-1">
+                                    <RadzenCheckBox TValue="Boolean" />
+                                </div>
+                            </div>
+                            <br />*@
+                            <div class="row">
+
+                                <div class="col-3 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Invoice Date:
+                                </div>
+                                <br />
+                                <div class="col-3">
+                                    @*<RadzenTextBox Placeholder="Invoice Date" Class="w-100" />*@
+                                    <DisabledTextBox placeHolder="Invoice Date" />
+                                </div>
+                                <div class="col-2 header-of-dropdown-and-texbox d-flex align-items-center" style="padding:0;">
+                                    Invoice Reference:
+                                </div>
+                                <div class="col-4" style="">
+                                    @*<RadzenTextBox Placeholder="Invoice Ref" Class="w-100" />*@
+                                    <DisabledTextBox placeHolder="Invoice Reference" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-3 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    FileName :
+                                </div>
+                                <br />
+                                <div class="col-9">
+                                    @*<RadzenTextBox Placeholder="FileName" Class="w-100" />*@
+                                    <DisabledTextBox placeHolder="FileName" />
+                                </div>
+                            </div>
+                           @* <br />
+                            <div class="row">
+                                <div class="col-3 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    WeekNo :
+                                </div>
+                                <br />
+                                <div class="col-9">
+                                    <RadzenTextBox Placeholder="WeekNo" Class="w-100" />
+                                </div>
+                            </div>*@
+                            <br />
+                            <div class="row">
+                                <div class="col-3 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Data Loaded :
+                                </div>
+                                <br />
+                                <div class="col-9">
+                                    @*<RadzenTextBox Placeholder="Data Loaded" Class="w-100" />*@
+                                    <DisabledTextBox placeHolder="Data Loaded" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-3 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    SLA Date :
+                                </div>
+                                <br />
+                                <div class="col-9">
+                                    @*<RadzenTextBox Placeholder="SLA Date" Class="w-100" />*@
+                                    <DisabledTextBox placeHolder="SLA Date" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </RadzenFieldset>
+            </div>            
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [Parameter]
+    public AuditDetails AuditDetails { get; set; }
+}

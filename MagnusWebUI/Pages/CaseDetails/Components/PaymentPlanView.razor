@@ -1,0 +1,47 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="" style="display: flex;/* border: 1px solid gray; */padding:10px;border-radius: 10px;box-shadow: 0 3px 10px rgb(0 0 0 / 20%);">
+            <div class="col-12">
+                <div class="card">
+                    <div class="col-2">
+                        <div class="card">
+                            <div class="col-12">
+                                <div class="row">
+                                    <button class="btn btn-effect" style="width:100%;">Create New Plan</button>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <button class="btn btn-effect" style="width:100%;">Make A Payment</button>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <button class="btn btn-effect" style="width:100%;">Close Current Plan</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+    
+       
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+}

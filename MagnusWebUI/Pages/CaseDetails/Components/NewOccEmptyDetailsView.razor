@@ -1,0 +1,362 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="" style="display: flex;/* border: 1px solid gray; */padding:10px;border-radius: 10px;box-shadow: 0 3px 10px rgb(0 0 0 / 20%);">
+            
+            <div class="col-4">
+                <RadzenFieldset Text="New Occupier Details" Style="height:100% !important">
+                    <div class="row">
+                        <div class="col-12 
+
+
+
+" style="">
+                            Date Moved In:
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Date Moved In" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Full Previous Address 1:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Full Previous Address 1" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Full Previous Address 2:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Full Previous Address 2" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Full Previous Address 3:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Full Previous Address 3" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Full Previous Address 4:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Full Previous Address 4" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Full Previous Address 5:
+                        </div>                       
+                    </div>
+                    <br />
+                    <div class="row">
+                         <div class="col-12">
+                            <RadzenTextBox Placeholder="Full Previous Address 5" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                     <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Full Previous PostCode:
+                        </div>                       
+                    </div>
+                    <br />
+                    <div class="row">
+                         <div class="col-12">
+                            <RadzenTextBox Placeholder="Full Previous PostCode" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Proof Seen:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Proof Seen" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Type Of Proof Seen:
+                        </div>                       
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Type Of Proof Seen" />
+                        </div>
+                    </div>
+                    <br />
+                     <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            New Buisness Name:
+                        </div>                      
+                    </div>
+                    <br />
+                    <div class="row">
+                         <div class="col-12">
+                            <RadzenTextBox Placeholder="New Buisness Name" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                     <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            New Buisness Contact Name:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="New Buisness Contact Name" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                     <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            New Buisness Contact Position:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="New Buisness Contact Position" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                     <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            New Buisness Contact Tel No:
+                        </div>                       
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="New Buisness Contact Tel No" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                     <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Meter Read Upon Occupancy:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Meter Read Upon Occupancy" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Meter Read Upon Occupancy:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Meter Read Upon Occupancy" Class="w-100" />
+                        </div>
+                    </div>
+
+                </RadzenFieldset>
+            </div>
+             <div class="col-4">
+                <RadzenFieldset Text="Previous Occupier Forward Details" Style="height:100% !important">
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Previous Occupier Address 1:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Previous Occupier Address 1" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Previous Occupier Address 2:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Previous Occupier Address 2" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Previous Occupier Address 3:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Previous Occupier Address 3" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Previous Occupier Address 4:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Previous Occupier Address 4" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Previous Occupier Address 5:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Previous Occupier Address 5" Class="w-100" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Previous Occupier PostCode:
+                        </div>                        
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                            <RadzenTextBox Placeholder="Previous Occupier PostCode" Class="w-100" />
+                        </div>
+                    </div>
+
+                </RadzenFieldset>
+            </div>
+            <div class="col-4">
+                <RadzenFieldset Text="Empty Rationale / Demolish View" Style="height:100% !important">
+                    <div class="row">
+                        <div class="col-11 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Mail Build Up:
+                        </div>
+                        <div class="col-1">
+                            <RadzenCheckBox Name="Mail Build Up" TValue="bool" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-11 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            No Furtinure:
+                        </div>
+                        <div class="col-1">
+                            <RadzenCheckBox Name="No Furtinure" TValue="bool" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-11 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Confirmed By Neighbour:
+                        </div>
+                        <div class="col-1">
+                            <RadzenCheckBox Name="Confirmed By Neighbour" TValue="bool" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-11 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            To Let/ For Sale Sign:
+                        </div>
+                        <div class="col-1">
+                            <RadzenCheckBox Name="To Let/ For Sale Sign" TValue="bool" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-11 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Boarded Up:
+                        </div>
+                        <div class="col-1">
+                            <RadzenCheckBox Name="Boarded Up" TValue="bool" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-11 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Sealed MailBox:
+                        </div>
+                        <div class="col-1">
+                            <RadzenCheckBox Name="Sealed MailBox" TValue="bool" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                            Demolish Due:
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-12">
+                           <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Demolish Due" />
+                        </div>
+                    </div>
+                </RadzenFieldset>
+            </div>
+
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    public List<ClientConfirmedAdjustmentView> clientConfirmedAdjustmentViews { get; set; } = new();
+}

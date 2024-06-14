@@ -1,0 +1,339 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="" style="display: flex;/* border: 1px solid gray; */padding:10px;border-radius: 10px;box-shadow: 0 3px 10px rgb(0 0 0 / 20%);">
+            <div class="col-4">
+                <RadzenFieldset Text="Customer Payment Details">                    
+                        <div class="row">
+                            <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Customer Able To Pay In Full:
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Customer Able To Pay In Full" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-4 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Customer Making Payment Today:
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Customer Making Payment Today" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Customer Paymemnt Method:
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Customer Paymemnt Method" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Customer Payment Amount:
+                            </div>                            
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenTextBox Placeholder="Customer Payment Amount" Class="w-100" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Cheque Made Payable To:
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Cheque Made Payable To" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Cheque Number:
+                            </div>                            
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenTextBox Placeholder="Cheque Number" Class="w-100" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Receipt Number:
+                            </div>                            
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenTextBox Placeholder="Receipt Number" Class="w-100" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Payment Made To:
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Payment Made To" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Castle Contact For Payment:
+                            </div>                            
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenTextBox Placeholder="Castle Contact For Payment" Class="w-100" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Our Contact For Payment:
+                            </div>                           
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenTextBox Placeholder="Castle Contact For Payment" Class="w-100" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Customer Proof Of Bank Trans Seen:
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-12">
+                                <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Customer Proof Of Bank Trans Seen" />
+                            </div>
+                        </div>
+                                           
+
+                </RadzenFieldset>
+            </div>
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-6">
+                        <RadzenFieldset Text="Payment Arrangement Details" Style="height:100% !important">
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Arrange Set Today:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Arrange Set Today" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Arrangement Type:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Arrangement Type" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Arrangement Frequency:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Arrangement Frequency" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Arrangement Amount:
+                                </div>                                
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenTextBox Placeholder="Arrangement Amount" Class="w-100" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    1st Installment Date:
+                                </div>                                
+                            </div>
+                             <br />
+                            <div class="row">
+                               <div class="col-12">
+                                    <RadzenTextBox Placeholder="1st Installment Date" Class="w-100" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Arrangement Client Contact:
+                                </div>                               
+                            </div>
+                             <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenTextBox Placeholder="Arrangement Client Contact" Class="w-100" />
+                                </div>
+                            </div>
+                            
+                        </RadzenFieldset>
+                    </div>
+                    <div class="col-6">
+                        <RadzenFieldset Text="Proof Of Direct Payment" Style="height:100% !important">
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Details Of Payment Confirmed:
+                                </div>
+                            </div>
+                             <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Details Of Payment Confirmed" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Proof Of Payment Amount:
+                                </div>                                
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenTextBox Placeholder="Proof Of Payment Amount" Class="w-100" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Proof Of Payment Method:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Proof Of Payment Method" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Proof Of Paid To:
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenDropDown AllowClear="true" TValue="int" Class="w-100 " Placeholder="Proof Of Paid To" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Date Of Payment:
+                                </div>                               
+                            </div>
+                            <br />
+                            <div class="row">
+                                 <div class="col-12">
+                                    <RadzenTextBox Placeholder="Date Of Payment" Class="w-100" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Verified Payment With:
+                                </div>                                
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <RadzenTextBox Placeholder="Verified Payment With" Class="w-100" />
+                                </div>
+                            </div>
+                        </RadzenFieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 d-flex">
+                    <RadzenFieldset Text="Proof Of Direct Payment" Style="height:100% ">
+                        <RadzenDataGrid  AllowAlternatingRows="false" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                        Data="@clientConfirmedAdjustmentViews" TItem="ClientConfirmedAdjustmentView" ColumnWidth="auto" LogicalFilterOperator="LogicalFilterOperator.Or">
+                            <Columns>
+                                    <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="AdjType" Filterable="false" Title="Adj Type" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+
+                                    <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="AdjDate" Filterable="false" Title="Adj Date " Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="AdjAmount" Title="Adj Amount" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="NewBalance" Title="New Balance" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+
+                                    <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="AdjRef" Title="Adj Date " Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="Reason" Title="Adj Amount" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="ClientConfirmedAdjustmentView" Property="File Name" Title="File Name" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                            </Columns>
+                        </RadzenDataGrid>
+                    </RadzenFieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    public List<ClientConfirmedAdjustmentView> clientConfirmedAdjustmentViews { get; set; } = new ();
+}

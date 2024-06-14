@@ -1,0 +1,17 @@
+﻿@using Magnus.Core.Models.CaseDetailsModels;
+
+<RadzenTextBox Value="@bindTextValue" Placeholder="@placeHolder" class="w-100" ReadOnly Disabled/>
+
+@code {
+    [Parameter]
+    public string? bindTextValue { get; set; } = string.Empty;
+    [Parameter]
+    public string placeHolder { get; set; } = string.Empty;
+
+    public bool Hidden => bindTextValue is null;
+}
+<style>
+    .rz-textbox.rz-state-disabled.w-100 {
+        color: black;
+    }
+</style>

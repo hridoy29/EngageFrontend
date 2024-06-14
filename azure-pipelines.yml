@@ -1,0 +1,66 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: NuGetToolInstaller@1
+
+# Restore nuget packages
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+# Build the application
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+# Run unit tests
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    
+
+# Package the web app for deployment
+- task: DotNetCoreCLI@2
+  displayName: "Package web app"
+  inputs:
+    command: "publish"
+    publishWebProjects: true
+    arguments: "--configuration Release --output $(Build.ArtifactStagingDirectory)/webapp"
+  condition: succeeded()
+
+# Publish the build artifacts
+- task: PublishBuildArtifacts@1
+  displayName: "Publish build artifacts"
+  inputs:
+    PathtoPublish: "$(Build.ArtifactStagingDirectory)/webapp"
+
+# Deploy app to azure app service
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Engage(49c185ed-558b-4190-854f-675b35e46f40)'
+    appType: 'webApp'
+    WebAppName: 'as-engage-magnus-dev-001'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)/webapp/*.zip'
+
+# Restarts azure app service
+- task: AzureAppServiceManage@0
+  inputs:
+    azureSubscription: 'Engage(49c185ed-558b-4190-854f-675b35e46f40)'
+    Action: 'Restart Azure App Service'
+    WebAppName: 'as-engage-magnus-dev-001'

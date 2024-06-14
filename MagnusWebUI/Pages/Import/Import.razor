@@ -1,0 +1,159 @@
+﻿@page "/import"
+@inject IImportServices _importServices
+
+
+<AuthorizeView>
+    <Authorized>
+        <div class="row">
+            <div class="col-md-4" style="padding: 15px;">
+                <RadzenFieldset Text="New Business Import">
+                    <div class="row">
+                        <div class="col-4" style="display: flex;   align-items: center;">
+                            Select a Client:
+                        </div>
+                        <div class="col-8">
+                            <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                            FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@multiSelect.clients @bind-Value=@MultiSelectClients
+                                            Placeholder="Client" Style="width: 100%" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4" style="display: flex; align-items: center;">
+                            Work Type:
+                        </div>
+                        <div class="col-8">
+                            <RadzenDropDown Multiple="true" Chips="true" MaxSelectedLabels="20" AllowClear="true" AllowFiltering="true"
+                                            FilterCaseSensitivity="FilterCaseSensitivity.Default" Data=@multiSelect.workTypes @bind-Value=@MultiSelectWorkType
+                                            Placeholder="Work Type" Style="width: 100%" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 d-flex" style="padding:10px;">
+                            <div class="col-8">
+                                validate Import
+                            </div>
+                            <div class="col-4">
+                                <RadzenCheckBox TriState="false" Value="validateImport"
+                                                TValue="bool" Change="@(args=> { validateImport = !validateImport; })" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex" style="padding:10px;">
+                            <div class="col-8">
+                                Send Email
+                            </div>
+                            <div class="col-4">
+                                <RadzenCheckBox TriState="false" Value="sendEmail"
+                                                TValue="bool" Change="@(args=> { sendEmail = !sendEmail; })" />
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-6 d-flex" style="padding:10px;">
+                            <div class="col-8">
+                                Validate Postcodes
+                            </div>
+                            <div class="col-4">
+                                <RadzenCheckBox TriState="false" Value="validatePostcodes"
+                                                TValue="bool" Change="@(args=> { validatePostcodes = !validatePostcodes; })" />
+                            </div>
+
+                        </div>
+                        <div class="col-md-6 d-flex" style="padding:10px;">
+                            <div class="col-8">
+                                Send Internal Email
+                            </div>
+                            <div class="col-4">
+                                <RadzenCheckBox TriState="false" Value="sendInternalEmail"
+                                                TValue="bool" Change="@(args=> { sendInternalEmail = !sendInternalEmail; })" />
+                            </div>
+
+                        </div>
+                        <div class="col-md-6 d-flex" style="padding:10px;">
+                            <div class="col-8">
+                                Test Load
+                            </div>
+                            <div class="col-4">
+                                <RadzenCheckBox TriState="false" Value="testLoad"
+                                                TValue="bool" Change="@(args=> { testLoad = !testLoad; })" />
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6" style="margin-top:10px;">
+                            <button class="btn btn-effect" style="width: 100%;font-size: 17px; ">Reset All</button>
+                        </div>
+                        <div class="col-md-6" style="margin-top:10px;">
+                            <button class="btn btn-effect" style="width: 100%;font-size: 17px; ">Resume Import</button>
+                        </div>
+                        <div class="col-md-6" style="margin-top:10px;">
+                            <button class="btn btn-effect" style="width: 100%;font-size: 17px; ">Reset Process</button>
+                        </div>
+                        <div class="col-md-6" style="margin-top:10px;">
+                            <button class="btn btn-effect" style="width: 100%;font-size: 17px; ">Exit Process</button>
+                        </div>
+                    </div>
+                </RadzenFieldset>
+
+            </div>
+            <div class="col-md-8">
+                <RadzenTextArea Cols="30" Rows="35" Style="width:100%" />
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin />
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
+
+
+
+
+@code
+{
+    public ImportMultiselectView multiSelect { get; set; } = new();
+
+    List<string> agentList = new List<string>() { "Agent 1", "Agent 2" };
+
+    List<string> MultiSelectClients { get; set; }
+    List<string> MultiSelectWorkType { get; set; }
+
+    public bool validateImport { get; set; } = false;
+    public bool sendEmail { get; set; } = false;
+    public bool validatePostcodes { get; set; } = false;
+    public bool sendInternalEmail { get; set; } = false;
+    public bool testLoad { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var DataList = await _importServices.GetAllMultiSelect();
+        multiSelect = DataList;
+    }
+}
+<style>
+    .file-input-zone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: blue;
+        color: white;
+        cursor: pointer;
+        position: relative;
+        width: 120px;
+        height: 30px;
+    }
+
+        .file-input-zone:hover {
+            background-color: lightblue;
+        }
+
+    .btn  input[type=file] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+</style>

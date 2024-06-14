@@ -1,0 +1,72 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="" style="display: flex;/* border: 1px solid gray; */padding:10px;border-radius: 10px;box-shadow: 0 3px 10px rgb(0 0 0 / 20%);">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6">
+                        <RadzenFieldset Text="Audio Call Recording(s) Available" Style="height:100% ">
+                            <RadzenDataGrid AllowAlternatingRows="false" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                            Data="@audioViews" TItem="AudioView" ColumnWidth="auto" LogicalFilterOperator="LogicalFilterOperator.Or">
+                                <Columns>
+                                    <RadzenDataGridColumn TItem="AudioView" Property="ChaseRef" Filterable="false" Title="Our Reference" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+
+                                    <RadzenDataGridColumn TItem="AudioView" Property="UpdateType" Filterable="false" Title="Update type" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="AudioView" Property="ClientReference" Title="Client Ref" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="AudioView" Property="ClientCancellationReason" Title="Client Cancellation Reason" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenFieldset>
+                    </div>
+                    <div class="col-6">
+                        <RadzenFieldset Text="Audio Access History" Style="height:100% ">
+                            <RadzenDataGrid AllowAlternatingRows="false" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                            Data="@audioViews" TItem="AudioView" ColumnWidth="auto" LogicalFilterOperator="LogicalFilterOperator.Or">
+                                <Columns>
+                                    <RadzenDataGridColumn TItem="AudioView" Property="ChaseRef" Filterable="false" Title="Our Reference" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+
+                                    <RadzenDataGridColumn TItem="AudioView" Property="UpdateType" Filterable="false" Title="Update type" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                    
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenFieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <RadzenFieldset Text="Review History" Style="height:100% ">
+                            <RadzenDataGrid AllowAlternatingRows="false" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                                            Data="@audioViews" TItem="AudioView" ColumnWidth="auto" LogicalFilterOperator="LogicalFilterOperator.Or">
+                                <Columns>
+                                    <RadzenDataGridColumn TItem="AudioView" Property="ChaseRef" Filterable="false" Title="Our Reference" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="AudioView" Property="UpdateType" Filterable="false" Title="Update type" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="AudioView" Property="ClientReference" Title="Client Ref" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />
+                                    <RadzenDataGridColumn TItem="AudioView" Property="ClientCancellationReason" Title="Client Cancellation Reason" Width="auto" CssClass="hober" TextAlign="TextAlign.Center" />                                   
+                                </Columns>
+                            </RadzenDataGrid>
+                        </RadzenFieldset>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    public List<AudioView> audioViews { get; set; } = new();
+}

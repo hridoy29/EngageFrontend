@@ -1,0 +1,169 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.DisputeDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using MagnusWebUI.Shared.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div style="/* border: 1px solid gray; */padding:2px;border-radius: 10px;box-shadow: 0 3px 10px rgb(0 0 0 / 20%);">
+            <div class="" style="display: flex;">
+                <div class="col-4" style="padding-right:8px;">
+                    <RadzenFieldset Text="Dispute Details" Style="height:100% !important">
+                        <div class="@*col-margin*@" >
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader  header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Dispute Reasons:
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader">
+                                    <DisabledTextBox placeHolder="Dispute Reasons" bindTextValue="@DisputeDetails.GetValue("Dispute Reasons")" />
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Dispute Reason Comments:
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader">
+                                    <DisabledTextBox placeHolder="Dispute Reason Comments" bindTextValue="@DisputeDetails.GetValue("Dispute Reason Comments")" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Castle Contact Name:
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader">
+                                    <DisabledTextBox placeHolder="Castle Contact Name" bindTextValue="@DisputeDetails.GetValue("Castle Contact Name")" />
+                                </div>
+                            </div>
+                        </div>
+                    </RadzenFieldset>
+                </div>
+                <div class="col-4" style="padding-right:8px; padding-left:8px;">
+                    <RadzenFieldset Text="Resolution On Way Details" Style="height:100% !important">
+                        <div class="@*col-margin*@" >
+                            <div class="row">
+                                <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Reason For Resolution On Way:
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 margin-bottom-for-textboxHeader">
+                                    <DisabledTextBox placeHolder="Reason For Resolution On Way" bindTextValue="@DisputeDetails.GetValue("Reason For Resolution On Way")" />
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Payment Amount:
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader">
+                                    <DisabledTextBox placeHolder="Payment Amount" bindTextValue="@DisputeDetails.GetValue("Payment Amount")" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Payment Method:
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 margin-bottom-for-textboxHeader">
+                                    <DisabledTextBox placeHolder="Payment Method" bindTextValue="@DisputeDetails.GetValue("Payment Method")" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Resolution On Way End Date:
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader">
+                                    <DisabledTextBox placeHolder="Resolution On Way End Date" bindTextValue="@DisputeDetails.GetValue("Resolution On Way End Date")" />
+                                </div>
+                            </div>
+                        </div>
+                    </RadzenFieldset>
+                </div>
+                <div class="col-4" style="padding-left:8px;">
+                    <RadzenFieldset Text="Customer Dissatisfaction Details" Style="height:100% !important">
+                        <div class="@*col-margin*@" >
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Customer Dissatisfied With:
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader">
+                                    <DisabledTextBox placeHolder="Customer Dissatisfied With" bindTextValue="@DisputeDetails.GetValue("Customer Dissatisfied With")" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Customer Dissatisfied Comments:
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader">
+                                    <DisabledTextBox placeHolder="Customer Dissatisfied Comments" bindTextValue="@DisputeDetails.GetValue("Customer Dissatisfied Comments")" />
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Risk Of Personal Danger:
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 margin-bottom-for-textboxHeader">
+                                    <DisabledTextBox placeHolder="Risk Of Personal Danger" bindTextValue="@DisputeDetails.GetValue("Risk Of Personal Danger")" />
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                    Customer Dissatisfied Comments:
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-12 margin-bottom-for-textboxHeader">
+                                    <DisabledTextBox placeHolder="Customer Dissatisfied Comments" bindTextValue="@DisputeDetails.GetValue("Customer Dissatisfied Comments")" />
+                                </div>
+                            </div>
+                        </div>
+                    </RadzenFieldset>
+                </div>
+
+            </div>
+            <div>
+                <div class="col-12 pager-radzen">
+                    <RadzenPager HorizontalAlign="HorizontalAlign.Left" Count="100" PageSize="3" PageNumbersCount="5" />
+                </div>
+            </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    public List<ClientConfirmedAdjustmentView> clientConfirmedAdjustmentViews { get; set; } = new();
+
+    //Figure out these mapping issues
+    [Parameter]
+    public DisputeDetails DisputeDetails { get; set; }
+}

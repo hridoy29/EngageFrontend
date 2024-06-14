@@ -1,0 +1,140 @@
+﻿@using Magnus.APIs.ClientDetails;
+@using Magnus.Core.Models.CaseDetailsModels.PropertyDetailsModels;
+@using Magnus.Views.ClientDetails;
+@using Magnus.Core.Models
+@using MagnusWebUI.Shared.Components
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+@using MagnusWebUI.Pages.CaseDetails.Components
+@inject IClientDetailsServices _ClientDetails
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+@inject EnagageNavigationManager navigation
+<AuthorizeView>
+    <Authorized>
+        <div class="col-12 main-col-padding">
+            <RadzenFieldset Text="Property Located">
+                <div class="col-12 d-flex main-col-padding">
+                    <div class="col-6 left-col-padding">
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Property Located:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Property Located" bindTextValue="@PropertyDetails.GetValue("Property Located", PropertyOrd)"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Access Info:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Access Info" bindTextValue="@PropertyDetails.GetValue("Access Info", PropertyOrd)"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Area Condition:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Area Condition" bindTextValue="@PropertyDetails.GetValue("Area Condition", PropertyOrd)"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Property Condition:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Property Condition" bindTextValue="@PropertyDetails.GetValue("Property Condition", PropertyOrd)"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Door Colour:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Door Colour" bindTextValue="@PropertyDetails.GetValue("Door Colour", PropertyOrd)"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 right-col-padding">
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Someone Living at the Property:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Someone Living at the Property" bindTextValue="@PropertyDetails.GetValue("Someone Living at the Property", PropertyOrd)"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Inhabitance Confirmed By:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Inhabitance Confirmed By" bindTextValue="@PropertyDetails.GetValue("Inhabitance Confirmed By", PropertyOrd)"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Inhabitance Confirmed By Unknown Detail:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Inhabitance Confirmed By Unknown Detail" bindTextValue="@PropertyDetails.GetValue("Inhabitance Confirmed By Unknown Detail", PropertyOrd)"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Business Type:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Business Type" bindTextValue="@PropertyDetails.GetValue("Business Type", PropertyOrd)"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader header-of-dropdown-and-texbox d-flex align-items-center" style="">
+                                Business Size:
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 margin-bottom-for-textboxHeader">
+                                <DisabledTextBox placeHolder="Business Size" bindTextValue="@PropertyDetails.GetValue("Business Size", PropertyOrd)"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </RadzenFieldset>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [CascadingParameter]
+    public PropertyDetails PropertyDetails { get; set; }
+
+    [CascadingParameter]
+    public int PropertyOrd { get; set; } 
+}

@@ -1,0 +1,31 @@
+﻿@page "/dev-tools"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Microsoft.Authentication.WebAssembly.Msal.Models
+
+@attribute [Authorize(Policy = "Magnus-Devs")]
+
+@inject GraphServiceClient Client
+@inject IAuthorizationService AuthorizationService
+<h1 class="d-flex justify-content-center">Authorized</h1>
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private Microsoft.Graph.User? user;
+    public List<string> policyMessage { get; set; } = new();
+    public bool IsValid { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userFromAuth = (await authenticationStateTask).User;
+        var username = userFromAuth.Claims.FirstOrDefault(x => x.Type.Equals("name", StringComparison.OrdinalIgnoreCase))?.Value;
+        var email = userFromAuth.Claims.FirstOrDefault(x => x.Type.Equals("preferred_username", StringComparison.OrdinalIgnoreCase))?.Value;
+        var request = Client.Me.Request();
+        user = await request.GetAsync();
+    }
+}
